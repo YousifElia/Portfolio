@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Source+Sans+3:wght@400;500&family=JetBrains+Mono:wght@300;400&display=swap');
+html{font-size:120%}
+body{margin:0;padding:0;min-height:100vh;background:#e6edf7}
+.wrap{background:radial-gradient(900px circle at 20% -10%,#f2f6fc 0%,#e6edf7 55%,#dde6f3 100%);min-height:100vh;position:relative;overflow:hidden;border-radius:0;font-family:'Source Sans 3',sans-serif;font-size:1rem;line-height:1.6;color:#1f1b18;--mx:0px;--my:0px;--spot:0.22}
+.grid-base{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(64,78,104,0.12) 1px,transparent 1px);background-size:40px 40px;background-position:0 0;pointer-events:none;transform:translate(calc(var(--mx) * 0.35),calc(var(--my) * 0.35));will-change:transform}
+.grid-spot{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(64,78,104,0.22) 1px,transparent 1px);background-size:40px 40px;background-position:0 0;pointer-events:none;opacity:var(--spot);transform:translate(calc(var(--mx) * 0.7),calc(var(--my) * 0.7));will-change:transform,opacity}
+.glow{display:none}
+.content{position:relative;z-index:2;max-width:672px;margin:0 auto;padding:53px 29px 48px}
+.hero{margin-bottom:48px;animation:fadeUp 0.65s cubic-bezier(0.22,1,0.36,1) both}
+.hero-name{display:flex;align-items:baseline;gap:12px 14px;flex-wrap:wrap;margin-bottom:17px}
+.name{font-family:'Playfair Display',serif;font-size:2.1rem;font-weight:500;letter-spacing:-0.025em;color:#1c1714;line-height:1}
+.sep{color:#b9b2aa;font-size:1.1rem}
+.role{font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:#7a746d;align-self:center}
+.bio{font-size:0.82rem;line-height:1.78;color:#4a453f;max-width:552px;margin-bottom:14px}
+.bio em{color:#1c1714;font-style:italic}
+.avail{display:inline-flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.06em;color:#7a746d}
+.dot{width:6px;height:6px;border-radius:50%;background:#1f1b18;box-shadow:0 0 0 2px rgba(31,27,24,0.08);animation:pulse 2.5s ease-in-out infinite;flex-shrink:0}
+.section{margin-bottom:38px;animation:fadeUp 0.65s cubic-bezier(0.22,1,0.36,1) both}
+.lbl{display:block;font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:0.13em;text-transform:uppercase;color:#7a746d;margin-bottom:14px}
+.bt{border-top:1px solid rgba(70,64,58,0.14);padding-top:17px}
+.rrow{display:grid;grid-template-columns:108px 1fr;gap:14px;margin-bottom:17px}
+.rd{font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:#7a746d;padding-top:2px}
+.rt{font-size:0.82rem;color:#1c1714;margin-bottom:2px}
+.rs{font-size:0.74rem;color:#4a453f;margin-bottom:2px}
+.rdl{font-size:0.68rem;color:#7a746d;line-height:1.6}
+.div{height:1px;background:rgba(70,64,58,0.14);margin:14px 0}
+.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:17px;margin-bottom:17px}
+.sl{display:block;font-family:'JetBrains Mono',monospace;font-size:0.57rem;letter-spacing:0.1em;text-transform:uppercase;color:#7a746d;margin-bottom:5px}
+.sv{font-size:0.72rem;color:#4a453f;line-height:1.65}
+.dl{display:inline-flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:#7a746d;text-decoration:none;cursor:pointer;letter-spacing:0.04em}
+.pl{border-top:0;display:grid;gap:14px}
+.proj{display:grid;grid-template-columns:53px 1fr 22px;gap:14px;align-items:start;padding:16px;border:1px solid rgba(70,64,58,0.12);border-radius:10px;background:#fdfaf7;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s}
+.proj:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(31,27,24,0.08)}
+.proj:hover .pn{color:#1c1714}
+.proj:hover .pa{color:#1c1714;transform:translate(2px,-2px)}
+.py{font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:#7a746d;padding-top:2px}
+.pn{font-size:0.82rem;color:#4a453f;margin-bottom:5px;transition:color 0.2s}
+.pd{font-size:0.72rem;color:#7a746d;line-height:1.6;margin-bottom:7px}
+.pt{display:flex;gap:10px;flex-wrap:wrap}
+.pt span{font-family:'JetBrains Mono',monospace;font-size:0.56rem;color:#7a746d}
+.pb{margin:6px 0 0 0;padding-left:16px}
+.pb li{font-size:0.7rem;color:#6e6861;line-height:1.6;margin-bottom:4px}
+.pb li:last-child{margin-bottom:0}
+.pa{font-size:0.78rem;color:#b9b2aa;transition:all 0.2s;padding-top:2px}
+.bl{border-top:1px solid rgba(70,64,58,0.14)}
+.book{display:flex;align-items:flex-start;gap:19px;padding:14px 0;border-bottom:1px solid rgba(70,64,58,0.14)}
+.bn{font-family:'JetBrains Mono',monospace;font-size:0.57rem;color:#b9b2aa;min-width:22px;padding-top:2px}
+.bti{font-size:0.82rem;color:#4a453f;margin-bottom:2px}
+.bm{display:flex;align-items:center;gap:6px;font-size:0.68rem;color:#7a746d}
+.be{font-family:'JetBrains Mono',monospace;font-size:0.57rem;opacity:0.75}
+.foot{display:flex;justify-content:space-between;align-items:center;padding-top:29px;border-top:1px solid rgba(70,64,58,0.14)}
+.fc{font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:#b9b2aa}
+.fl{display:flex;gap:19px}
+.fl a{font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.04em;color:#7a746d;text-decoration:none;transition:color 0.2s}
+.fl a:hover{color:#1c1714}
+
+.interests{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.interest-card{display:flex;align-items:flex-start;gap:16px;padding:16px;border:1px solid rgba(70,64,58,0.12);border-radius:12px;background:#fdfaf7;text-decoration:none;transition:transform 0.15s,box-shadow 0.15s}
+.interest-card:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(31,27,24,0.08)}
+.interest-icon{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:#efe8df;font-family:'JetBrains Mono',monospace;font-size:0.75rem;letter-spacing:0.08em;color:#7a746d;flex-shrink:0}
+.interest-title{font-size:0.82rem;color:#4a453f;margin-bottom:4px}
+.interest-desc{font-size:0.68rem;color:#7a746d;line-height:1.6}
+
+.section--leadership .rrow{background:#fdfaf7;border:1px solid rgba(70,64,58,0.12);border-radius:10px;padding:14px 16px;margin-bottom:14px}
+.section--leadership .div{display:none}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}

@@ -17,67 +17,58 @@
     html{font-size:100%}
     body{background:var(--bg);color:var(--fg);font-family:var(--sans);overflow-y:auto;overflow-x:hidden}
 
-    /* LOADING */
     #loading{position:fixed;inset:0;z-index:100;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;transition:opacity 0.8s ease}
     #loading.done{opacity:0;pointer-events:none}
-    .load-name{font-family:var(--serif);font-size:clamp(1.6rem,4vw,2.4rem);font-weight:300;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.7);text-shadow:0 0 40px rgba(200,120,50,.3)}
-    .load-bar{width:160px;height:1px;background:rgba(255,255,255,.08);overflow:hidden}
-    .load-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#ffaa55);transition:width .3s ease}
-    .load-sub{font-family:var(--mono);font-size:.5rem;letter-spacing:.2em;color:rgba(255,255,255,.2);text-transform:uppercase}
+    .load-name{font-family:var(--serif);font-size:clamp(1.6rem,4vw,2.4rem);font-weight:300;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+    .load-bar{width:160px;height:1px;background:rgba(255,255,255,.1);overflow:hidden}
+    .load-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#ffaa55);transition:width .25s ease}
+    .load-sub{font-family:var(--mono);font-size:.5rem;letter-spacing:.2em;color:rgba(255,255,255,.18);text-transform:uppercase}
 
-    /* INTRO */
     #intro{position:fixed;inset:0;z-index:10;background:#000}
     #intro canvas{position:absolute!important;inset:0;width:100%!important;height:100%!important}
 
-    /* Name lives INSIDE the black sphere — centered on screen */
+    /* Name: 36% from top — sits above the disk line which lands ~55–62% of screen */
     #intro-name{
-      position:absolute;top:50%;left:50%;
-      transform:translate(-50%,-50%);
-      text-align:center;pointer-events:none;z-index:16;
-      transition:opacity .5s ease;
+      position:absolute;top:36%;left:50%;transform:translate(-50%,-50%);
+      text-align:center;pointer-events:none;z-index:16;transition:opacity .5s ease;
     }
     #intro-name h1{
-      font-family:var(--serif);font-size:clamp(2rem,4.5vw,3.2rem);font-weight:300;
-      letter-spacing:.18em;color:rgba(255,255,255,.82);text-transform:uppercase;
-      /* subtle glow so it reads inside the dark sphere */
-      text-shadow:0 0 30px rgba(255,255,255,.18),0 0 60px rgba(255,255,255,.06);
+      font-family:var(--serif);font-size:clamp(2rem,4.8vw,3.2rem);font-weight:300;
+      letter-spacing:.18em;color:rgba(255,255,255,.9);text-transform:uppercase;
+      text-shadow:0 2px 40px rgba(0,0,0,.9),0 0 80px rgba(0,0,0,.7);
     }
     #intro-name p{
-      font-family:var(--mono);font-size:.52rem;letter-spacing:.26em;
-      color:rgba(255,255,255,.28);text-transform:uppercase;margin-top:12px;
+      font-family:var(--mono);font-size:.53rem;letter-spacing:.26em;
+      color:rgba(255,255,255,.32);text-transform:uppercase;margin-top:12px;
+      text-shadow:0 1px 16px rgba(0,0,0,.95);
     }
 
-    #scroll-hint{
-      position:absolute;bottom:34px;left:50%;transform:translateX(-50%);
-      z-index:16;display:flex;flex-direction:column;align-items:center;gap:10px;
-      pointer-events:none;transition:opacity .4s ease;
-    }
-    #scroll-hint span{font-family:var(--mono);font-size:.5rem;letter-spacing:.22em;color:rgba(255,255,255,.22);text-transform:uppercase}
-    .hint-line{width:1px;height:28px;background:linear-gradient(to bottom,rgba(255,255,255,.2),transparent);animation:hint-drop 2s ease-in-out infinite}
+    #scroll-hint{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);z-index:16;display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:none;transition:opacity .4s ease}
+    #scroll-hint span{font-family:var(--mono);font-size:.5rem;letter-spacing:.22em;color:rgba(255,255,255,.2);text-transform:uppercase}
+    .hint-line{width:1px;height:28px;background:linear-gradient(to bottom,rgba(255,255,255,.18),transparent);animation:hint-drop 2s ease-in-out infinite}
     @keyframes hint-drop{0%{opacity:0;transform:scaleY(.4) translateY(-8px)}40%{opacity:1}100%{opacity:0;transform:scaleY(1) translateY(8px)}}
 
-    #vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 25%,#000 100%);opacity:0;pointer-events:none;z-index:14}
+    #vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 30%,#000 100%);opacity:0;pointer-events:none;z-index:14}
     #overlay{position:fixed;inset:0;background:#000;z-index:40;opacity:0;pointer-events:none}
     #driver{height:420vh;position:relative;z-index:5}
 
-    /* PORTFOLIO */
     #portfolio{position:relative;min-height:100vh;background:var(--bg);z-index:6;opacity:0;transition:opacity 1.1s ease}
     #portfolio.visible{opacity:1}
     .p-grid{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(circle,rgba(180,165,140,.05) 1px,transparent 1px);background-size:38px 38px;opacity:0;transition:opacity 1.2s ease .4s}
     .p-grid.on{opacity:1}
     .p-wrap{position:relative;z-index:2;max-width:648px;margin:0 auto;padding:68px 28px 60px}
     .p-hero{margin-bottom:60px}
-    .p-name{font-family:var(--serif);font-size:clamp(2.6rem,6vw,3.9rem);font-weight:300;letter-spacing:-.01em;color:#ede4d8;line-height:1;margin-bottom:9px}
+    .p-name{font-family:var(--serif);font-size:clamp(2.6rem,6vw,3.9rem);font-weight:300;color:#ede4d8;line-height:1;margin-bottom:9px}
     .p-role{font-family:var(--mono);font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:22px}
     .p-bio{font-size:.86rem;line-height:1.84;color:var(--fg-muted);max-width:510px;margin-bottom:18px}
     .p-bio em{color:#8a8278;font-style:italic}
-    .p-avail{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.56rem;letter-spacing:.08em;color:var(--fg-muted)}
+    .p-avail{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.56rem;color:var(--fg-muted)}
     .p-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;animation:blink 2.5s ease-in-out infinite}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:.55}}
     .p-section{margin-bottom:44px}
     .p-lbl{display:block;font-family:var(--mono);font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:16px}
     .p-rule{border:none;border-top:1px solid var(--border);margin-bottom:16px}
-    .p-dl{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.58rem;letter-spacing:.06em;color:var(--fg-muted);text-decoration:none;transition:color .2s}
+    .p-dl{display:inline-flex;gap:6px;font-family:var(--mono);font-size:.58rem;color:var(--fg-muted);text-decoration:none;transition:color .2s}
     .p-dl:hover{color:var(--fg)}
     .p-projs{display:grid;gap:10px}
     .p-proj{display:grid;grid-template-columns:50px 1fr 18px;gap:14px;align-items:start;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--card);text-decoration:none;transition:border-color .2s,transform .15s,box-shadow .15s}
@@ -107,7 +98,7 @@
     .p-foot{display:flex;justify-content:space-between;align-items:center;padding-top:30px;border-top:1px solid var(--border)}
     .p-copy{font-family:var(--mono);font-size:.54rem;color:#302c28}
     .p-links{display:flex;gap:20px}
-    .p-links a{font-family:var(--mono);font-size:.57rem;letter-spacing:.05em;color:var(--fg-muted);text-decoration:none;transition:color .2s}
+    .p-links a{font-family:var(--mono);font-size:.57rem;color:var(--fg-muted);text-decoration:none;transition:color .2s}
     .p-links a:hover{color:var(--fg)}
     .p-section,.p-hero,.p-foot{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
     #portfolio.visible .p-hero                {opacity:1;transform:none;transition-delay:.1s}
@@ -124,12 +115,11 @@
 <div id="loading">
   <div class="load-name">Yousif Elia</div>
   <div class="load-bar"><div class="load-fill" id="load-fill"></div></div>
-  <div class="load-sub">Initialising</div>
+  <div class="load-sub">Loading scene</div>
 </div>
 
 <div id="intro">
   <div id="vignette"></div>
-  <!-- Name floats inside the dark sphere -->
   <div id="intro-name">
     <h1>Yousif Elia</h1>
     <p>Software Engineer</p>
@@ -149,39 +139,100 @@
     <div class="p-hero">
       <h1 class="p-name">Yousif Elia</h1>
       <p class="p-role">Software Engineer</p>
-      <p class="p-bio">Second-year Computer Science student at the University of Windsor, seeking internships. I build things to solve my own problems — focusing on clean code and understanding the <em>why</em> behind every decision.</p>
+      <p class="p-bio">Second-year Computer Science student at the University of Windsor, seeking internships. I build things that solve real problems — focused on clean architecture and understanding the <em>why</em> behind every decision.</p>
       <span class="p-avail"><span class="p-dot"></span>Available for internships · Fall 2026</span>
     </div>
+
     <div class="p-section">
       <span class="p-lbl">Resume</span><hr class="p-rule">
       <a class="p-dl" href="YousifElia-SWE.pdf" target="_blank" rel="noopener">Download full resume ↗</a>
     </div>
+
     <div class="p-section">
       <span class="p-lbl">Projects</span>
       <div class="p-projs">
-        <a class="p-proj" href="#" target="_blank"><span class="p-proj-yr">2026</span><div><p class="p-proj-name">myAdvice</p><p class="p-proj-desc">Centralized system for advising operations across teams.</p><ul class="p-proj-bullets"><li>Engineered backend infrastructure using JavaFX and REST APIs.</li><li>Built database systems with MariaDB to track user metrics.</li><li>Containerized with Docker for seamless team collaboration.</li><li>Redesigned UI/UX workflows, reducing required user actions by ~80%.</li></ul><div class="p-tags"><span>JavaFX</span><span>REST</span><span>Hibernate</span><span>MariaDB</span><span>Docker</span></div></div><span class="p-proj-arr">↗</span></a>
-        <a class="p-proj" href="#" target="_blank"><span class="p-proj-yr">2026</span><div><p class="p-proj-name">MedCheck</p><p class="p-proj-desc">Compares drug name, dosage, and price against crowdsourced data to estimate fair price ranges and flag overpayment.</p><div class="p-tags"><span>Web App</span><span>Pricing</span><span>Data</span></div></div><span class="p-proj-arr">↗</span></a>
-        <a class="p-proj" href="#" target="_blank"><span class="p-proj-yr">2025</span><div><p class="p-proj-name">StudySync Dashboard</p><p class="p-proj-desc">Productivity dashboard for students to track assignments and focus time using the Pomodoro technique.</p><div class="p-tags"><span>React</span><span>Tailwind</span><span>Vite</span></div></div><span class="p-proj-arr">↗</span></a>
-        <a class="p-proj" href="#" target="_blank"><span class="p-proj-yr">2025</span><div><p class="p-proj-name">Inventory API</p><p class="p-proj-desc">RESTful API for small business inventory management with JWT auth and role-based access.</p><div class="p-tags"><span>Node.js</span><span>Express</span><span>PostgreSQL</span></div></div><span class="p-proj-arr">↗</span></a>
+        <a class="p-proj" href="#" target="_blank">
+          <span class="p-proj-yr">2026</span>
+          <div>
+            <p class="p-proj-name">myAdvice</p>
+            <p class="p-proj-desc">Centralized system for advising operations across teams.</p>
+            <ul class="p-proj-bullets">
+              <li>Engineered backend infrastructure with JavaFX and REST APIs.</li>
+              <li>Built MariaDB schemas to track user metrics and contractual data.</li>
+              <li>Containerized with Docker for seamless team collaboration.</li>
+              <li>Redesigned UX workflows, cutting required user actions by ~80%.</li>
+            </ul>
+            <div class="p-tags"><span>JavaFX</span><span>REST</span><span>Hibernate</span><span>MariaDB</span><span>Docker</span></div>
+          </div>
+          <span class="p-proj-arr">↗</span>
+        </a>
+        <a class="p-proj" href="#" target="_blank">
+          <span class="p-proj-yr">2026</span>
+          <div>
+            <p class="p-proj-name">MedCheck</p>
+            <p class="p-proj-desc">Web app that compares drug name, dosage, and price against crowdsourced data to flag potential overpayment.</p>
+            <div class="p-tags"><span>Web App</span><span>Pricing</span><span>Data</span></div>
+          </div>
+          <span class="p-proj-arr">↗</span>
+        </a>
+        <a class="p-proj" href="#" target="_blank">
+          <span class="p-proj-yr">2025</span>
+          <div>
+            <p class="p-proj-name">StudySync Dashboard</p>
+            <p class="p-proj-desc">Productivity dashboard for students tracking assignments and focus sessions with the Pomodoro technique.</p>
+            <div class="p-tags"><span>React</span><span>Tailwind</span><span>Vite</span></div>
+          </div>
+          <span class="p-proj-arr">↗</span>
+        </a>
+        <a class="p-proj" href="#" target="_blank">
+          <span class="p-proj-yr">2025</span>
+          <div>
+            <p class="p-proj-name">Inventory API</p>
+            <p class="p-proj-desc">RESTful API for small-business inventory management with JWT auth and role-based access control.</p>
+            <div class="p-tags"><span>Node.js</span><span>Express</span><span>PostgreSQL</span></div>
+          </div>
+          <span class="p-proj-arr">↗</span>
+        </a>
       </div>
     </div>
+
     <div class="p-section">
       <span class="p-lbl">Leadership</span>
-      <div class="p-exp"><span class="p-exp-date">Mar 2026 – Present</span><div><p class="p-exp-title">Head of Events</p><p class="p-exp-org">University of Windsor</p><p class="p-exp-desc">Lead planning and coordination for student events and campus engagement.</p></div></div>
-      <div class="p-exp"><span class="p-exp-date">Mar 2024 – Sep 2024</span><div><p class="p-exp-title">Math Tutor</p><p class="p-exp-org">Private Tutoring</p><p class="p-exp-desc">Tutored high school math and reinforced problem-solving fundamentals.</p></div></div>
+      <div class="p-exp">
+        <span class="p-exp-date">Mar 2026 – Present</span>
+        <div>
+          <p class="p-exp-title">Head of Events</p>
+          <p class="p-exp-org">University of Windsor</p>
+          <p class="p-exp-desc">Lead planning and coordination for student events and campus engagement initiatives.</p>
+        </div>
+      </div>
+      <div class="p-exp">
+        <span class="p-exp-date">Mar 2024 – Sep 2024</span>
+        <div>
+          <p class="p-exp-title">Math Tutor</p>
+          <p class="p-exp-org">Private Tutoring</p>
+          <p class="p-exp-desc">Tutored high school students in mathematics, reinforcing problem-solving fundamentals.</p>
+        </div>
+      </div>
     </div>
+
     <div class="p-section">
       <span class="p-lbl">Personal Interests</span>
       <div class="p-interests">
-        <a class="p-int" href="music.html"><span class="p-int-icon">M</span><div><p class="p-int-title">Music</p><p class="p-int-desc">Album reviews and what I am currently listening to</p></div></a>
-        <a class="p-int" href="watching.html"><span class="p-int-icon">S</span><div><p class="p-int-title">Shows</p><p class="p-int-desc">Shows and movies I am currently watching</p></div></a>
-        <a class="p-int" href="reading.html"><span class="p-int-icon">R</span><div><p class="p-int-title">Reading</p><p class="p-int-desc">Books I am reading and personal reviews</p></div></a>
-        <a class="p-int" href="physical.html"><span class="p-int-icon">P</span><div><p class="p-int-title">Physical</p><p class="p-int-desc">Training, sports, and staying active</p></div></a>
+        <a class="p-int" href="music.html"><span class="p-int-icon">M</span><div><p class="p-int-title">Music</p><p class="p-int-desc">Album reviews and current listening</p></div></a>
+        <a class="p-int" href="watching.html"><span class="p-int-icon">S</span><div><p class="p-int-title">Shows</p><p class="p-int-desc">Shows and films I'm watching</p></div></a>
+        <a class="p-int" href="reading.html"><span class="p-int-icon">R</span><div><p class="p-int-title">Reading</p><p class="p-int-desc">Books and personal reviews</p></div></a>
+        <a class="p-int" href="physical.html"><span class="p-int-icon">P</span><div><p class="p-int-title">Physical</p><p class="p-int-desc">Training, sports, staying active</p></div></a>
       </div>
     </div>
+
     <footer class="p-foot">
       <span class="p-copy">© 2026 Yousif Elia</span>
-      <nav class="p-links"><a href="#">GitHub</a><a href="#">LinkedIn</a><a href="#">Email</a></nav>
+      <nav class="p-links">
+        <a href="#">GitHub</a>
+        <a href="#">LinkedIn</a>
+        <a href="#">Email</a>
+      </nav>
     </footer>
   </div>
 </main>
@@ -193,19 +244,14 @@ import { EffectComposer }  from 'https://esm.sh/three@0.160.0/examples/jsm/postp
 import { RenderPass }      from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/UnrealBloomPass.js';
 
-/* ── DOM ─────────────────────────────────────── */
-const loadingEl   = document.getElementById('loading');
-const loadFill    = document.getElementById('load-fill');
-const introEl     = document.getElementById('intro');
-const overlayEl   = document.getElementById('overlay');
-const driverEl    = document.getElementById('driver');
-const portfolioEl = document.getElementById('portfolio');
-const pgridEl     = document.getElementById('p-grid');
-const vignetteEl  = document.getElementById('vignette');
-const hintEl      = document.getElementById('scroll-hint');
-const nameEl      = document.getElementById('intro-name');
+const $ = id => document.getElementById(id);
+const loadingEl = $('loading'), loadFill = $('load-fill'),
+      introEl = $('intro'), overlayEl = $('overlay'),
+      driverEl = $('driver'), portfolioEl = $('portfolio'),
+      pgridEl = $('p-grid'), vignetteEl = $('vignette'),
+      hintEl = $('scroll-hint'), nameEl = $('intro-name');
 
-/* ── Scene / Camera / Renderer ───────────────── */
+/* ── Renderer ─────────────────────────────── */
 const scene    = new THREE.Scene();
 const camera   = new THREE.PerspectiveCamera(52, innerWidth/innerHeight, 0.01, 3000);
 const renderer = new THREE.WebGLRenderer({ antialias:true, powerPreference:'high-performance' });
@@ -213,481 +259,324 @@ renderer.setSize(innerWidth, innerHeight);
 renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
 renderer.outputColorSpace  = THREE.SRGBColorSpace;
 renderer.toneMapping       = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.05;
+renderer.toneMappingExposure = 1.0;
 introEl.appendChild(renderer.domElement);
 
-/* ── Post-processing ─────────────────────────── */
+/* ── Bloom — kept low so sphere stays dark ── */
 const composer = new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene, camera));
 const bloom = new UnrealBloomPass(
   new THREE.Vector2(innerWidth, innerHeight),
-  1.1,   // strength
-  0.55,  // radius
-  0.68   // threshold — keeps lensing ring sharp
+  0.55,   // strength
+  0.60,   // radius
+  0.82    // threshold — only hottest disk parts glow
 );
 composer.addPass(bloom);
 
-/* ── Sparse star field (3 000 stars) ─────────── */
-const STAR_N = 3000;
-const sp = new Float32Array(STAR_N*3), sc = new Float32Array(STAR_N*3), ss = new Float32Array(STAR_N);
-for (let i = 0; i < STAR_N; i++) {
-  // Avoid clustering near camera — push stars far out and avoid disk plane
-  const phi   = Math.acos(1 - 2*(i+.5)/STAR_N);
-  const theta = 2*Math.PI*i/1.6180339887;
-  const r     = 400 + Math.random()*600;
-  sp[i*3]   = r*Math.sin(phi)*Math.cos(theta);
-  sp[i*3+1] = r*Math.sin(phi)*Math.sin(theta);
-  sp[i*3+2] = r*Math.cos(phi);
-  // mostly white with very occasional warm tint
-  const warm = Math.random() < .12;
-  sc[i*3]   = warm ? 1.0 : 0.92; sc[i*3+1] = warm ? .88 : .96; sc[i*3+2] = warm ? .7 : 1.0;
-  ss[i] = Math.random() < .96 ? Math.random()*.5+.15 : Math.random()*1.2+.6;
+/* ── Sparse stars (2500) ──────────────────── */
+const N = 2500;
+const sp = new Float32Array(N*3), sc = new Float32Array(N*3), ss = new Float32Array(N);
+for (let i = 0; i < N; i++) {
+  const phi = Math.acos(1-2*(i+.5)/N), th = 2*Math.PI*i/1.618;
+  const r = 400 + Math.random()*600;
+  sp[i*3]=r*Math.sin(phi)*Math.cos(th); sp[i*3+1]=r*Math.sin(phi)*Math.sin(th); sp[i*3+2]=r*Math.cos(phi);
+  sc[i*3]=0.92; sc[i*3+1]=0.95; sc[i*3+2]=1.0;
+  ss[i] = Math.random()<.95 ? Math.random()*.4+.1 : Math.random()*.9+.4;
 }
 const sGeo = new THREE.BufferGeometry();
 sGeo.setAttribute('position', new THREE.BufferAttribute(sp,3));
 sGeo.setAttribute('color',    new THREE.BufferAttribute(sc,3));
 sGeo.setAttribute('size',     new THREE.BufferAttribute(ss,1));
-const sMat = new THREE.ShaderMaterial({
-  uniforms: {uTime:{value:0}},
-  vertexShader:`
-    attribute float size; attribute vec3 color; varying vec3 vC;
-    void main(){
-      vC=color;
-      vec4 mv=modelViewMatrix*vec4(position,1.);
-      gl_PointSize=size*(320./-mv.z);
-      gl_Position=projectionMatrix*mv;
-    }`,
-  fragmentShader:`
-    varying vec3 vC;
-    void main(){
-      float r=length(gl_PointCoord-vec2(.5));
-      float a=1.-smoothstep(.38,.5,r);
-      if(a<.01)discard;
-      gl_FragColor=vec4(vC,a*.75);
-    }`,
-  blending:THREE.AdditiveBlending, depthWrite:false, transparent:true
-});
-scene.add(new THREE.Points(sGeo, sMat));
+scene.add(new THREE.Points(sGeo, new THREE.ShaderMaterial({
+  vertexShader:`attribute float size;attribute vec3 color;varying vec3 vC;void main(){vC=color;vec4 mv=modelViewMatrix*vec4(position,1.);gl_PointSize=size*(300./-mv.z);gl_Position=projectionMatrix*mv;}`,
+  fragmentShader:`varying vec3 vC;void main(){float r=length(gl_PointCoord-.5);float a=1.-smoothstep(.38,.5,r);if(a<.01)discard;gl_FragColor=vec4(vC,a*.7);}`,
+  blending:THREE.AdditiveBlending,depthWrite:false,transparent:true
+})));
 
-/* ════════════════════════════════════════════════
-   BLACK HOLE MATERIALS
-   Render order:
-     0  — black sphere (Spline, occludes everything)
-     1  — accretion disk (CodePen shader, nearly flat)
-     2  — lensing sphere (bright white fresnel ring)
-     3  — outer warm glow
-     4  — photon ring
-   ════════════════════════════════════════════════ */
+/* ── Scene constants ──────────────────────── */
+const R       = 1.0;
+const DISK_IN = R * 1.18;
+const DISK_OUT= R * 7.5;
 
-/* Sphere radius we normalise to */
-const R = 1.0;
-
-/* ── 1. Accretion disk — CodePen full shader ─── */
-const DISK_IN  = R * 1.16;
-const DISK_OUT = R * 7.2;   // large outer radius for the long blade
-
+/* ── Disk material (CodePen shader) ──────── */
 const diskMat = new THREE.ShaderMaterial({
   uniforms:{
-    uTime:     {value:0},
-    uColorHot: {value:new THREE.Color(0xffffff)},
-    uColorMid: {value:new THREE.Color(0xffcc55)},
-    uColorEdge:{value:new THREE.Color(0xff7711)},
-    uColorDeep:{value:new THREE.Color(0x661100)},
-    uCamPos:   {value:new THREE.Vector3()},
+    uTime:     { value: 0 },
+    uCamPos:   { value: new THREE.Vector3() },
+    uColorHot: { value: new THREE.Color(0xffffff) },
+    uColorMid: { value: new THREE.Color(0xffcc55) },
+    uColorEdge:{ value: new THREE.Color(0xff7711) },
+    uColorDeep:{ value: new THREE.Color(0x661100) },
   },
   vertexShader:`
-    varying vec3 vPos; varying float vR; varying vec2 vUv;
+    varying vec3 vPos; varying float vR;
     void main(){
-      vUv=uv; vPos=position; vR=length(position.xy);
-      gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);
+      vPos = position;
+      vR   = length(position.xy);
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     }`,
   fragmentShader:`
     uniform float uTime;
-    uniform vec3  uColorHot,uColorMid,uColorEdge,uColorDeep,uCamPos;
-    varying vec3  vPos; varying float vR; varying vec2 vUv;
+    uniform vec3  uColorHot, uColorMid, uColorEdge, uColorDeep, uCamPos;
+    varying vec3  vPos;
+    varying float vR;
 
-    float rand(vec2 n){return fract(sin(dot(n,vec2(12.9898,4.1414)))*43758.5453);}
+    float rand(vec2 n){ return fract(sin(dot(n, vec2(12.9898,4.1414))) * 43758.5453); }
     float noise(vec2 p){
-      vec2 ip=floor(p),u=fract(p);u=u*u*(3.-2.*u);
-      return mix(mix(rand(ip),rand(ip+vec2(1,0)),u.x),
-                 mix(rand(ip+vec2(0,1)),rand(ip+vec2(1,1)),u.x),u.y);
+      vec2 ip = floor(p), u = fract(p);
+      u = u*u*(3.0-2.0*u);
+      return mix(
+        mix(rand(ip), rand(ip+vec2(1,0)), u.x),
+        mix(rand(ip+vec2(0,1)), rand(ip+vec2(1,1)), u.x), u.y);
     }
-    float fbm(vec2 p,float t){
-      float s=0.,a=.65,f=2.2;
-      for(int i=0;i<6;i++){
-        s+=a*noise(p*f+vec2(t*.27,t*.18));
-        f*=2.;a*=.5;
-      }
+    float fbm(vec2 p, float t){
+      float s=0.0, a=0.65, f=2.2;
+      for(int i=0;i<6;i++){ s+=a*noise(p*f+vec2(t*.27,t*.18)); f*=2.0; a*=0.5; }
       return s;
     }
-    float vortex(float dist,float angle,float time){
-      float spiral=sin(angle*2.3+dist*.28*5.8-time*.6);
-      return smoothstep(-.38,.68,spiral)*.32;
-    }
 
     void main(){
-      float inner=${DISK_IN.toFixed(3)}, outer=${DISK_OUT.toFixed(3)};
-      float nP=clamp((vR-inner)/(outer-inner),0.,1.);
-      float angle=atan(vPos.y,vPos.x);
-      float ov=1./sqrt(max(vR,.1));
+      float inner = ${DISK_IN.toFixed(4)};
+      float outer = ${DISK_OUT.toFixed(4)};
+      float nP    = clamp((vR - inner) / (outer - inner), 0.0, 1.0);
+      float angle = atan(vPos.y, vPos.x);
+      float ov    = 1.0 / sqrt(max(vR, 0.1));
 
-      /* Doppler shift */
-      float dop=0.,beam=1.;
-      if(length(uCamPos)>.01){
-        vec3 tang=normalize(vec3(-vPos.y,vPos.x,0.));
-        dop=dot(normalize(uCamPos-vPos),tang)*ov*.3;
-        beam=clamp(1.+dop*.4,.5,2.);
+      /* Doppler brightening on approaching side */
+      float dop = 0.0, beam = 1.0;
+      if(length(uCamPos) > 0.01){
+        vec3 tang = normalize(vec3(-vPos.y, vPos.x, 0.0));
+        dop  = dot(normalize(uCamPos - vPos), tang) * ov * 0.3;
+        beam = clamp(1.0 + dop * 0.4, 0.5, 2.0);
       }
 
-      float spd=4.8/(pow(vR,1.6)+1.1);
-      vec2 coord=vec2(vR*1.9,(angle-uTime*spd*.52)*3.6);
-      float pat=fbm(coord,uTime*.17)*.8+vortex(vR,angle,uTime);
-      float temp=clamp(ov*(1.+pat*.3),0.,2.);
+      float spd   = 4.8 / (pow(vR, 1.6) + 1.1);
+      vec2  coord = vec2(vR * 1.9, (angle - uTime * spd * 0.52) * 3.6);
+      float pat   = fbm(coord, uTime * 0.17) * 0.8
+                  + sin(angle*2.3 + vR*5.8 - uTime*0.6) * 0.1;
 
-      vec3 ci=mix(uColorHot,uColorMid,smoothstep(0.,.4,nP)*(1.-temp*.3));
-      vec3 co=mix(uColorMid,uColorEdge,smoothstep(.4,.8,nP));
-      vec3 cd=mix(uColorEdge,uColorDeep,smoothstep(.8,1.,nP));
-      vec3 col=mix(mix(ci,co,smoothstep(.4,.8,nP)),cd,smoothstep(.8,1.,nP));
-      col*=vec3(1.+dop*.15,1.,1.-dop*.15);
+      /* Colour gradient inner→outer */
+      vec3 ci  = mix(uColorHot,  uColorMid,  smoothstep(0.0, 0.4, nP));
+      vec3 co  = mix(uColorMid,  uColorEdge, smoothstep(0.4, 0.8, nP));
+      vec3 cd  = mix(uColorEdge, uColorDeep, smoothstep(0.8, 1.0, nP));
+      vec3 col = mix(mix(ci, co, smoothstep(0.4, 0.8, nP)), cd, smoothstep(0.8, 1.0, nP));
+      col *= vec3(1.0 + dop*0.15, 1.0, 1.0 - dop*0.15);
 
-      float radBright=pow(1.-smoothstep(0.,.85,nP),2.2)*3.5;
-      float bright=(pat+.5)*1.15*radBright*beam;
-      col*=bright;
-      float hot=smoothstep(3.,5.,bright)*smoothstep(0.,.08,nP);
-      col=mix(col,vec3(1.),hot*.5);
+      float radBright = pow(1.0 - smoothstep(0.0, 0.9, nP), 2.2) * 3.4;
+      float bright    = (pat + 0.5) * radBright * beam;
+      col *= bright;
+      /* White-hot inner edge */
+      col  = mix(col, vec3(1.0), smoothstep(3.0,6.0,bright)*smoothstep(0.0,0.06,nP)*0.5);
 
-      float ia=smoothstep(0.,.05,nP);
-      float oa=1.-smoothstep(.88,1.,nP);
-      float na=clamp(pat*.35+.75,.6,1.);
-      gl_FragColor=vec4(clamp(col,0.,10.),ia*oa*na);
+      float ia = smoothstep(0.0, 0.05, nP);
+      float oa = 1.0 - smoothstep(0.9, 1.0, nP);
+      gl_FragColor = vec4(clamp(col, 0.0, 10.0), ia * oa * clamp(pat*0.3+0.8, 0.5, 1.0));
     }`,
-  transparent:true, side:THREE.DoubleSide, depthWrite:false,
-  blending:THREE.AdditiveBlending, renderSide:THREE.DoubleSide
+  transparent: true,
+  side:        THREE.DoubleSide,
+  depthWrite:  false,
+  depthTest:   true,
+  blending:    THREE.AdditiveBlending,
 });
 
-/* ── 2. Gravitational lensing ring ───────────
-   Bright white/silver fresnel — the most important
-   visual: the circle of bent light around the sphere. */
-const lensMat = new THREE.ShaderMaterial({
-  uniforms:{uTime:{value:0}},
-  vertexShader:`
-    varying vec3 vN,vVP,vWN;
-    void main(){
-      vWN=normalize((modelMatrix*vec4(normal,0.)).xyz);
-      vec4 mv=modelViewMatrix*vec4(position,1.);
-      vVP=-mv.xyz; vN=normalize(normalMatrix*normal);
-      gl_Position=projectionMatrix*mv;
-    }`,
-  fragmentShader:`
-    uniform float uTime;
-    varying vec3 vN,vVP,vWN;
-
-    float rand(vec2 n){return fract(sin(dot(n,vec2(12.9898,4.1414)))*43758.5453);}
-    float noise(vec2 p){
-      vec2 ip=floor(p),u=fract(p);u=u*u*(3.-2.*u);
-      return mix(mix(rand(ip),rand(ip+vec2(1,0)),u.x),
-                 mix(rand(ip+vec2(0,1)),rand(ip+vec2(1,1)),u.x),u.y);
-    }
-
-    void main(){
-      vec3 vd=normalize(vVP);
-
-      /* Core fresnel ring — sharp and white */
-      float edge=abs(dot(vd,vN));
-      float fres=pow(1.-edge,4.8);
-
-      /* Secondary softer halo */
-      float halo=pow(1.-edge,2.2)*.18;
-
-      /* Subtle noise shimmer on ring */
-      float nm=noise(vN.xy*11.+uTime*.22)*.08+.96;
-
-      /* Disk-plane brightening: hotter where ring meets equator */
-      float equator=1.-abs(vWN.y);          /* 1 at equator, 0 at poles */
-      float diskBoost=pow(equator,3.)*.55;
-
-      float alpha=(fres+halo+diskBoost)*nm;
-
-      /* Colour: pure white-silver core, very faint warm tinge at equator */
-      vec3 col=mix(vec3(1.,1.,1.),vec3(1.,.92,.75),diskBoost*.6);
-
-      gl_FragColor=vec4(col,clamp(alpha,0.,1.)*.92);
-    }`,
-  transparent:true, side:THREE.FrontSide, depthWrite:false,
-  blending:THREE.AdditiveBlending
+/* ── Pure black occluder material ──────────
+   depthWrite:true means the sphere writes to the
+   depth buffer → disk fragments behind it are culled. */
+const blackMat = new THREE.MeshBasicMaterial({
+  color:      0x000000,
+  side:       THREE.FrontSide,
+  depthWrite: true,
+  depthTest:  true,
 });
 
-/* ── 3. Outer warm glow (orbiting hotspot) ───── */
-const glowMat = new THREE.ShaderMaterial({
-  uniforms:{
-    uTime:{value:0},
-    uGlow:{value:new THREE.Color(0xff8833)},
-    uHot: {value:new THREE.Color(0xffdd88)},
-  },
-  vertexShader:`
-    varying vec3 vN,vVP,vWN;
-    void main(){
-      vWN=normalize((modelMatrix*vec4(normal,0.)).xyz);
-      vec4 mv=modelViewMatrix*vec4(position,1.);
-      vVP=-mv.xyz; vN=normalize(normalMatrix*normal);
-      gl_Position=projectionMatrix*mv;
-    }`,
-  fragmentShader:`
-    uniform float uTime;uniform vec3 uGlow,uHot;
-    varying vec3 vN,vVP,vWN;
-    float rand(vec2 n){return fract(sin(dot(n,vec2(12.9898,4.1414)))*43758.5453);}
-    float noise(vec2 p){vec2 ip=floor(p),u=fract(p);u=u*u*(3.-2.*u);return mix(mix(rand(ip),rand(ip+vec2(1,0)),u.x),mix(rand(ip+vec2(0,1)),rand(ip+vec2(1,1)),u.x),u.y);}
-    void main(){
-      float i=pow(.68-dot(vN,normalize(vVP)),2.5);
-      float p=sin(uTime*.8+vN.y*1.8)*.15+.9;
-      float f=noise(vN.xz*9.+uTime*1.9)*.3+.78;
-      float base=clamp(i*p*f,0.,1.);
+/* ── Main group ───────────────────────────── */
+const BH = new THREE.Group();
+scene.add(BH);
 
-      /* orbiting hotspot locked to disk plane */
-      vec3 hDir=normalize(vec3(cos(uTime*.42),sin(uTime*.12)*.08,sin(uTime*.42)));
-      float hs=pow(max(0.,dot(vWN,hDir)),3.5)*2.2;
-      float cs=pow(max(0.,dot(vWN,-hDir)),5.)*.5;
+/* Disk lives in BH group, renderOrder 1 (after sphere) */
+const disk = new THREE.Mesh(
+  new THREE.RingGeometry(DISK_IN, DISK_OUT, 256, 64),
+  diskMat
+);
+disk.rotation.x  = Math.PI / 2 - 0.09;   // ~5° from fully edge-on → thin blade
+disk.renderOrder = 1;
+BH.add(disk);
 
-      vec3 col=uGlow*base;
-      col=mix(col,uHot*(base+hs),hs*.65);
-      col+=uGlow*cs*.3;
+/* Camera defaults — updated after GLB loads */
+const camStart = new THREE.Vector3(0, 2.8, 8.0);
+const camEnd   = new THREE.Vector3(0, 0.5, 0.4);
+let running = true;
+camera.position.copy(camStart);
+camera.lookAt(0, 0, 0);
 
-      gl_FragColor=vec4(col,(base+hs*.5+cs*.15)*.8);
-    }`,
-  transparent:true, side:THREE.BackSide,
-  blending:THREE.AdditiveBlending, depthWrite:false
-});
-
-/* ── 4. Photon ring ──────────────────────────── */
-const photMat = new THREE.ShaderMaterial({
-  uniforms:{uTime:{value:0}},
-  vertexShader:`varying vec3 vN,vVP;void main(){vec4 mv=modelViewMatrix*vec4(position,1.);vVP=-mv.xyz;vN=normalize(normalMatrix*normal);gl_Position=projectionMatrix*mv;}`,
-  fragmentShader:`
-    uniform float uTime;varying vec3 vN,vVP;
-    void main(){
-      float f=pow(1.-abs(dot(normalize(vVP),vN)),3.2);
-      float p=sin(uTime*2.4)*.08+.94;
-      gl_FragColor=vec4(vec3(1.,1.,1.),f*.32*p);
-    }`,
-  transparent:true, side:THREE.FrontSide,
-  depthWrite:false, blending:THREE.AdditiveBlending
-});
-
-/* ── Build scene geometry ────────────────────── */
-function buildBlackHole(sphereGeo) {
-  const group = new THREE.Group();
-
-  /* Black sphere (Spline geometry or fallback) */
-  const bhMat = new THREE.MeshBasicMaterial({color:0x000000, side:THREE.FrontSide, depthWrite:true});
-  const bh    = new THREE.Mesh(sphereGeo, bhMat);
-  bh.renderOrder = 0;
-  group.add(bh);
-
-  /* Accretion disk — nearly horizontal, ≤5° tilt
-     rotation.x = Math.PI/2 is perfectly edge-on from camera at Z.
-     We subtract 0.08 rad (~5°) to show a tiny top face. */
-  const disk = new THREE.Mesh(
-    new THREE.RingGeometry(DISK_IN, DISK_OUT, 256, 64),
-    diskMat
-  );
-  disk.rotation.x  = Math.PI/2 - 0.08;   // 5° from edge-on → nearly flat blade
-  disk.renderOrder = 1;
-  group.add(disk);
-
-  /* Lensing sphere — the bright white circle */
-  const lens = new THREE.Mesh(new THREE.SphereGeometry(R*1.055, 128, 64), lensMat);
-  lens.scale.setScalar(1.72);             // makes the halo extend beyond the sphere edge
-  lens.renderOrder = 2;
-  group.add(lens);
-
-  /* Outer glow sphere */
-  const glow = new THREE.Mesh(new THREE.SphereGeometry(R, 64, 32), glowMat);
-  glow.scale.setScalar(1.18);
-  glow.renderOrder = 3;
-  group.add(glow);
-
-  /* Photon ring */
-  const phot = new THREE.Mesh(new THREE.SphereGeometry(R*1.5, 64, 32), photMat);
-  phot.renderOrder = 4;
-  group.add(phot);
-
-  return group;
-}
-
-/* ── GLB load — extract Spline sphere halves ─── */
-let BH_GROUP = null;
-let running  = true;
-const camStart = new THREE.Vector3();
-const camEnd   = new THREE.Vector3();
-
+/* ── Fake progress bar while GLB fetches ── */
 let fakeP = 0;
-const fakeT = setInterval(()=>{
-  fakeP = Math.min(fakeP + Math.random()*3, 75);
-  loadFill.style.width = fakeP+'%';
-}, 90);
+const fakeT = setInterval(() => {
+  fakeP = Math.min(fakeP + Math.random() * 4, 80);
+  loadFill.style.width = fakeP + '%';
+}, 80);
 
-new GLTFLoader().load('./black_hole.glb', gltf=>{
-  clearInterval(fakeT);
-  loadFill.style.width = '100%';
+/* ── GLB Load ─────────────────────────────── */
+new GLTFLoader().load(
+  './black_hole.glb',
 
-  /* The GLB root has a 0.01 scale. After that:
-     Top sphere max = 86.64 → ×0.01 = 0.8664 units.
-     We want radius = R (1.0), so scale by 1/0.8664 ≈ 1.154 */
-  const glbRoot = gltf.scene;
-  const NORM    = 1.0 / 0.8664;
-  glbRoot.scale.setScalar(NORM);
+  /* onLoad */
+  gltf => {
+    clearInterval(fakeT);
+    loadFill.style.width = '100%';
+    console.log('[BH] ✓ black_hole.glb loaded');
 
-  /* Re-centre */
-  const b0  = new THREE.Box3().setFromObject(glbRoot);
-  const c0  = b0.getCenter(new THREE.Vector3());
-  glbRoot.position.sub(c0);
+    const root = gltf.scene;
 
-  /* Collect sphere half geometries, hide the flat Ellipse ring */
-  let sphereGeo = null;
-  glbRoot.traverse(child=>{
-    if(!child.isMesh) return;
-    const b   = new THREE.Box3().setFromObject(child);
-    const s   = b.getSize(new THREE.Vector3());
-    const flat = Math.min(s.x,s.y,s.z) / Math.max(s.x,s.y,s.z);
-    if(flat < 0.12){
-      child.visible = false; // hide Spline ring
-    } else {
-      // Use first sphere geometry found
-      if(!sphereGeo) sphereGeo = child.geometry.clone();
-      child.visible = false;
-    }
-  });
+    /* Normalise: GLB root bakes in scale=0.01.
+       Sphere radius after that = ~0.866 units.
+       Scale by 1/0.866 so sphere radius ≈ R=1.0 */
+    root.scale.setScalar(1.0 / 0.866);
 
-  /* Fallback if no sphere found */
-  if(!sphereGeo) sphereGeo = new THREE.SphereGeometry(R, 64, 64);
+    /* Shift so bounding-box centre lands at origin */
+    const box = new THREE.Box3().setFromObject(root);
+    root.position.sub(box.getCenter(new THREE.Vector3()));
 
-  BH_GROUP = buildBlackHole(sphereGeo);
-  scene.add(BH_GROUP);
+    /* Apply materials per-mesh */
+    root.traverse(child => {
+      if (!child.isMesh) return;
+      const b = new THREE.Box3().setFromObject(child);
+      const s = b.getSize(new THREE.Vector3());
+      const flatness = Math.min(s.x, s.y, s.z) / Math.max(s.x, s.y, s.z);
 
-  /* Camera: start from slightly above the disk plane, angled toward horizon.
-     This mimics the Interstellar viewpoint. */
-  camStart.set(0, R*0.55, R*7.8);
-  camEnd.set(0, 0, R*0.26);
-  camera.position.copy(camStart);
-  camera.lookAt(0, 0, 0);
+      if (flatness < 0.15) {
+        /* Flat mesh = Spline ring → hide (we use our own CodePen disk) */
+        child.visible = false;
+      } else {
+        /* Sphere half → pure black, writes depth, renders first */
+        child.material    = blackMat;
+        child.renderOrder = 0;
+      }
+    });
 
-  setTimeout(()=>{
+    BH.add(root);
+
+    /* Camera elevated so name clears the disk line */
+    camStart.set(0, 2.8, 8.0);
+    camEnd.set(0, 0.5, 0.4);
+    camera.position.copy(camStart);
+    camera.lookAt(0, 0, 0);
+
+    setTimeout(() => {
+      loadingEl.classList.add('done');
+      setTimeout(() => { loadingEl.style.display = 'none'; }, 900);
+    }, 300);
+  },
+
+  /* onProgress */
+  xhr => {
+    if (xhr.lengthComputable)
+      loadFill.style.width = Math.max(fakeP, xhr.loaded / xhr.total * 100) + '%';
+  },
+
+  /* onError — fallback to Three.js sphere */
+  err => {
+    clearInterval(fakeT);
+    console.error('[BH] GLB failed:', err.message || err);
+
+    const fallback = new THREE.Mesh(new THREE.SphereGeometry(R, 96, 64), blackMat);
+    fallback.renderOrder = 0;
+    BH.add(fallback);
+
+    camStart.set(0, 2.8, 8.0);
+    camEnd.set(0, 0.5, 0.4);
+    camera.position.copy(camStart);
+    camera.lookAt(0, 0, 0);
+
     loadingEl.classList.add('done');
-    setTimeout(()=>{ loadingEl.style.display='none'; }, 900);
-  }, 350);
+    setTimeout(() => { loadingEl.style.display = 'none'; }, 900);
+  }
+);
 
-}, xhr=>{
-  if(xhr.lengthComputable)
-    loadFill.style.width = Math.max(fakeP, xhr.loaded/xhr.total*100)+'%';
-
-}, ()=>{
-  /* Fallback: standard sphere */
-  clearInterval(fakeT);
-  BH_GROUP = buildBlackHole(new THREE.SphereGeometry(R, 128, 64));
-  scene.add(BH_GROUP);
-  camStart.set(0, R*.55, R*7.8); camEnd.set(0, 0, R*.26);
-  camera.position.copy(camStart); camera.lookAt(0, 0, 0);
-  loadingEl.classList.add('done');
-  setTimeout(()=>{ loadingEl.style.display='none'; }, 900);
-});
-
-/* ── Animate ─────────────────────────────────── */
+/* ── Render loop ──────────────────────────── */
 const clock = new THREE.Clock();
-
-function animate(){
-  if(!running) return;
+function animate() {
+  if (!running) return;
   requestAnimationFrame(animate);
-  const t=clock.getElapsedTime(), dt=clock.getDelta();
-
-  /* Very slow rotation — disk stays nearly horizontal */
-  if(BH_GROUP) BH_GROUP.rotation.y += dt * 0.06;
-
+  const t = clock.getElapsedTime(), dt = clock.getDelta();
+  BH.rotation.y += dt * 0.055;
   diskMat.uniforms.uTime.value = t;
   diskMat.uniforms.uCamPos.value.copy(camera.position);
-  lensMat.uniforms.uTime.value = t;
-  glowMat.uniforms.uTime.value = t;
-  photMat.uniforms.uTime.value = t;
-
   composer.render(dt);
 }
 animate();
 
-/* ── Resize ──────────────────────────────────── */
-window.addEventListener('resize',()=>{
-  camera.aspect=innerWidth/innerHeight;
+window.addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
   camera.updateProjectionMatrix();
-  renderer.setSize(innerWidth,innerHeight);
-  composer.setSize(innerWidth,innerHeight);
-  bloom.resolution.set(innerWidth,innerHeight);
+  renderer.setSize(innerWidth, innerHeight);
+  composer.setSize(innerWidth, innerHeight);
+  bloom.resolution.set(innerWidth, innerHeight);
 });
 
-/* ── Scroll → zoom camera ─────────────────────
-   Camera dives forward and downward, giving the
-   "going inside the black hole" 3-D perspective effect. */
-let introComplete=false, transitionFired=false;
+/* ── Scroll → zoom ────────────────────────── */
+let introComplete = false, transitionFired = false;
 
-/* Gentle idle drift */
-let idleT=0;
-const idleDrift=setInterval(()=>{
-  if(introComplete||scrollY>4){clearInterval(idleDrift);return;}
-  if(!BH_GROUP) return;
-  idleT+=.016;
+let idleT = 0;
+const idleDrift = setInterval(() => {
+  if (introComplete || scrollY > 4) { clearInterval(idleDrift); return; }
+  idleT += 0.016;
   camera.position.set(
-    camStart.x+Math.sin(idleT*.22)*.18,
-    camStart.y-idleT*.04,
-    camStart.z-idleT*.14
+    camStart.x + Math.sin(idleT * .2) * .08,
+    camStart.y - idleT * .015,
+    camStart.z - idleT * .05
   );
-  camera.lookAt(0,0,0);
-},16);
+  camera.lookAt(0, 0, 0);
+}, 16);
 
-function getP(){
-  const max=driverEl.offsetHeight-innerHeight;
-  return max>0?Math.min(scrollY/max,1):0;
+function getP() {
+  const max = driverEl.offsetHeight - innerHeight;
+  return max > 0 ? Math.min(scrollY / max, 1) : 0;
 }
 
-function updateCamera(p){
-  /* Cubic ease-in so the last 30% rockets toward the sphere */
-  const e=1-Math.pow(1-p,3);
+function updateCamera(p) {
+  const e = 1 - Math.pow(1 - p, 3);
   camera.position.set(
-    camStart.x,
-    camStart.y+(camEnd.y-camStart.y)*e,
-    camStart.z+(camEnd.z-camStart.z)*e
+    0,
+    camStart.y + (camEnd.y - camStart.y) * e,
+    camStart.z + (camEnd.z - camStart.z) * e
   );
-  /* Slowly tilt gaze down as we dive, lining up with disk plane */
-  camera.lookAt(0, -e*.15, 0);
+  camera.lookAt(0, 0, 0);
 }
 
-function beginTransition(){
-  transitionFired=true;
-  bloom.strength=2.8;
-  overlayEl.style.transition='opacity .65s ease';
-  overlayEl.style.opacity='1';
-  setTimeout(()=>{
-    overlayEl.style.background='#ffffff';
-    overlayEl.style.transition='opacity .06s ease';
-    overlayEl.style.opacity='.95';
-    setTimeout(()=>{
-      introComplete=true; running=false;
-      introEl.style.display='none'; driverEl.style.display='none';
-      window.scrollTo(0,0);
-      portfolioEl.classList.add('visible'); pgridEl.classList.add('on');
-      overlayEl.style.background='#000';
-      overlayEl.style.transition='opacity 1.1s ease .1s';
-      overlayEl.style.opacity='0';
-    },80);
-  },700);
+function beginTransition() {
+  transitionFired = true;
+  bloom.strength = 2.4;
+  overlayEl.style.transition = 'opacity .65s ease';
+  overlayEl.style.opacity = '1';
+  setTimeout(() => {
+    overlayEl.style.background = '#fff';
+    overlayEl.style.transition = 'opacity .06s ease';
+    overlayEl.style.opacity = '.92';
+    setTimeout(() => {
+      introComplete = true; running = false;
+      introEl.style.display = 'none';
+      driverEl.style.display = 'none';
+      window.scrollTo(0, 0);
+      portfolioEl.classList.add('visible');
+      pgridEl.classList.add('on');
+      overlayEl.style.background = '#000';
+      overlayEl.style.transition = 'opacity 1.1s ease .1s';
+      overlayEl.style.opacity = '0';
+    }, 80);
+  }, 700);
 }
 
-window.addEventListener('scroll',()=>{
-  if(introComplete||transitionFired) return;
-  const p=getP();
-  nameEl.style.opacity=Math.max(0,1-p*4.5)+'';
-  hintEl.style.opacity=Math.max(0,1-p*6)+'';
-  if(p>.15) vignetteEl.style.opacity=Math.min(1,(p-.15)/.5)+'';
-  bloom.strength=1.1+p*1.8;
-  if(BH_GROUP) updateCamera(p);
-  if(p>=.88&&!transitionFired) beginTransition();
-},{passive:true});
+window.addEventListener('scroll', () => {
+  if (introComplete || transitionFired) return;
+  const p = getP();
+  nameEl.style.opacity = Math.max(0, 1 - p * 4) + '';
+  hintEl.style.opacity = Math.max(0, 1 - p * 5) + '';
+  if (p > .12) vignetteEl.style.opacity = Math.min(1, (p - .12) / .5) + '';
+  bloom.strength = .55 + p * 2.0;
+  updateCamera(p);
+  if (p >= .88 && !transitionFired) beginTransition();
+}, { passive: true });
 </script>
 </body>
 </html>

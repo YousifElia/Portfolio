@@ -1,0 +1,1083 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Yousif Elia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=JetBrains+Mono:wght@300;400&family=Source+Sans+3:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #060606;
+      --fg:       #d8d0c4;
+      --fg-mid:   #9a9088;
+      --fg-muted: #5e5850;
+      --accent:   #c96832;
+      --border:   rgba(200,185,160,0.07);
+      --card:     #0c0a08;
+      --mono:     'JetBrains Mono', monospace;
+      --serif:    'Cormorant Garamond', serif;
+      --sans:     'Source Sans 3', sans-serif;
+    }
+
+    html { font-size: 100%; }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--sans);
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    /* ═══════════════════════════════════════
+       INTRO — BLACK HOLE
+    ═══════════════════════════════════════ */
+    #intro {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      background: #000003;
+    }
+
+    #intro canvas {
+      position: absolute !important;
+      inset: 0;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    #intro-name {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      pointer-events: none;
+      z-index: 16;
+      transition: opacity 0.6s ease;
+    }
+
+    #intro-name h1 {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 300;
+      letter-spacing: 0.22em;
+      color: rgba(255,255,255,0.88);
+      text-transform: uppercase;
+      text-shadow: 0 0 60px rgba(210,130,60,0.35);
+    }
+
+    #intro-name p {
+      font-family: var(--mono);
+      font-size: 0.54rem;
+      letter-spacing: 0.28em;
+      color: rgba(255,255,255,0.32);
+      text-transform: uppercase;
+      margin-top: 12px;
+    }
+
+    #scroll-hint {
+      position: absolute;
+      bottom: 38px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 16;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    #scroll-hint span {
+      font-family: var(--mono);
+      font-size: 0.52rem;
+      letter-spacing: 0.22em;
+      color: rgba(255,255,255,0.28);
+      text-transform: uppercase;
+    }
+
+    .hint-line {
+      width: 1px;
+      height: 30px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.25), transparent);
+      animation: hint-drop 2s ease-in-out infinite;
+    }
+
+    @keyframes hint-drop {
+      0%   { opacity: 0; transform: scaleY(0.4) translateY(-8px); }
+      40%  { opacity: 1; }
+      100% { opacity: 0; transform: scaleY(1) translateY(8px); }
+    }
+
+    /* vignette that closes in on zoom */
+    #vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 20%, #000 100%);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 14;
+    }
+
+    /* ═══════════════════════════════════════
+       TRANSITION OVERLAY
+    ═══════════════════════════════════════ */
+    #overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 40;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.8s ease;
+    }
+
+    /* ═══════════════════════════════════════
+       SCROLL DRIVER
+    ═══════════════════════════════════════ */
+    #driver {
+      height: 400vh;
+      position: relative;
+      z-index: 5;
+    }
+
+    /* ═══════════════════════════════════════
+       PORTFOLIO
+    ═══════════════════════════════════════ */
+    #portfolio {
+      position: relative;
+      min-height: 100vh;
+      background: var(--bg);
+      z-index: 6;
+      opacity: 0;
+      transition: opacity 1.1s ease;
+    }
+
+    #portfolio.visible { opacity: 1; }
+
+    /* subtle dot grid */
+    .p-grid {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: radial-gradient(circle, rgba(180,165,140,0.055) 1px, transparent 1px);
+      background-size: 38px 38px;
+      opacity: 0;
+      transition: opacity 1.2s ease 0.4s;
+    }
+    .p-grid.on { opacity: 1; }
+
+    .p-wrap {
+      position: relative;
+      z-index: 2;
+      max-width: 648px;
+      margin: 0 auto;
+      padding: 68px 28px 60px;
+    }
+
+    /* ─── Hero ────────────────────────────── */
+    .p-hero { margin-bottom: 60px; }
+
+    .p-name {
+      font-family: var(--serif);
+      font-size: clamp(2.6rem, 6vw, 3.9rem);
+      font-weight: 300;
+      letter-spacing: -0.01em;
+      color: #ede4d8;
+      line-height: 1;
+      margin-bottom: 9px;
+    }
+
+    .p-role {
+      font-family: var(--mono);
+      font-size: 0.56rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 22px;
+    }
+
+    .p-bio {
+      font-size: 0.86rem;
+      line-height: 1.84;
+      color: var(--fg-muted);
+      max-width: 510px;
+      margin-bottom: 18px;
+    }
+
+    .p-bio em { color: #8a8278; font-style: italic; }
+
+    .p-avail {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 0.56rem;
+      letter-spacing: 0.08em;
+      color: var(--fg-muted);
+    }
+
+    .p-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      animation: blink 2.5s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%,100% { opacity: 1; box-shadow: 0 0 0 0 rgba(201,104,50,0.5); }
+      50%      { opacity: 0.55; box-shadow: 0 0 0 5px rgba(201,104,50,0); }
+    }
+
+    /* ─── Sections ────────────────────────── */
+    .p-section { margin-bottom: 44px; }
+
+    .p-lbl {
+      display: block;
+      font-family: var(--mono);
+      font-size: 0.52rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+      margin-bottom: 16px;
+    }
+
+    .p-rule {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+
+    /* ─── Resume ──────────────────────────── */
+    .p-dl {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.06em;
+      color: var(--fg-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .p-dl:hover { color: var(--fg); }
+
+    /* ─── Projects ────────────────────────── */
+    .p-projs { display: grid; gap: 10px; }
+
+    .p-proj {
+      display: grid;
+      grid-template-columns: 50px 1fr 18px;
+      gap: 14px;
+      align-items: start;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--card);
+      text-decoration: none;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.15s, box-shadow 0.15s;
+    }
+
+    .p-proj:hover {
+      border-color: rgba(200,185,160,0.16);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 36px rgba(0,0,0,0.5);
+    }
+
+    .p-proj-yr {
+      font-family: var(--mono);
+      font-size: 0.56rem;
+      color: var(--fg-muted);
+      padding-top: 2px;
+    }
+
+    .p-proj-name {
+      font-size: 0.83rem;
+      color: #bfb6aa;
+      margin-bottom: 5px;
+      transition: color 0.2s;
+    }
+    .p-proj:hover .p-proj-name { color: #ede4d8; }
+
+    .p-proj-desc {
+      font-size: 0.71rem;
+      color: var(--fg-muted);
+      line-height: 1.68;
+      margin-bottom: 7px;
+    }
+
+    .p-proj-bullets {
+      padding-left: 14px;
+      margin-bottom: 8px;
+    }
+    .p-proj-bullets li {
+      font-size: 0.67rem;
+      color: #4e4840;
+      line-height: 1.65;
+      margin-bottom: 3px;
+    }
+
+    .p-tags { display: flex; flex-wrap: wrap; gap: 7px; }
+    .p-tags span {
+      font-family: var(--mono);
+      font-size: 0.52rem;
+      color: var(--fg-muted);
+      padding: 2px 7px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+
+    .p-proj-arr {
+      font-size: 0.74rem;
+      color: #2e2a26;
+      padding-top: 2px;
+      transition: color 0.2s, transform 0.2s;
+    }
+    .p-proj:hover .p-proj-arr {
+      color: var(--fg-muted);
+      transform: translate(2px,-2px);
+    }
+
+    /* ─── Experience ──────────────────────── */
+    .p-exp {
+      display: grid;
+      grid-template-columns: 116px 1fr;
+      gap: 14px;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--card);
+      margin-bottom: 10px;
+    }
+    .p-exp:last-child { margin-bottom: 0; }
+
+    .p-exp-date {
+      font-family: var(--mono);
+      font-size: 0.54rem;
+      color: var(--fg-muted);
+      line-height: 1.55;
+      padding-top: 2px;
+    }
+
+    .p-exp-title {
+      font-size: 0.82rem;
+      color: #bfb6aa;
+      margin-bottom: 2px;
+    }
+
+    .p-exp-org {
+      font-size: 0.7rem;
+      color: var(--fg-muted);
+      margin-bottom: 5px;
+    }
+
+    .p-exp-desc {
+      font-size: 0.66rem;
+      color: #4e4840;
+      line-height: 1.65;
+    }
+
+    /* ─── Interests ───────────────────────── */
+    .p-interests {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 10px;
+    }
+
+    .p-int {
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      padding: 15px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--card);
+      text-decoration: none;
+      transition: border-color 0.2s, transform 0.15s, box-shadow 0.15s;
+    }
+    .p-int:hover {
+      border-color: rgba(200,185,160,0.16);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.4);
+    }
+
+    .p-int-icon {
+      width: 38px; height: 38px;
+      border-radius: 9px;
+      background: rgba(200,185,160,0.04);
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--fg-muted);
+      flex-shrink: 0;
+    }
+
+    .p-int-title {
+      font-size: 0.79rem;
+      color: #bfb6aa;
+      margin-bottom: 4px;
+    }
+
+    .p-int-desc {
+      font-size: 0.64rem;
+      color: var(--fg-muted);
+      line-height: 1.62;
+    }
+
+    /* ─── Footer ──────────────────────────── */
+    .p-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 30px;
+      border-top: 1px solid var(--border);
+    }
+
+    .p-copy {
+      font-family: var(--mono);
+      font-size: 0.54rem;
+      color: #302c28;
+    }
+
+    .p-links { display: flex; gap: 20px; }
+    .p-links a {
+      font-family: var(--mono);
+      font-size: 0.57rem;
+      letter-spacing: 0.05em;
+      color: var(--fg-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .p-links a:hover { color: var(--fg); }
+
+    /* ─── Section fade-up ─────────────────── */
+    .p-section, .p-hero, .p-foot {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    #portfolio.visible .p-hero        { opacity:1; transform:none; transition-delay:0.08s; }
+    #portfolio.visible .p-section:nth-child(2) { opacity:1; transform:none; transition-delay:0.18s; }
+    #portfolio.visible .p-section:nth-child(3) { opacity:1; transform:none; transition-delay:0.26s; }
+    #portfolio.visible .p-section:nth-child(4) { opacity:1; transform:none; transition-delay:0.34s; }
+    #portfolio.visible .p-section:nth-child(5) { opacity:1; transform:none; transition-delay:0.42s; }
+    #portfolio.visible .p-foot        { opacity:1; transform:none; transition-delay:0.50s; }
+
+    /* ─── Responsive ──────────────────────── */
+    @media (max-width: 520px) {
+      .p-interests { grid-template-columns: 1fr; }
+      .p-exp { grid-template-columns: 1fr; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════
+       BLACK HOLE INTRO
+  ══════════════════════════════════════ -->
+  <div id="intro">
+    <!-- Three.js canvas appended here by JS -->
+    <div id="vignette"></div>
+
+    <div id="intro-name">
+      <h1>Yousif Elia</h1>
+      <p>Software Engineer</p>
+    </div>
+
+    <div id="scroll-hint">
+      <span>scroll to enter</span>
+      <div class="hint-line"></div>
+    </div>
+  </div>
+
+  <!-- Transition flash -->
+  <div id="overlay"></div>
+
+  <!-- Scroll driver — creates the scrollable height for the zoom animation -->
+  <div id="driver"></div>
+
+  <!-- ══════════════════════════════════════
+       PORTFOLIO
+  ══════════════════════════════════════ -->
+  <div class="p-grid" id="p-grid"></div>
+
+  <main id="portfolio">
+    <div class="p-wrap">
+
+      <!-- Hero -->
+      <div class="p-hero">
+        <h1 class="p-name">Yousif Elia</h1>
+        <p class="p-role">Software Engineer</p>
+        <p class="p-bio">Second-year Computer Science student at the University of Windsor, seeking internships. I build things to solve my own problems — focusing on clean code and understanding the <em>why</em> behind every decision.</p>
+        <span class="p-avail"><span class="p-dot"></span>Available for internships · Fall 2026</span>
+      </div>
+
+      <!-- Resume -->
+      <div class="p-section">
+        <span class="p-lbl">Resume</span>
+        <hr class="p-rule">
+        <a class="p-dl" href="YousifElia-SWE.pdf" target="_blank" rel="noopener">Download full resume ↗</a>
+      </div>
+
+      <!-- Projects -->
+      <div class="p-section">
+        <span class="p-lbl">Projects</span>
+        <div class="p-projs">
+
+          <a class="p-proj" href="#" target="_blank">
+            <span class="p-proj-yr">2026</span>
+            <div>
+              <p class="p-proj-name">myAdvice</p>
+              <p class="p-proj-desc">Centralized system for advising operations across teams.</p>
+              <ul class="p-proj-bullets">
+                <li>Engineered backend infrastructure using JavaFX and REST APIs to optimize data retrieval and improve system efficiency.</li>
+                <li>Built database systems with MariaDB to track user metrics and contractual data.</li>
+                <li>Containerized the app with Docker to enable seamless collaboration across a team.</li>
+                <li>Applied root cause analysis to redesign UI/UX workflows, reducing required user actions by ~80%.</li>
+              </ul>
+              <div class="p-tags"><span>JavaFX</span><span>REST</span><span>Hibernate</span><span>MariaDB</span><span>Docker</span></div>
+            </div>
+            <span class="p-proj-arr">↗</span>
+          </a>
+
+          <a class="p-proj" href="#" target="_blank">
+            <span class="p-proj-yr">2026</span>
+            <div>
+              <p class="p-proj-name">MedCheck</p>
+              <p class="p-proj-desc">Web application that compares a drug name, dosage, and price against crowdsourced and historical data to estimate a fair price range and flag potential overpayment.</p>
+              <div class="p-tags"><span>Web App</span><span>Pricing</span><span>Data</span></div>
+            </div>
+            <span class="p-proj-arr">↗</span>
+          </a>
+
+          <a class="p-proj" href="#" target="_blank">
+            <span class="p-proj-yr">2025</span>
+            <div>
+              <p class="p-proj-name">StudySync Dashboard</p>
+              <p class="p-proj-desc">Productivity dashboard for students to track assignments and focus time using the Pomodoro technique.</p>
+              <div class="p-tags"><span>React</span><span>Tailwind</span><span>Vite</span></div>
+            </div>
+            <span class="p-proj-arr">↗</span>
+          </a>
+
+          <a class="p-proj" href="#" target="_blank">
+            <span class="p-proj-yr">2025</span>
+            <div>
+              <p class="p-proj-name">Inventory API</p>
+              <p class="p-proj-desc">RESTful API for small business inventory management with JWT auth and role-based access.</p>
+              <div class="p-tags"><span>Node.js</span><span>Express</span><span>PostgreSQL</span></div>
+            </div>
+            <span class="p-proj-arr">↗</span>
+          </a>
+
+        </div>
+      </div>
+
+      <!-- Leadership -->
+      <div class="p-section">
+        <span class="p-lbl">Leadership</span>
+        <div class="p-exp">
+          <span class="p-exp-date">Mar 2026 – Present</span>
+          <div>
+            <p class="p-exp-title">Head of Events</p>
+            <p class="p-exp-org">University of Windsor</p>
+            <p class="p-exp-desc">Lead planning and coordination for student events and campus engagement.</p>
+          </div>
+        </div>
+        <div class="p-exp">
+          <span class="p-exp-date">Mar 2024 – Sep 2024</span>
+          <div>
+            <p class="p-exp-title">Math Tutor</p>
+            <p class="p-exp-org">Private Tutoring</p>
+            <p class="p-exp-desc">Tutored high school math and reinforced problem-solving fundamentals.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interests -->
+      <div class="p-section">
+        <span class="p-lbl">Personal Interests</span>
+        <div class="p-interests">
+          <a class="p-int" href="music.html">
+            <span class="p-int-icon">M</span>
+            <div>
+              <p class="p-int-title">Music</p>
+              <p class="p-int-desc">Album reviews and what I am currently listening to</p>
+            </div>
+          </a>
+          <a class="p-int" href="watching.html">
+            <span class="p-int-icon">S</span>
+            <div>
+              <p class="p-int-title">Shows</p>
+              <p class="p-int-desc">Shows and movies I am currently watching</p>
+            </div>
+          </a>
+          <a class="p-int" href="reading.html">
+            <span class="p-int-icon">R</span>
+            <div>
+              <p class="p-int-title">Reading</p>
+              <p class="p-int-desc">Books I am reading and personal reviews</p>
+            </div>
+          </a>
+          <a class="p-int" href="physical.html">
+            <span class="p-int-icon">P</span>
+            <div>
+              <p class="p-int-title">Physical</p>
+              <p class="p-int-desc">Training, sports, and staying active</p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="p-foot">
+        <span class="p-copy">© 2026 Yousif Elia</span>
+        <nav class="p-links">
+          <a href="#">GitHub</a>
+          <a href="#">LinkedIn</a>
+          <a href="#">Email</a>
+        </nav>
+      </footer>
+
+    </div>
+  </main>
+
+  <!-- ══════════════════════════════════════
+       THREE.JS — BLACK HOLE + SCROLL LOGIC
+  ══════════════════════════════════════ -->
+  <script type="module">
+    import * as THREE from "https://esm.sh/three@0.160.0";
+    import { EffectComposer } from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/EffectComposer.js';
+    import { RenderPass }     from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/UnrealBloomPass.js';
+
+    /* ─── Constants ─────────────────────── */
+    const BH_R       = 1.0;
+    const DISK_IN    = BH_R + 0.15;
+    const DISK_OUT   = 5.5;
+    const LENSING_R  = BH_R + 0.07;
+    const PHOTON_R   = BH_R * 1.5;
+
+    /* ─── Renderer / Camera ─────────────── */
+    const scene    = new THREE.Scene();
+    scene.fog      = new THREE.FogExp2(0x000004, 0.085);
+
+    const camera   = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 2000);
+    camera.position.set(0, 4.2, 9.5);
+    camera.lookAt(0, 0, 0);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+    renderer.outputColorSpace  = THREE.SRGBColorSpace;
+    renderer.toneMapping       = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 0.95;
+    document.getElementById('intro').appendChild(renderer.domElement);
+
+    /* ─── Post-processing ───────────────── */
+    const composer  = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, camera));
+    const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.7, 0.7, 0.75);
+    composer.addPass(bloom);
+
+    /* ─── Stars ─────────────────────────── */
+    const STAR_COUNT = 45000;
+    const sPos  = new Float32Array(STAR_COUNT * 3);
+    const sCol  = new Float32Array(STAR_COUNT * 3);
+    const sSize = new Float32Array(STAR_COUNT);
+    const sAlph = new Float32Array(STAR_COUNT);
+    const FIELD_R = 1200;
+    const white  = new THREE.Color(0xffffff);
+    const blue   = new THREE.Color(0xaaddff);
+    const yellow = new THREE.Color(0xffffaa);
+    const red    = new THREE.Color(0xffcccc);
+
+    for (let i = 0; i < STAR_COUNT; i++) {
+      const i3 = i * 3;
+      const phi   = Math.acos(1 - 2*(i+0.5)/STAR_COUNT);
+      const theta = 2 * Math.PI * i / ((1+Math.sqrt(5))/2);
+      const r     = Math.cbrt(Math.random()) * FIELD_R;
+      sPos[i3]   = r * Math.sin(phi) * Math.cos(theta);
+      sPos[i3+1] = r * Math.sin(phi) * Math.sin(theta);
+      sPos[i3+2] = r * Math.cos(phi);
+
+      const c  = white.clone();
+      const ct = Math.random();
+      if (ct < 0.5)       c.lerp(blue,   Math.random()*0.3);
+      else if (ct < 0.85) c.lerp(yellow, Math.random()*0.2);
+      else                c.lerp(red,    Math.random()*0.15);
+      c.multiplyScalar(Math.random()*0.4 + 0.6);
+      sCol[i3]=c.r; sCol[i3+1]=c.g; sCol[i3+2]=c.b;
+
+      const sv = Math.random();
+      sSize[i] = sv > 0.997 ? THREE.MathUtils.randFloat(1.5,2.2)
+               : sv > 0.98  ? THREE.MathUtils.randFloat(0.8,1.5)
+               :               THREE.MathUtils.randFloat(0.3,0.8);
+      sSize[i] *= (1 - Math.min(1, r/FIELD_R)*0.3);
+      sAlph[i] = Math.random()*0.5 + 0.5;
+    }
+
+    const starGeo = new THREE.BufferGeometry();
+    starGeo.setAttribute('position', new THREE.BufferAttribute(sPos, 3));
+    starGeo.setAttribute('color',    new THREE.BufferAttribute(sCol, 3));
+    starGeo.setAttribute('size',     new THREE.BufferAttribute(sSize, 1));
+    starGeo.setAttribute('alpha',    new THREE.BufferAttribute(sAlph, 1));
+
+    const starMat = new THREE.ShaderMaterial({
+      uniforms: { uTime: { value: 0 } },
+      vertexShader: `
+        attribute float size; attribute float alpha;
+        varying vec3 vColor; varying float vAlpha;
+        void main(){
+          vColor = color; vAlpha = alpha;
+          vec4 mv = modelViewMatrix * vec4(position,1.0);
+          gl_PointSize = size * (350.0 / -mv.z);
+          gl_Position  = projectionMatrix * mv;
+        }`,
+      fragmentShader: `
+        uniform float uTime;
+        varying vec3 vColor; varying float vAlpha;
+        void main(){
+          float r = length(gl_PointCoord - vec2(0.5));
+          float a = 1.0 - smoothstep(0.45, 0.5, r);
+          if(a < 0.01) discard;
+          float tw = sin(uTime*(vAlpha*1.5+0.5) + vAlpha*10.0)*0.12 + 0.9;
+          gl_FragColor = vec4(vColor*tw, a*vAlpha);
+        }`,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false, transparent: true, vertexColors: true
+    });
+
+    const stars = new THREE.Points(starGeo, starMat);
+    scene.add(stars);
+
+    /* ─── Black hole sphere ─────────────── */
+    const bh = new THREE.Mesh(
+      new THREE.SphereGeometry(BH_R, 64, 32),
+      new THREE.MeshBasicMaterial({ color: 0x000000 })
+    );
+    bh.renderOrder = 0;
+    scene.add(bh);
+
+    /* ─── Theme colors ──────────────────── */
+    const T = {
+      diskHot:  new THREE.Color(0xffffff),
+      diskMid:  new THREE.Color(0xffaa33),
+      diskEdge: new THREE.Color(0xcc331a),
+      diskDeep: new THREE.Color(0x661a00),
+      lensing:  new THREE.Color(0xffcc66),
+      glow:     new THREE.Color(0xff8833),
+      photon:   new THREE.Color(0xffbb44),
+    };
+
+    /* ─── Accretion disk ────────────────── */
+    const diskMat = new THREE.ShaderMaterial({
+      uniforms: {
+        uTime:      { value: 0 },
+        uColorHot:  { value: T.diskHot.clone() },
+        uColorMid:  { value: T.diskMid.clone() },
+        uColorEdge: { value: T.diskEdge.clone() },
+        uColorDeep: { value: T.diskDeep.clone() },
+        uCamPos:    { value: camera.position },
+      },
+      vertexShader: `
+        varying vec2 vUv; varying vec3 vPos; varying float vR;
+        void main(){
+          vUv=uv; vPos=position; vR=length(position.xy);
+          gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0);
+        }`,
+      fragmentShader: `
+        uniform float uTime;
+        uniform vec3  uColorHot,uColorMid,uColorEdge,uColorDeep,uCamPos;
+        varying vec2  vUv; varying vec3 vPos; varying float vR;
+
+        float rand(vec2 n){return fract(sin(dot(n,vec2(12.9898,4.1414)))*43758.5453);}
+        float noise(vec2 p){
+          vec2 ip=floor(p),u=fract(p); u=u*u*(3.0-2.0*u);
+          return mix(mix(rand(ip),rand(ip+vec2(1,0)),u.x),mix(rand(ip+vec2(0,1)),rand(ip+vec2(1,1)),u.x),u.y);
+        }
+        float fbm(vec2 p,float t){
+          float s=0.0,a=0.65,f=2.2;
+          for(int i=0;i<6;i++){s+=a*noise(p*f+vec2(t*0.27,t*0.18));f*=2.0;a*=0.5;}
+          return s;
+        }
+        void main(){
+          float inner=${DISK_IN.toFixed(2)},outer=${DISK_OUT.toFixed(2)};
+          float nP = clamp((vR-inner)/(outer-inner),0.0,1.0);
+          float angle=atan(vPos.y,vPos.x);
+          float ov=1.0/sqrt(max(vR,0.1));
+          float dop=0.0,beam=1.0;
+          if(length(uCamPos)>0.01){
+            vec3 tang=normalize(vec3(-vPos.y,vPos.x,0));
+            dop=dot(normalize(uCamPos-vPos),tang)*ov*0.3;
+            beam=clamp(1.0+dop*0.4,0.5,2.0);
+          }
+          float spd=4.8/(pow(vR,1.6)+1.1);
+          vec2 coord=vec2(vR*1.9,(angle-uTime*spd*0.52)*3.6);
+          float pat=fbm(coord,uTime*0.17)*0.8 + sin(angle*2.3+vR*5.8-uTime*0.6)*0.32*0.32;
+          float temp=clamp(ov*(1.0+pat*0.3),0.0,2.0);
+          vec3 ci=mix(uColorHot,uColorMid,smoothstep(0.0,0.4,nP)*(1.0-temp*0.3));
+          vec3 co=mix(uColorMid,uColorEdge,smoothstep(0.4,0.8,nP));
+          vec3 cd=mix(uColorEdge,uColorDeep,smoothstep(0.8,1.0,nP));
+          vec3 col=mix(mix(ci,co,smoothstep(0.4,0.8,nP)),cd,smoothstep(0.8,1.0,nP));
+          col*=vec3(1.0+dop*0.15,1.0,1.0-dop*0.15);
+          float bright=(pat+0.5)*1.15*pow(1.0-smoothstep(0.0,0.8,nP),1.9)*3.0*beam;
+          col*=bright;
+          float hot=smoothstep(3.0,5.0,bright)*smoothstep(0.0,0.1,nP);
+          col=mix(col,vec3(1.0),hot*0.45);
+          float ia=smoothstep(0.0,0.06,nP);
+          float oa=1.0-smoothstep(0.85,1.0,nP);
+          float na=clamp(pat*0.35+0.75,0.65,1.0);
+          gl_FragColor=vec4(clamp(col,0.0,8.0),ia*oa*na);
+        }`,
+      transparent:true, side:THREE.DoubleSide, depthWrite:false, blending:THREE.AdditiveBlending
+    });
+
+    const disk = new THREE.Mesh(
+      new THREE.RingGeometry(DISK_IN, DISK_OUT, 128, 64),
+      diskMat
+    );
+    disk.rotation.x  = Math.PI / 2.6;
+    disk.renderOrder  = 1;
+    scene.add(disk);
+
+    /* ─── Photon sphere ─────────────────── */
+    const photonMat = new THREE.ShaderMaterial({
+      uniforms: { uTime:{value:0}, uColor:{value:T.photon.clone()} },
+      vertexShader: `
+        varying vec3 vN,vVP;
+        void main(){
+          vec4 mv=modelViewMatrix*vec4(position,1.0);
+          vVP=-mv.xyz; vN=normalize(normalMatrix*normal);
+          gl_Position=projectionMatrix*mv;
+        }`,
+      fragmentShader: `
+        uniform float uTime; uniform vec3 uColor;
+        varying vec3 vN,vVP;
+        void main(){
+          float f=pow(1.0-abs(dot(normalize(vVP),vN)),3.0);
+          float p=sin(uTime*2.0)*0.1+0.9;
+          gl_FragColor=vec4(uColor,f*0.3*p);
+        }`,
+      transparent:true, side:THREE.FrontSide, depthWrite:false, blending:THREE.AdditiveBlending
+    });
+    const photon = new THREE.Mesh(new THREE.SphereGeometry(PHOTON_R,64,32), photonMat);
+    photon.renderOrder = 4;
+    scene.add(photon);
+
+    /* ─── Lensing sphere ────────────────── */
+    const lensMat = new THREE.ShaderMaterial({
+      uniforms: { uTime:{value:0}, uColor:{value:T.lensing.clone()} },
+      vertexShader: `
+        varying vec3 vN,vVP;
+        void main(){
+          vec4 mv=modelViewMatrix*vec4(position,1.0);
+          vVP=-mv.xyz; vN=normalize(normalMatrix*normal);
+          gl_Position=projectionMatrix*mv;
+        }`,
+      fragmentShader: `
+        uniform float uTime; uniform vec3 uColor;
+        varying vec3 vN,vVP;
+        float rand(vec2 n){return fract(sin(dot(n,vec2(12.9898,4.1414)))*43758.5453);}
+        float noise(vec2 p){
+          vec2 ip=floor(p),u=fract(p); u=u*u*(3.0-2.0*u);
+          float r=mix(mix(rand(ip),rand(ip+vec2(1,0)),u.x),mix(rand(ip+vec2(0,1)),rand(ip+vec2(1,1)),u.x),u.y);
+          return r*r;
+        }
+        void main(){
+          vec3 vd=normalize(vVP);
+          float fF=pow(1.0-abs(dot(vd,vN)),5.2);
+          float p=sin(uTime*0.55+length(vVP)*0.12)*0.12+0.95;
+          float nV=noise(vN.xy*7.0+uTime*0.35)*0.12;
+          vec3 dN=normalize(vN+vec3(nV,nV*0.6,0));
+          float a=fF*0.68*p+pow(1.0-abs(dot(vd,dN)),8.5)*0.38;
+          gl_FragColor=vec4(uColor,clamp(a,0.0,1.0)*0.9);
+        }`,
+      transparent:true, side:THREE.FrontSide, depthWrite:false, blending:THREE.AdditiveBlending
+    });
+    const lens = new THREE.Mesh(new THREE.SphereGeometry(LENSING_R,64,32), lensMat);
+    lens.scale.multiplyScalar(1.62);
+    lens.renderOrder = 2;
+    scene.add(lens);
+
+    /* ─── Glow sphere ───────────────────── */
+    const glowMat = new THREE.ShaderMaterial({
+      uniforms: { uTime:{value:0}, uGlow:{value:T.glow.clone()} },
+      vertexShader: `
+        varying vec3 vN,vVP;
+        void main(){
+          vec4 mv=modelViewMatrix*vec4(position,1.0);
+          vVP=-mv.xyz; vN=normalize(normalMatrix*normal);
+          gl_Position=projectionMatrix*mv;
+        }`,
+      fragmentShader: `
+        uniform float uTime; uniform vec3 uGlow;
+        varying vec3 vN,vVP;
+        float rand(vec2 n){return fract(sin(dot(n,vec2(12.9898,4.1414)))*43758.5453);}
+        float noise(vec2 p){
+          vec2 ip=floor(p),u=fract(p); u=u*u*(3.0-2.0*u);
+          return mix(mix(rand(ip),rand(ip+vec2(1,0)),u.x),mix(rand(ip+vec2(0,1)),rand(ip+vec2(1,1)),u.x),u.y);
+        }
+        void main(){
+          float i=pow(0.68-dot(vN,normalize(vVP)),2.6);
+          float p=sin(uTime*0.7+vN.y*1.8)*0.18+0.88;
+          float f=noise(vN.xz*9.0+uTime*1.8)*0.35+0.75;
+          gl_FragColor=vec4(uGlow,clamp(i*p*f,0.0,1.0)*0.92);
+        }`,
+      transparent:true, side:THREE.BackSide, blending:THREE.AdditiveBlending, depthWrite:false
+    });
+    const glow = new THREE.Mesh(new THREE.SphereGeometry(BH_R,64,32), glowMat);
+    glow.scale.multiplyScalar(1.07 * 1.16);
+    glow.renderOrder = 3;
+    scene.add(glow);
+
+    /* ─── Animate loop ──────────────────── */
+    const clock = new THREE.Clock();
+    let running = true;
+
+    function animate() {
+      if (!running) return;
+      requestAnimationFrame(animate);
+      const t  = clock.getElapsedTime();
+      const dt = clock.getDelta();
+
+      starMat.uniforms.uTime.value   = t;
+      diskMat.uniforms.uTime.value   = t;
+      diskMat.uniforms.uCamPos.value.copy(camera.position);
+      lensMat.uniforms.uTime.value   = t;
+      glowMat.uniforms.uTime.value   = t;
+      photonMat.uniforms.uTime.value = t;
+
+      stars.rotation.y += dt * 0.004;
+      stars.rotation.x += dt * 0.0015;
+
+      composer.render(dt);
+    }
+    animate();
+
+    /* ─── Resize ────────────────────────── */
+    window.addEventListener('resize', () => {
+      camera.aspect = innerWidth / innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(innerWidth, innerHeight);
+      composer.setSize(innerWidth, innerHeight);
+      bloom.resolution.set(innerWidth, innerHeight);
+    });
+
+    /* ═══════════════════════════════════════
+       SCROLL-DRIVEN CAMERA + TRANSITION
+    ═══════════════════════════════════════ */
+    const intro    = document.getElementById('intro');
+    const overlay  = document.getElementById('overlay');
+    const driver   = document.getElementById('driver');
+    const portfolio= document.getElementById('portfolio');
+    const pgrid    = document.getElementById('p-grid');
+    const vignette = document.getElementById('vignette');
+    const hint     = document.getElementById('scroll-hint');
+    const nameLbl  = document.getElementById('intro-name');
+
+    let introComplete    = false;
+    let transitionFired  = false;
+
+    function getProgress() {
+      const max = driver.offsetHeight - innerHeight;
+      return max > 0 ? Math.min(window.scrollY / max, 1) : 0;
+    }
+
+    /* Camera path: start (0,4.2,9.5) → end (0,0.25,0.55) */
+    function updateCamera(p) {
+      const e  = 1 - Math.pow(1 - p, 2.8); // strong ease-in
+      // slight leftward spiral as we approach
+      const x  = Math.sin(p * Math.PI * 0.25) * 0.8 * (1 - e);
+      const y  = 4.2  + (0.25  - 4.2)  * e;
+      const z  = 9.5  + (0.55  - 9.5)  * e;
+      camera.position.set(x, y, z);
+      camera.lookAt(0, 0, 0);
+    }
+
+    function beginTransition() {
+      transitionFired = true;
+
+      /* fade to black */
+      overlay.style.transition  = 'opacity 0.75s ease';
+      overlay.style.opacity     = '1';
+
+      setTimeout(() => {
+        /* white flash — crossing the event horizon */
+        overlay.style.background   = '#ffffff';
+        overlay.style.transition   = 'opacity 0.08s ease';
+        overlay.style.opacity      = '0.85';
+
+        setTimeout(() => {
+          /* show portfolio */
+          introComplete = true;
+          running = false;          // stop render loop
+          intro.style.display = 'none';
+          driver.style.display= 'none';
+          window.scrollTo(0, 0);
+
+          portfolio.classList.add('visible');
+          pgrid.classList.add('on');
+
+          /* fade overlay out from white → transparent */
+          overlay.style.background  = '#000000';
+          overlay.style.transition  = 'opacity 1s ease 0.15s';
+          overlay.style.opacity     = '0';
+
+        }, 100);
+      }, 800);
+    }
+
+    window.addEventListener('scroll', () => {
+      if (introComplete || transitionFired) return;
+
+      const p = getProgress();
+
+      /* fade name + hint */
+      nameLbl.style.opacity = Math.max(0, 1 - p * 3.5).toString();
+      hint.style.opacity    = Math.max(0, 1 - p * 4.5).toString();
+
+      /* vignette closes in */
+      if (p > 0.25) {
+        vignette.style.opacity = Math.min(1, (p - 0.25) / 0.55).toString();
+      }
+
+      /* bloom intensifies on approach */
+      bloom.strength = 0.7 + p * 1.2;
+
+      /* camera zoom */
+      updateCamera(p);
+
+      /* trigger transition near the end */
+      if (p >= 0.88 && !transitionFired) {
+        beginTransition();
+      }
+    }, { passive: true });
+
+    /* Initial subtle camera drift before user scrolls */
+    let initDrift = 0;
+    const driftId = setInterval(() => {
+      if (introComplete || window.scrollY > 5) { clearInterval(driftId); return; }
+      initDrift += 0.003;
+      camera.position.set(
+        Math.sin(initDrift * 0.4) * 0.3,
+        4.2 - initDrift * 0.08,
+        9.5 - initDrift * 0.15
+      );
+      camera.lookAt(0, 0, 0);
+      if (initDrift > 2) clearInterval(driftId);
+    }, 16);
+
+  </script>
+</body>
+</html>

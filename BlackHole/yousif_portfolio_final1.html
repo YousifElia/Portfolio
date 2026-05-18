@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Yousif Elia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=JetBrains+Mono:wght@300;400&family=Source+Sans+3:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#060606;--fg:#d8d0c4;--fg-muted:#5e5850;
+      --accent:#c96832;--border:rgba(200,185,160,0.07);--card:#0c0a08;
+      --mono:'JetBrains Mono',monospace;--serif:'Cormorant Garamond',serif;
+      --sans:'Source Sans 3',sans-serif;
+    }
+    html{font-size:100%}
+    body{background:var(--bg);color:var(--fg);font-family:var(--sans);overflow-y:auto;overflow-x:hidden}
+
+    #loading{position:fixed;inset:0;z-index:100;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;transition:opacity 0.8s ease}
+    #loading.done{opacity:0;pointer-events:none}
+    .load-name{font-family:var(--serif);font-size:clamp(1.6rem,4vw,2.4rem);font-weight:300;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+    .load-bar{width:160px;height:1px;background:rgba(255,255,255,.1);overflow:hidden}
+    .load-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#ffaa55);transition:width .25s ease}
+    .load-sub{font-family:var(--mono);font-size:.5rem;letter-spacing:.2em;color:rgba(255,255,255,.18);text-transform:uppercase}
+
+    #intro{position:fixed;inset:0;z-index:10;background:#000}
+    #intro canvas{position:absolute!important;inset:0;width:100%!important;height:100%!important}
+
+    /* Name: 36% from top — sits above the disk line which lands ~55–62% of screen */
+    #intro-name{
+      position:absolute;top:36%;left:50%;transform:translate(-50%,-50%);
+      text-align:center;pointer-events:none;z-index:16;transition:opacity .5s ease;
+    }
+    #intro-name h1{
+      font-family:var(--serif);font-size:clamp(2rem,4.8vw,3.2rem);font-weight:300;
+      letter-spacing:.18em;color:rgba(255,255,255,.9);text-transform:uppercase;
+      text-shadow:0 2px 40px rgba(0,0,0,.9),0 0 80px rgba(0,0,0,.7);
+    }
+    #intro-name p{
+      font-family:var(--mono);font-size:.53rem;letter-spacing:.26em;
+      color:rgba(255,255,255,.32);text-transform:uppercase;margin-top:12px;
+      text-shadow:0 1px 16px rgba(0,0,0,.95);
+    }
+
+    #scroll-hint{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);z-index:16;display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:none;transition:opacity .4s ease}
+    #scroll-hint span{font-family:var(--mono);font-size:.5rem;letter-spacing:.22em;color:rgba(255,255,255,.2);text-transform:uppercase}
+    .hint-line{width:1px;height:28px;background:linear-gradient(to bottom,rgba(255,255,255,.18),transparent);animation:hint-drop 2s ease-in-out infinite}
+    @keyframes hint-drop{0%{opacity:0;transform:scaleY(.4) translateY(-8px)}40%{opacity:1}100%{opacity:0;transform:scaleY(1) translateY(8px)}}
+
+    #vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 30%,#000 100%);opacity:0;pointer-events:none;z-index:14}
+    #overlay{position:fixed;inset:0;background:#000;z-index:40;opacity:0;pointer-events:none}
+    #driver{height:420vh;position:relative;z-index:5}
+
+    #portfolio{position:relative;min-height:100vh;background:var(--bg);z-index:6;opacity:0;transition:opacity 1.1s ease}
+    #portfolio.visible{opacity:1}
+    .p-grid{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(circle,rgba(180,165,140,.05) 1px,transparent 1px);background-size:38px 38px;opacity:0;transition:opacity 1.2s ease .4s}
+    .p-grid.on{opacity:1}
+    .p-wrap{position:relative;z-index:2;max-width:648px;margin:0 auto;padding:68px 28px 60px}
+    .p-hero{margin-bottom:60px}
+    .p-name{font-family:var(--serif);font-size:clamp(2.6rem,6vw,3.9rem);font-weight:300;color:#ede4d8;line-height:1;margin-bottom:9px}
+    .p-role{font-family:var(--mono);font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:22px}
+    .p-bio{font-size:.86rem;line-height:1.84;color:var(--fg-muted);max-width:510px;margin-bottom:18px}
+    .p-bio em{color:#8a8278;font-style:italic}
+    .p-avail{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.56rem;color:var(--fg-muted)}
+    .p-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;animation:blink 2.5s ease-in-out infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.55}}
+    .p-section{margin-bottom:44px}
+    .p-lbl{display:block;font-family:var(--mono);font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:16px}
+    .p-rule{border:none;border-top:1px solid var(--border);margin-bottom:16px}
+    .p-dl{display:inline-flex;gap:6px;font-family:var(--mono);font-size:.58rem;color:var(--fg-muted);text-decoration:none;transition:color .2s}
+    .p-dl:hover{color:var(--fg)}
+    .p-projs{display:grid;gap:10px}
+    .p-proj{display:grid;grid-template-columns:50px 1fr 18px;gap:14px;align-items:start;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--card);text-decoration:none;transition:border-color .2s,transform .15s,box-shadow .15s}
+    .p-proj:hover{border-color:rgba(200,185,160,.16);transform:translateY(-1px);box-shadow:0 10px 36px rgba(0,0,0,.5)}
+    .p-proj-yr{font-family:var(--mono);font-size:.56rem;color:var(--fg-muted);padding-top:2px}
+    .p-proj-name{font-size:.83rem;color:#bfb6aa;margin-bottom:5px;transition:color .2s}
+    .p-proj:hover .p-proj-name{color:#ede4d8}
+    .p-proj-desc{font-size:.71rem;color:var(--fg-muted);line-height:1.68;margin-bottom:7px}
+    .p-proj-bullets{padding-left:14px;margin-bottom:8px}
+    .p-proj-bullets li{font-size:.67rem;color:#4e4840;line-height:1.65;margin-bottom:3px}
+    .p-tags{display:flex;flex-wrap:wrap;gap:7px}
+    .p-tags span{font-family:var(--mono);font-size:.52rem;color:var(--fg-muted);padding:2px 7px;border:1px solid var(--border);border-radius:4px}
+    .p-proj-arr{font-size:.74rem;color:#2e2a26;padding-top:2px;transition:color .2s,transform .2s}
+    .p-proj:hover .p-proj-arr{color:var(--fg-muted);transform:translate(2px,-2px)}
+    .p-exp{display:grid;grid-template-columns:116px 1fr;gap:14px;padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:var(--card);margin-bottom:10px}
+    .p-exp:last-child{margin-bottom:0}
+    .p-exp-date{font-family:var(--mono);font-size:.54rem;color:var(--fg-muted);line-height:1.55;padding-top:2px}
+    .p-exp-title{font-size:.82rem;color:#bfb6aa;margin-bottom:2px}
+    .p-exp-org{font-size:.7rem;color:var(--fg-muted);margin-bottom:5px}
+    .p-exp-desc{font-size:.66rem;color:#4e4840;line-height:1.65}
+    .p-interests{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+    .p-int{display:flex;align-items:flex-start;gap:13px;padding:15px;border:1px solid var(--border);border-radius:10px;background:var(--card);text-decoration:none;transition:border-color .2s,transform .15s,box-shadow .15s}
+    .p-int:hover{border-color:rgba(200,185,160,.16);transform:translateY(-1px);box-shadow:0 8px 28px rgba(0,0,0,.4)}
+    .p-int-icon{width:38px;height:38px;border-radius:9px;background:rgba(200,185,160,.04);border:1px solid var(--border);display:grid;place-items:center;font-family:var(--mono);font-size:.68rem;color:var(--fg-muted);flex-shrink:0}
+    .p-int-title{font-size:.79rem;color:#bfb6aa;margin-bottom:4px}
+    .p-int-desc{font-size:.64rem;color:var(--fg-muted);line-height:1.62}
+    .p-foot{display:flex;justify-content:space-between;align-items:center;padding-top:30px;border-top:1px solid var(--border)}
+    .p-copy{font-family:var(--mono);font-size:.54rem;color:#302c28}
+    .p-links{display:flex;gap:20px}
+    .p-links a{font-family:var(--mono);font-size:.57rem;color:var(--fg-muted);text-decoration:none;transition:color .2s}
+    .p-links a:hover{color:var(--fg)}
+    .p-section,.p-hero,.p-foot{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+    #portfolio.visible .p-hero                {opacity:1;transform:none;transition-delay:.1s}
+    #portfolio.visible .p-section:nth-child(2){opacity:1;transform:none;transition-delay:.2s}
+    #portfolio.visible .p-section:nth-child(3){opacity:1;transform:none;transition-delay:.29s}
+    #portfolio.visible .p-section:nth-child(4){opacity:1;transform:none;transition-delay:.38s}
+    #portfolio.visible .p-section:nth-child(5){opacity:1;transform:none;transition-delay:.47s}
+    #portfolio.visible .p-foot               {opacity:1;transform:none;transition-delay:.56s}
+    @media(max-width:520px){.p-interests{grid-template-columns:1fr}.p-exp{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="load-name">Yousif Elia</div>
+  <div class="load-bar"><div class="load-fill" id="load-fill"></div></div>
+  <div class="load-sub">Loading scene</div>
+</div>
+
+<div id="intro">
+  <div id="vignette"></div>
+  <div id="intro-name">
+    <h1>Yousif Elia</h1>
+    <p>Software Engineer</p>
+  </div>
+  <div id="scroll-hint">
+    <span>scroll to enter</span>
+    <div class="hint-line"></div>
+  </div>
+</div>
+
+<div id="overlay"></div>
+<div id="driver"></div>
+<div class="p-grid" id="p-grid"></div>
+
+<main id="portfolio">
+  <div class="p-wrap">
+    <div class="p-hero">
+      <h1 class="p-name">Yousif Elia</h1>
+      <p class="p-role">Software Engineer</p>
+      <p class="p-bio">Second-year Computer Science student at the University of Windsor, seeking internships. I build things that solve real problems — focused on clean architecture and understanding the <em>why</em> behind every decision.</p>
+      <span class="p-avail"><span class="p-dot"></span>Available for internships · Fall 2026</span>
+    </div>
+
+    <div class="p-section">
+      <span class="p-lbl">Resume</span><hr class="p-rule">
+      <a class="p-dl" href="YousifElia-SWE.pdf" target="_blank" rel="noopener">Download full resume ↗</a>
+    </div>
+
+    <div class="p-section">
+      <span class="p-lbl">Projects</span>
+      <div class="p-projs">
+        <a class="p-proj" href="#" target="_blank">
+          <span class="p-proj-yr">2026</span>
+          <div>
+            <p class="p-proj-name">myAdvice</p>
+            <p class="p-proj-desc">Centralized system for advising operations across teams.</p>
+            <ul class="p-proj-bullets">
+              <li>Engineered backend infrastructure with JavaFX and REST APIs.</li>
+              <li>Built MariaDB schemas to track user metrics and contractual data.</li>
+              <li>Containerized with Docker for seamless team collaboration.</li>
+              <li>Redesigned UX workflows, cutting required user actions by ~80%.</li>
+            </ul>
+            <div class="p-tags"><span>JavaFX</span><span>REST</span><span>Hibernate</span><span>MariaDB</span><span>Docker</span></div>
+          </div>
+          <span class="p-proj-arr">↗</span>
+        </a>
+        <a class="p-proj" href="#" target="_blank">
+          <span class="p-proj-yr">2026</span>
+          <div>
+            <p class="p-proj-name">MedCheck</p>
+            <p class="p-proj-desc">Web app that compares drug name, dosage, and price against crowdsourced data to flag potential overpayment.</p>
+            <div class="p-tags"><span>Web App</span><span>Pricing</span><span>Data</span></div>
+          </div>
+          <span class="p-proj-arr">↗</span>
+        </a>
+        <a class="p-proj" href="#" target="_blank">
+          <span class="p-proj-yr">2025</span>
+          <div>
+            <p class="p-proj-name">StudySync Dashboard</p>
+            <p class="p-proj-desc">Productivity dashboard for students tracking assignments and focus sessions with the Pomodoro technique.</p>
+            <div class="p-tags"><span>React</span><span>Tailwind</span><span>Vite</span></div>
+          </div>
+          <span class="p-proj-arr">↗</span>
+        </a>
+        <a class="p-proj" href="#" target="_blank">
+          <span class="p-proj-yr">2025</span>
+          <div>
+            <p class="p-proj-name">Inventory API</p>
+            <p class="p-proj-desc">RESTful API for small-business inventory management with JWT auth and role-based access control.</p>
+            <div class="p-tags"><span>Node.js</span><span>Express</span><span>PostgreSQL</span></div>
+          </div>
+          <span class="p-proj-arr">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="p-section">
+      <span class="p-lbl">Leadership</span>
+      <div class="p-exp">
+        <span class="p-exp-date">Mar 2026 – Present</span>
+        <div>
+          <p class="p-exp-title">Head of Events</p>
+          <p class="p-exp-org">University of Windsor</p>
+          <p class="p-exp-desc">Lead planning and coordination for student events and campus engagement initiatives.</p>
+        </div>
+      </div>
+      <div class="p-exp">
+        <span class="p-exp-date">Mar 2024 – Sep 2024</span>
+        <div>
+          <p class="p-exp-title">Math Tutor</p>
+          <p class="p-exp-org">Private Tutoring</p>
+          <p class="p-exp-desc">Tutored high school students in mathematics, reinforcing problem-solving fundamentals.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-section">
+      <span class="p-lbl">Personal Interests</span>
+      <div class="p-interests">
+        <a class="p-int" href="music.html"><span class="p-int-icon">M</span><div><p class="p-int-title">Music</p><p class="p-int-desc">Album reviews and current listening</p></div></a>
+        <a class="p-int" href="watching.html"><span class="p-int-icon">S</span><div><p class="p-int-title">Shows</p><p class="p-int-desc">Shows and films I'm watching</p></div></a>
+        <a class="p-int" href="reading.html"><span class="p-int-icon">R</span><div><p class="p-int-title">Reading</p><p class="p-int-desc">Books and personal reviews</p></div></a>
+        <a class="p-int" href="physical.html"><span class="p-int-icon">P</span><div><p class="p-int-title">Physical</p><p class="p-int-desc">Training, sports, staying active</p></div></a>
+      </div>
+    </div>
+
+    <footer class="p-foot">
+      <span class="p-copy">© 2026 Yousif Elia</span>
+      <nav class="p-links">
+        <a href="#">GitHub</a>
+        <a href="#">LinkedIn</a>
+        <a href="#">Email</a>
+      </nav>
+    </footer>
+  </div>
+</main>
+
+<script type="module">
+import * as THREE from 'https://esm.sh/three@0.160.0';
+import { GLTFLoader }      from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
+import { EffectComposer }  from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass }      from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/UnrealBloomPass.js';
+
+const $ = id => document.getElementById(id);
+const loadingEl = $('loading'), loadFill = $('load-fill'),
+      introEl = $('intro'), overlayEl = $('overlay'),
+      driverEl = $('driver'), portfolioEl = $('portfolio'),
+      pgridEl = $('p-grid'), vignetteEl = $('vignette'),
+      hintEl = $('scroll-hint'), nameEl = $('intro-name');
+
+/* ── Renderer ─────────────────────────────── */
+const scene    = new THREE.Scene();
+const camera   = new THREE.PerspectiveCamera(52, innerWidth/innerHeight, 0.01, 3000);
+const renderer = new THREE.WebGLRenderer({ antialias:true, powerPreference:'high-performance' });
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+renderer.outputColorSpace  = THREE.SRGBColorSpace;
+renderer.toneMapping       = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
+introEl.appendChild(renderer.domElement);
+
+/* ── Bloom — kept low so sphere stays dark ── */
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(
+  new THREE.Vector2(innerWidth, innerHeight),
+  0.55,   // strength
+  0.60,   // radius
+  0.82    // threshold — only hottest disk parts glow
+);
+composer.addPass(bloom);
+
+/* ── Sparse stars (2500) ──────────────────── */
+const N = 2500;
+const sp = new Float32Array(N*3), sc = new Float32Array(N*3), ss = new Float32Array(N);
+for (let i = 0; i < N; i++) {
+  const phi = Math.acos(1-2*(i+.5)/N), th = 2*Math.PI*i/1.618;
+  const r = 400 + Math.random()*600;
+  sp[i*3]=r*Math.sin(phi)*Math.cos(th); sp[i*3+1]=r*Math.sin(phi)*Math.sin(th); sp[i*3+2]=r*Math.cos(phi);
+  sc[i*3]=0.92; sc[i*3+1]=0.95; sc[i*3+2]=1.0;
+  ss[i] = Math.random()<.95 ? Math.random()*.4+.1 : Math.random()*.9+.4;
+}
+const sGeo = new THREE.BufferGeometry();
+sGeo.setAttribute('position', new THREE.BufferAttribute(sp,3));
+sGeo.setAttribute('color',    new THREE.BufferAttribute(sc,3));
+sGeo.setAttribute('size',     new THREE.BufferAttribute(ss,1));
+scene.add(new THREE.Points(sGeo, new THREE.ShaderMaterial({
+  vertexShader:`attribute float size;attribute vec3 color;varying vec3 vC;void main(){vC=color;vec4 mv=modelViewMatrix*vec4(position,1.);gl_PointSize=size*(300./-mv.z);gl_Position=projectionMatrix*mv;}`,
+  fragmentShader:`varying vec3 vC;void main(){float r=length(gl_PointCoord-.5);float a=1.-smoothstep(.38,.5,r);if(a<.01)discard;gl_FragColor=vec4(vC,a*.7);}`,
+  blending:THREE.AdditiveBlending,depthWrite:false,transparent:true
+})));
+
+/* ── Scene constants ──────────────────────── */
+const R       = 1.0;
+const DISK_IN = R * 1.18;
+const DISK_OUT= R * 7.5;
+
+/* ── Disk material (CodePen shader) ──────── */
+const diskMat = new THREE.ShaderMaterial({
+  uniforms:{
+    uTime:     { value: 0 },
+    uCamPos:   { value: new THREE.Vector3() },
+    uColorHot: { value: new THREE.Color(0xffffff) },
+    uColorMid: { value: new THREE.Color(0xffcc55) },
+    uColorEdge:{ value: new THREE.Color(0xff7711) },
+    uColorDeep:{ value: new THREE.Color(0x661100) },
+  },
+  vertexShader:`
+    varying vec3 vPos; varying float vR;
+    void main(){
+      vPos = position;
+      vR   = length(position.xy);
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }`,
+  fragmentShader:`
+    uniform float uTime;
+    uniform vec3  uColorHot, uColorMid, uColorEdge, uColorDeep, uCamPos;
+    varying vec3  vPos;
+    varying float vR;
+
+    float rand(vec2 n){ return fract(sin(dot(n, vec2(12.9898,4.1414))) * 43758.5453); }
+    float noise(vec2 p){
+      vec2 ip = floor(p), u = fract(p);
+      u = u*u*(3.0-2.0*u);
+      return mix(
+        mix(rand(ip), rand(ip+vec2(1,0)), u.x),
+        mix(rand(ip+vec2(0,1)), rand(ip+vec2(1,1)), u.x), u.y);
+    }
+    float fbm(vec2 p, float t){
+      float s=0.0, a=0.65, f=2.2;
+      for(int i=0;i<6;i++){ s+=a*noise(p*f+vec2(t*.27,t*.18)); f*=2.0; a*=0.5; }
+      return s;
+    }
+
+    void main(){
+      float inner = ${DISK_IN.toFixed(4)};
+      float outer = ${DISK_OUT.toFixed(4)};
+      float nP    = clamp((vR - inner) / (outer - inner), 0.0, 1.0);
+      float angle = atan(vPos.y, vPos.x);
+      float ov    = 1.0 / sqrt(max(vR, 0.1));
+
+      /* Doppler brightening on approaching side */
+      float dop = 0.0, beam = 1.0;
+      if(length(uCamPos) > 0.01){
+        vec3 tang = normalize(vec3(-vPos.y, vPos.x, 0.0));
+        dop  = dot(normalize(uCamPos - vPos), tang) * ov * 0.3;
+        beam = clamp(1.0 + dop * 0.4, 0.5, 2.0);
+      }
+
+      float spd   = 4.8 / (pow(vR, 1.6) + 1.1);
+      vec2  coord = vec2(vR * 1.9, (angle - uTime * spd * 0.52) * 3.6);
+      float pat   = fbm(coord, uTime * 0.17) * 0.8
+                  + sin(angle*2.3 + vR*5.8 - uTime*0.6) * 0.1;
+
+      /* Colour gradient inner→outer */
+      vec3 ci  = mix(uColorHot,  uColorMid,  smoothstep(0.0, 0.4, nP));
+      vec3 co  = mix(uColorMid,  uColorEdge, smoothstep(0.4, 0.8, nP));
+      vec3 cd  = mix(uColorEdge, uColorDeep, smoothstep(0.8, 1.0, nP));
+      vec3 col = mix(mix(ci, co, smoothstep(0.4, 0.8, nP)), cd, smoothstep(0.8, 1.0, nP));
+      col *= vec3(1.0 + dop*0.15, 1.0, 1.0 - dop*0.15);
+
+      float radBright = pow(1.0 - smoothstep(0.0, 0.9, nP), 2.2) * 3.4;
+      float bright    = (pat + 0.5) * radBright * beam;
+      col *= bright;
+      /* White-hot inner edge */
+      col  = mix(col, vec3(1.0), smoothstep(3.0,6.0,bright)*smoothstep(0.0,0.06,nP)*0.5);
+
+      float ia = smoothstep(0.0, 0.05, nP);
+      float oa = 1.0 - smoothstep(0.9, 1.0, nP);
+      gl_FragColor = vec4(clamp(col, 0.0, 10.0), ia * oa * clamp(pat*0.3+0.8, 0.5, 1.0));
+    }`,
+  transparent: true,
+  side:        THREE.DoubleSide,
+  depthWrite:  false,
+  depthTest:   true,
+  blending:    THREE.AdditiveBlending,
+});
+
+/* ── Pure black occluder material ──────────
+   depthWrite:true means the sphere writes to the
+   depth buffer → disk fragments behind it are culled. */
+const blackMat = new THREE.MeshBasicMaterial({
+  color:      0x000000,
+  side:       THREE.FrontSide,
+  depthWrite: true,
+  depthTest:  true,
+});
+
+/* ── Main group ───────────────────────────── */
+const BH = new THREE.Group();
+scene.add(BH);
+
+/* Disk lives in BH group, renderOrder 1 (after sphere) */
+const disk = new THREE.Mesh(
+  new THREE.RingGeometry(DISK_IN, DISK_OUT, 256, 64),
+  diskMat
+);
+disk.rotation.x  = Math.PI / 2 - 0.09;   // ~5° from fully edge-on → thin blade
+disk.renderOrder = 1;
+BH.add(disk);
+
+/* Camera defaults — updated after GLB loads */
+const camStart = new THREE.Vector3(0, 2.8, 8.0);
+const camEnd   = new THREE.Vector3(0, 0.5, 0.4);
+let running = true;
+camera.position.copy(camStart);
+camera.lookAt(0, 0, 0);
+
+/* ── Fake progress bar while GLB fetches ── */
+let fakeP = 0;
+const fakeT = setInterval(() => {
+  fakeP = Math.min(fakeP + Math.random() * 4, 80);
+  loadFill.style.width = fakeP + '%';
+}, 80);
+
+/* ── GLB Load ─────────────────────────────── */
+new GLTFLoader().load(
+  './black_hole.glb',
+
+  /* onLoad */
+  gltf => {
+    clearInterval(fakeT);
+    loadFill.style.width = '100%';
+    console.log('[BH] ✓ black_hole.glb loaded');
+
+    const root = gltf.scene;
+
+    /* Normalise: GLB root bakes in scale=0.01.
+       Sphere radius after that = ~0.866 units.
+       Scale by 1/0.866 so sphere radius ≈ R=1.0 */
+    root.scale.setScalar(1.0 / 0.866);
+
+    /* Shift so bounding-box centre lands at origin */
+    const box = new THREE.Box3().setFromObject(root);
+    root.position.sub(box.getCenter(new THREE.Vector3()));
+
+    /* Apply materials per-mesh */
+    root.traverse(child => {
+      if (!child.isMesh) return;
+      const b = new THREE.Box3().setFromObject(child);
+      const s = b.getSize(new THREE.Vector3());
+      const flatness = Math.min(s.x, s.y, s.z) / Math.max(s.x, s.y, s.z);
+
+      if (flatness < 0.15) {
+        /* Flat mesh = Spline ring → hide (we use our own CodePen disk) */
+        child.visible = false;
+      } else {
+        /* Sphere half → pure black, writes depth, renders first */
+        child.material    = blackMat;
+        child.renderOrder = 0;
+      }
+    });
+
+    BH.add(root);
+
+    /* Camera elevated so name clears the disk line */
+    camStart.set(0, 2.8, 8.0);
+    camEnd.set(0, 0.5, 0.4);
+    camera.position.copy(camStart);
+    camera.lookAt(0, 0, 0);
+
+    setTimeout(() => {
+      loadingEl.classList.add('done');
+      setTimeout(() => { loadingEl.style.display = 'none'; }, 900);
+    }, 300);
+  },
+
+  /* onProgress */
+  xhr => {
+    if (xhr.lengthComputable)
+      loadFill.style.width = Math.max(fakeP, xhr.loaded / xhr.total * 100) + '%';
+  },
+
+  /* onError — fallback to Three.js sphere */
+  err => {
+    clearInterval(fakeT);
+    console.error('[BH] GLB failed:', err.message || err);
+
+    const fallback = new THREE.Mesh(new THREE.SphereGeometry(R, 96, 64), blackMat);
+    fallback.renderOrder = 0;
+    BH.add(fallback);
+
+    camStart.set(0, 2.8, 8.0);
+    camEnd.set(0, 0.5, 0.4);
+    camera.position.copy(camStart);
+    camera.lookAt(0, 0, 0);
+
+    loadingEl.classList.add('done');
+    setTimeout(() => { loadingEl.style.display = 'none'; }, 900);
+  }
+);
+
+/* ── Render loop ──────────────────────────── */
+const clock = new THREE.Clock();
+function animate() {
+  if (!running) return;
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime(), dt = clock.getDelta();
+  BH.rotation.y += dt * 0.055;
+  diskMat.uniforms.uTime.value = t;
+  diskMat.uniforms.uCamPos.value.copy(camera.position);
+  composer.render(dt);
+}
+animate();
+
+window.addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+  composer.setSize(innerWidth, innerHeight);
+  bloom.resolution.set(innerWidth, innerHeight);
+});
+
+/* ── Scroll → zoom ────────────────────────── */
+let introComplete = false, transitionFired = false;
+
+let idleT = 0;
+const idleDrift = setInterval(() => {
+  if (introComplete || scrollY > 4) { clearInterval(idleDrift); return; }
+  idleT += 0.016;
+  camera.position.set(
+    camStart.x + Math.sin(idleT * .2) * .08,
+    camStart.y - idleT * .015,
+    camStart.z - idleT * .05
+  );
+  camera.lookAt(0, 0, 0);
+}, 16);
+
+function getP() {
+  const max = driverEl.offsetHeight - innerHeight;
+  return max > 0 ? Math.min(scrollY / max, 1) : 0;
+}
+
+function updateCamera(p) {
+  const e = 1 - Math.pow(1 - p, 3);
+  camera.position.set(
+    0,
+    camStart.y + (camEnd.y - camStart.y) * e,
+    camStart.z + (camEnd.z - camStart.z) * e
+  );
+  camera.lookAt(0, 0, 0);
+}
+
+function beginTransition() {
+  transitionFired = true;
+  bloom.strength = 2.4;
+  overlayEl.style.transition = 'opacity .65s ease';
+  overlayEl.style.opacity = '1';
+  setTimeout(() => {
+    overlayEl.style.background = '#fff';
+    overlayEl.style.transition = 'opacity .06s ease';
+    overlayEl.style.opacity = '.92';
+    setTimeout(() => {
+      introComplete = true; running = false;
+      introEl.style.display = 'none';
+      driverEl.style.display = 'none';
+      window.scrollTo(0, 0);
+      portfolioEl.classList.add('visible');
+      pgridEl.classList.add('on');
+      overlayEl.style.background = '#000';
+      overlayEl.style.transition = 'opacity 1.1s ease .1s';
+      overlayEl.style.opacity = '0';
+    }, 80);
+  }, 700);
+}
+
+window.addEventListener('scroll', () => {
+  if (introComplete || transitionFired) return;
+  const p = getP();
+  nameEl.style.opacity = Math.max(0, 1 - p * 4) + '';
+  hintEl.style.opacity = Math.max(0, 1 - p * 5) + '';
+  if (p > .12) vignetteEl.style.opacity = Math.min(1, (p - .12) / .5) + '';
+  bloom.strength = .55 + p * 2.0;
+  updateCamera(p);
+  if (p >= .88 && !transitionFired) beginTransition();
+}, { passive: true });
+</script>
+</body>
+</html>

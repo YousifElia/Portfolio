@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Yousif Elia</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=JetBrains+Mono:wght@300;400&family=Source+Sans+3:wght@300;400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=JetBrains+Mono:wght@300;400&family=Source+Sans+3:wght@300;400&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -23,13 +23,63 @@
     }
 
     html { font-size: 100%; }
-
     body {
       background: var(--bg);
       color: var(--fg);
       font-family: var(--sans);
       overflow-y: auto;
       overflow-x: hidden;
+    }
+
+    /* ═══════════════════════════════════════
+       LOADING SCREEN
+    ═══════════════════════════════════════ */
+    #loading {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      transition: opacity 0.8s ease;
+    }
+    #loading.done { opacity: 0; pointer-events: none; }
+
+    .load-name {
+      font-family: var(--serif);
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 300;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+      text-shadow: 0 0 40px rgba(200,120,50,0.3);
+    }
+
+    .load-bar {
+      width: 160px;
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 1px;
+      overflow: hidden;
+    }
+
+    .load-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), #ffaa55);
+      border-radius: 1px;
+      transition: width 0.3s ease;
+    }
+
+    .load-sub {
+      font-family: var(--mono);
+      font-size: 0.5rem;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.2);
+      text-transform: uppercase;
     }
 
     /* ═══════════════════════════════════════
@@ -67,16 +117,16 @@
       letter-spacing: 0.22em;
       color: rgba(255,255,255,0.88);
       text-transform: uppercase;
-      text-shadow: 0 0 60px rgba(210,130,60,0.35);
+      text-shadow: 0 0 80px rgba(210,130,60,0.5), 0 0 20px rgba(210,130,60,0.2);
     }
 
     #intro-name p {
       font-family: var(--mono);
       font-size: 0.54rem;
       letter-spacing: 0.28em;
-      color: rgba(255,255,255,0.32);
+      color: rgba(255,255,255,0.3);
       text-transform: uppercase;
-      margin-top: 12px;
+      margin-top: 14px;
     }
 
     #scroll-hint {
@@ -122,6 +172,7 @@
       opacity: 0;
       pointer-events: none;
       z-index: 14;
+      transition: opacity 0.1s linear;
     }
 
     /* ═══════════════════════════════════════
@@ -134,7 +185,6 @@
       z-index: 40;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.8s ease;
     }
 
     /* ═══════════════════════════════════════
@@ -157,16 +207,14 @@
       opacity: 0;
       transition: opacity 1.1s ease;
     }
-
     #portfolio.visible { opacity: 1; }
 
-    /* subtle dot grid */
     .p-grid {
       position: fixed;
       inset: 0;
       pointer-events: none;
       z-index: 0;
-      background-image: radial-gradient(circle, rgba(180,165,140,0.055) 1px, transparent 1px);
+      background-image: radial-gradient(circle, rgba(180,165,140,0.05) 1px, transparent 1px);
       background-size: 38px 38px;
       opacity: 0;
       transition: opacity 1.2s ease 0.4s;
@@ -210,7 +258,6 @@
       max-width: 510px;
       margin-bottom: 18px;
     }
-
     .p-bio em { color: #8a8278; font-style: italic; }
 
     .p-avail {
@@ -285,7 +332,6 @@
       cursor: pointer;
       transition: border-color 0.2s, transform 0.15s, box-shadow 0.15s;
     }
-
     .p-proj:hover {
       border-color: rgba(200,185,160,0.16);
       transform: translateY(-1px);
@@ -314,10 +360,7 @@
       margin-bottom: 7px;
     }
 
-    .p-proj-bullets {
-      padding-left: 14px;
-      margin-bottom: 8px;
-    }
+    .p-proj-bullets { padding-left: 14px; margin-bottom: 8px; }
     .p-proj-bullets li {
       font-size: 0.67rem;
       color: #4e4840;
@@ -341,10 +384,7 @@
       padding-top: 2px;
       transition: color 0.2s, transform 0.2s;
     }
-    .p-proj:hover .p-proj-arr {
-      color: var(--fg-muted);
-      transform: translate(2px,-2px);
-    }
+    .p-proj:hover .p-proj-arr { color: var(--fg-muted); transform: translate(2px,-2px); }
 
     /* ─── Experience ──────────────────────── */
     .p-exp {
@@ -366,31 +406,12 @@
       line-height: 1.55;
       padding-top: 2px;
     }
-
-    .p-exp-title {
-      font-size: 0.82rem;
-      color: #bfb6aa;
-      margin-bottom: 2px;
-    }
-
-    .p-exp-org {
-      font-size: 0.7rem;
-      color: var(--fg-muted);
-      margin-bottom: 5px;
-    }
-
-    .p-exp-desc {
-      font-size: 0.66rem;
-      color: #4e4840;
-      line-height: 1.65;
-    }
+    .p-exp-title { font-size: 0.82rem; color: #bfb6aa; margin-bottom: 2px; }
+    .p-exp-org   { font-size: 0.7rem; color: var(--fg-muted); margin-bottom: 5px; }
+    .p-exp-desc  { font-size: 0.66rem; color: #4e4840; line-height: 1.65; }
 
     /* ─── Interests ───────────────────────── */
-    .p-interests {
-      display: grid;
-      grid-template-columns: repeat(2,1fr);
-      gap: 10px;
-    }
+    .p-interests { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
 
     .p-int {
       display: flex;
@@ -422,17 +443,8 @@
       flex-shrink: 0;
     }
 
-    .p-int-title {
-      font-size: 0.79rem;
-      color: #bfb6aa;
-      margin-bottom: 4px;
-    }
-
-    .p-int-desc {
-      font-size: 0.64rem;
-      color: var(--fg-muted);
-      line-height: 1.62;
-    }
+    .p-int-title { font-size: 0.79rem; color: #bfb6aa; margin-bottom: 4px; }
+    .p-int-desc  { font-size: 0.64rem; color: var(--fg-muted); line-height: 1.62; }
 
     /* ─── Footer ──────────────────────────── */
     .p-foot {
@@ -443,11 +455,7 @@
       border-top: 1px solid var(--border);
     }
 
-    .p-copy {
-      font-family: var(--mono);
-      font-size: 0.54rem;
-      color: #302c28;
-    }
+    .p-copy { font-family: var(--mono); font-size: 0.54rem; color: #302c28; }
 
     .p-links { display: flex; gap: 20px; }
     .p-links a {
@@ -460,20 +468,19 @@
     }
     .p-links a:hover { color: var(--fg); }
 
-    /* ─── Section fade-up ─────────────────── */
+    /* ─── Section reveals ─────────────────── */
     .p-section, .p-hero, .p-foot {
       opacity: 0;
       transform: translateY(18px);
       transition: opacity 0.7s ease, transform 0.7s ease;
     }
-    #portfolio.visible .p-hero        { opacity:1; transform:none; transition-delay:0.08s; }
-    #portfolio.visible .p-section:nth-child(2) { opacity:1; transform:none; transition-delay:0.18s; }
-    #portfolio.visible .p-section:nth-child(3) { opacity:1; transform:none; transition-delay:0.26s; }
-    #portfolio.visible .p-section:nth-child(4) { opacity:1; transform:none; transition-delay:0.34s; }
-    #portfolio.visible .p-section:nth-child(5) { opacity:1; transform:none; transition-delay:0.42s; }
-    #portfolio.visible .p-foot        { opacity:1; transform:none; transition-delay:0.50s; }
+    #portfolio.visible .p-hero                 { opacity:1; transform:none; transition-delay:0.1s; }
+    #portfolio.visible .p-section:nth-child(2) { opacity:1; transform:none; transition-delay:0.2s; }
+    #portfolio.visible .p-section:nth-child(3) { opacity:1; transform:none; transition-delay:0.29s; }
+    #portfolio.visible .p-section:nth-child(4) { opacity:1; transform:none; transition-delay:0.38s; }
+    #portfolio.visible .p-section:nth-child(5) { opacity:1; transform:none; transition-delay:0.47s; }
+    #portfolio.visible .p-foot                 { opacity:1; transform:none; transition-delay:0.56s; }
 
-    /* ─── Responsive ──────────────────────── */
     @media (max-width: 520px) {
       .p-interests { grid-template-columns: 1fr; }
       .p-exp { grid-template-columns: 1fr; gap: 4px; }
@@ -482,28 +489,30 @@
 </head>
 <body>
 
-  <!-- ══════════════════════════════════════
-       BLACK HOLE INTRO
-  ══════════════════════════════════════ -->
-  <div id="intro">
-    <!-- Three.js canvas appended here by JS -->
-    <div id="vignette"></div>
+  <!-- LOADING -->
+  <div id="loading">
+    <div class="load-name">Yousif Elia</div>
+    <div class="load-bar"><div class="load-fill" id="load-fill"></div></div>
+    <div class="load-sub">Initialising scene</div>
+  </div>
 
+  <!-- INTRO -->
+  <div id="intro">
+    <div id="vignette"></div>
     <div id="intro-name">
       <h1>Yousif Elia</h1>
       <p>Software Engineer</p>
     </div>
-
     <div id="scroll-hint">
       <span>scroll to enter</span>
       <div class="hint-line"></div>
     </div>
   </div>
 
-  <!-- Transition flash -->
+  <!-- FLASH OVERLAY -->
   <div id="overlay"></div>
 
-  <!-- Scroll driver — creates the scrollable height for the zoom animation -->
+  <!-- SCROLL DRIVER -->
   <div id="driver"></div>
 
   <!-- ══════════════════════════════════════
@@ -514,7 +523,6 @@
   <main id="portfolio">
     <div class="p-wrap">
 
-      <!-- Hero -->
       <div class="p-hero">
         <h1 class="p-name">Yousif Elia</h1>
         <p class="p-role">Software Engineer</p>
@@ -522,14 +530,12 @@
         <span class="p-avail"><span class="p-dot"></span>Available for internships · Fall 2026</span>
       </div>
 
-      <!-- Resume -->
       <div class="p-section">
         <span class="p-lbl">Resume</span>
         <hr class="p-rule">
         <a class="p-dl" href="YousifElia-SWE.pdf" target="_blank" rel="noopener">Download full resume ↗</a>
       </div>
 
-      <!-- Projects -->
       <div class="p-section">
         <span class="p-lbl">Projects</span>
         <div class="p-projs">
@@ -583,7 +589,6 @@
         </div>
       </div>
 
-      <!-- Leadership -->
       <div class="p-section">
         <span class="p-lbl">Leadership</span>
         <div class="p-exp">
@@ -604,42 +609,28 @@
         </div>
       </div>
 
-      <!-- Interests -->
       <div class="p-section">
         <span class="p-lbl">Personal Interests</span>
         <div class="p-interests">
           <a class="p-int" href="music.html">
             <span class="p-int-icon">M</span>
-            <div>
-              <p class="p-int-title">Music</p>
-              <p class="p-int-desc">Album reviews and what I am currently listening to</p>
-            </div>
+            <div><p class="p-int-title">Music</p><p class="p-int-desc">Album reviews and what I am currently listening to</p></div>
           </a>
           <a class="p-int" href="watching.html">
             <span class="p-int-icon">S</span>
-            <div>
-              <p class="p-int-title">Shows</p>
-              <p class="p-int-desc">Shows and movies I am currently watching</p>
-            </div>
+            <div><p class="p-int-title">Shows</p><p class="p-int-desc">Shows and movies I am currently watching</p></div>
           </a>
           <a class="p-int" href="reading.html">
             <span class="p-int-icon">R</span>
-            <div>
-              <p class="p-int-title">Reading</p>
-              <p class="p-int-desc">Books I am reading and personal reviews</p>
-            </div>
+            <div><p class="p-int-title">Reading</p><p class="p-int-desc">Books I am reading and personal reviews</p></div>
           </a>
           <a class="p-int" href="physical.html">
             <span class="p-int-icon">P</span>
-            <div>
-              <p class="p-int-title">Physical</p>
-              <p class="p-int-desc">Training, sports, and staying active</p>
-            </div>
+            <div><p class="p-int-title">Physical</p><p class="p-int-desc">Training, sports, and staying active</p></div>
           </a>
         </div>
       </div>
 
-      <!-- Footer -->
       <footer class="p-foot">
         <span class="p-copy">© 2026 Yousif Elia</span>
         <nav class="p-links">
@@ -652,298 +643,236 @@
     </div>
   </main>
 
-  <!-- ══════════════════════════════════════
-       THREE.JS — BLACK HOLE + SCROLL LOGIC
-  ══════════════════════════════════════ -->
   <script type="module">
-    import * as THREE from "https://esm.sh/three@0.160.0";
-    import { EffectComposer } from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/EffectComposer.js';
-    import { RenderPass }     from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/RenderPass.js';
+    import * as THREE from 'https://esm.sh/three@0.160.0';
+    import { GLTFLoader }      from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
+    import { DRACOLoader }     from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/DRACOLoader.js';
+    import { EffectComposer }  from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/EffectComposer.js';
+    import { RenderPass }      from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/RenderPass.js';
     import { UnrealBloomPass } from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/UnrealBloomPass.js';
 
-    /* ─── Constants ─────────────────────── */
-    const BH_R       = 1.0;
-    const DISK_IN    = BH_R + 0.15;
-    const DISK_OUT   = 5.5;
-    const LENSING_R  = BH_R + 0.07;
-    const PHOTON_R   = BH_R * 1.5;
+    /* ─── DOM refs ─────────────────────────── */
+    const loadingEl  = document.getElementById('loading');
+    const loadFill   = document.getElementById('load-fill');
+    const introEl    = document.getElementById('intro');
+    const overlayEl  = document.getElementById('overlay');
+    const driverEl   = document.getElementById('driver');
+    const portfolioEl= document.getElementById('portfolio');
+    const pgridEl    = document.getElementById('p-grid');
+    const vignetteEl = document.getElementById('vignette');
+    const hintEl     = document.getElementById('scroll-hint');
+    const nameEl     = document.getElementById('intro-name');
 
-    /* ─── Renderer / Camera ─────────────── */
+    /* ─── Renderer ─────────────────────────── */
     const scene    = new THREE.Scene();
-    scene.fog      = new THREE.FogExp2(0x000004, 0.085);
-
-    const camera   = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 2000);
-    camera.position.set(0, 4.2, 9.5);
-    camera.lookAt(0, 0, 0);
-
+    const camera   = new THREE.PerspectiveCamera(55, innerWidth/innerHeight, 0.01, 5000);
     const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
     renderer.setSize(innerWidth, innerHeight);
     renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
     renderer.outputColorSpace  = THREE.SRGBColorSpace;
     renderer.toneMapping       = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 0.95;
-    document.getElementById('intro').appendChild(renderer.domElement);
+    renderer.toneMappingExposure = 1.1;
+    renderer.shadowMap.enabled = false;
+    introEl.appendChild(renderer.domElement);
 
-    /* ─── Post-processing ───────────────── */
-    const composer  = new EffectComposer(renderer);
+    /* ─── Post-processing ───────────────────── */
+    const composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
-    const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.7, 0.7, 0.75);
+    const bloom = new UnrealBloomPass(
+      new THREE.Vector2(innerWidth, innerHeight),
+      1.2, 0.6, 0.65
+    );
     composer.addPass(bloom);
 
-    /* ─── Stars ─────────────────────────── */
-    const STAR_COUNT = 45000;
-    const sPos  = new Float32Array(STAR_COUNT * 3);
-    const sCol  = new Float32Array(STAR_COUNT * 3);
-    const sSize = new Float32Array(STAR_COUNT);
-    const sAlph = new Float32Array(STAR_COUNT);
-    const FIELD_R = 1200;
-    const white  = new THREE.Color(0xffffff);
-    const blue   = new THREE.Color(0xaaddff);
-    const yellow = new THREE.Color(0xffffaa);
-    const red    = new THREE.Color(0xffcccc);
-
-    for (let i = 0; i < STAR_COUNT; i++) {
-      const i3 = i * 3;
-      const phi   = Math.acos(1 - 2*(i+0.5)/STAR_COUNT);
-      const theta = 2 * Math.PI * i / ((1+Math.sqrt(5))/2);
-      const r     = Math.cbrt(Math.random()) * FIELD_R;
-      sPos[i3]   = r * Math.sin(phi) * Math.cos(theta);
-      sPos[i3+1] = r * Math.sin(phi) * Math.sin(theta);
-      sPos[i3+2] = r * Math.cos(phi);
-
-      const c  = white.clone();
-      const ct = Math.random();
-      if (ct < 0.5)       c.lerp(blue,   Math.random()*0.3);
-      else if (ct < 0.85) c.lerp(yellow, Math.random()*0.2);
-      else                c.lerp(red,    Math.random()*0.15);
-      c.multiplyScalar(Math.random()*0.4 + 0.6);
-      sCol[i3]=c.r; sCol[i3+1]=c.g; sCol[i3+2]=c.b;
-
-      const sv = Math.random();
-      sSize[i] = sv > 0.997 ? THREE.MathUtils.randFloat(1.5,2.2)
-               : sv > 0.98  ? THREE.MathUtils.randFloat(0.8,1.5)
-               :               THREE.MathUtils.randFloat(0.3,0.8);
-      sSize[i] *= (1 - Math.min(1, r/FIELD_R)*0.3);
-      sAlph[i] = Math.random()*0.5 + 0.5;
+    /* ─── Star field ────────────────────────── */
+    const STARS = 40000;
+    const sp = new Float32Array(STARS*3), sc = new Float32Array(STARS*3), ss = new Float32Array(STARS);
+    const FR = 900;
+    for (let i = 0; i < STARS; i++) {
+      const phi   = Math.acos(1-2*(i+0.5)/STARS);
+      const theta = 2*Math.PI*i/((1+Math.sqrt(5))/2);
+      const r     = Math.cbrt(Math.random())*FR;
+      sp[i*3]  = r*Math.sin(phi)*Math.cos(theta);
+      sp[i*3+1]= r*Math.sin(phi)*Math.sin(theta);
+      sp[i*3+2]= r*Math.cos(phi);
+      const warm = Math.random() < 0.3;
+      sc[i*3]  = warm ? 1.0 : 0.85+Math.random()*0.15;
+      sc[i*3+1]= warm ? 0.85+Math.random()*0.15 : 0.9+Math.random()*0.1;
+      sc[i*3+2]= warm ? 0.6+Math.random()*0.3 : 1.0;
+      ss[i] = Math.random() < 0.98 ? Math.random()*0.7+0.2 : Math.random()*1.8+0.8;
     }
-
     const starGeo = new THREE.BufferGeometry();
-    starGeo.setAttribute('position', new THREE.BufferAttribute(sPos, 3));
-    starGeo.setAttribute('color',    new THREE.BufferAttribute(sCol, 3));
-    starGeo.setAttribute('size',     new THREE.BufferAttribute(sSize, 1));
-    starGeo.setAttribute('alpha',    new THREE.BufferAttribute(sAlph, 1));
+    starGeo.setAttribute('position', new THREE.BufferAttribute(sp,3));
+    starGeo.setAttribute('color',    new THREE.BufferAttribute(sc,3));
+    starGeo.setAttribute('size',     new THREE.BufferAttribute(ss,1));
 
     const starMat = new THREE.ShaderMaterial({
       uniforms: { uTime: { value: 0 } },
-      vertexShader: `
-        attribute float size; attribute float alpha;
-        varying vec3 vColor; varying float vAlpha;
+      vertexShader:`
+        attribute float size; attribute vec3 color;
+        varying vec3 vC;
         void main(){
-          vColor = color; vAlpha = alpha;
-          vec4 mv = modelViewMatrix * vec4(position,1.0);
-          gl_PointSize = size * (350.0 / -mv.z);
-          gl_Position  = projectionMatrix * mv;
+          vC = color;
+          vec4 mv = modelViewMatrix*vec4(position,1.0);
+          gl_PointSize = size*(280.0/-mv.z);
+          gl_Position  = projectionMatrix*mv;
         }`,
-      fragmentShader: `
-        uniform float uTime;
-        varying vec3 vColor; varying float vAlpha;
+      fragmentShader:`
+        uniform float uTime; varying vec3 vC;
         void main(){
-          float r = length(gl_PointCoord - vec2(0.5));
-          float a = 1.0 - smoothstep(0.45, 0.5, r);
-          if(a < 0.01) discard;
-          float tw = sin(uTime*(vAlpha*1.5+0.5) + vAlpha*10.0)*0.12 + 0.9;
-          gl_FragColor = vec4(vColor*tw, a*vAlpha);
+          float r = length(gl_PointCoord-vec2(0.5));
+          float a = 1.0-smoothstep(0.42,0.5,r);
+          if(a<0.01) discard;
+          gl_FragColor = vec4(vC,a*0.85);
         }`,
       blending: THREE.AdditiveBlending,
-      depthWrite: false, transparent: true, vertexColors: true
+      depthWrite: false, transparent: true
     });
 
     const stars = new THREE.Points(starGeo, starMat);
     scene.add(stars);
 
-    /* ─── Black hole sphere ─────────────── */
-    const bh = new THREE.Mesh(
-      new THREE.SphereGeometry(BH_R, 64, 32),
-      new THREE.MeshBasicMaterial({ color: 0x000000 })
-    );
-    bh.renderOrder = 0;
-    scene.add(bh);
-
-    /* ─── Theme colors ──────────────────── */
-    const T = {
-      diskHot:  new THREE.Color(0xffffff),
-      diskMid:  new THREE.Color(0xffaa33),
-      diskEdge: new THREE.Color(0xcc331a),
-      diskDeep: new THREE.Color(0x661a00),
-      lensing:  new THREE.Color(0xffcc66),
-      glow:     new THREE.Color(0xff8833),
-      photon:   new THREE.Color(0xffbb44),
-    };
-
-    /* ─── Accretion disk ────────────────── */
-    const diskMat = new THREE.ShaderMaterial({
-      uniforms: {
-        uTime:      { value: 0 },
-        uColorHot:  { value: T.diskHot.clone() },
-        uColorMid:  { value: T.diskMid.clone() },
-        uColorEdge: { value: T.diskEdge.clone() },
-        uColorDeep: { value: T.diskDeep.clone() },
-        uCamPos:    { value: camera.position },
-      },
-      vertexShader: `
-        varying vec2 vUv; varying vec3 vPos; varying float vR;
+    /* ─── Space nebula (subtle colour cloud) ── */
+    const nebulaGeo = new THREE.SphereGeometry(400, 8, 8);
+    const nebulaMat = new THREE.ShaderMaterial({
+      uniforms: { uTime: { value: 0 } },
+      vertexShader:`varying vec3 vN; void main(){ vN=normalize(normal); gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+      fragmentShader:`
+        uniform float uTime; varying vec3 vN;
         void main(){
-          vUv=uv; vPos=position; vR=length(position.xy);
-          gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0);
+          float warm = dot(vN, normalize(vec3(1.0,0.2,0.3)))*0.5+0.5;
+          float cool = dot(vN, normalize(vec3(-0.5,0.8,-0.3)))*0.5+0.5;
+          vec3 col = mix(vec3(0.08,0.03,0.0), vec3(0.0,0.02,0.08), cool);
+          col = mix(col, vec3(0.12,0.04,0.0), warm*0.5);
+          gl_FragColor = vec4(col, 0.18);
         }`,
-      fragmentShader: `
-        uniform float uTime;
-        uniform vec3  uColorHot,uColorMid,uColorEdge,uColorDeep,uCamPos;
-        varying vec2  vUv; varying vec3 vPos; varying float vR;
+      side: THREE.BackSide, transparent: true, depthWrite: false,
+      blending: THREE.AdditiveBlending
+    });
+    scene.add(new THREE.Mesh(nebulaGeo, nebulaMat));
 
-        float rand(vec2 n){return fract(sin(dot(n,vec2(12.9898,4.1414)))*43758.5453);}
-        float noise(vec2 p){
-          vec2 ip=floor(p),u=fract(p); u=u*u*(3.0-2.0*u);
-          return mix(mix(rand(ip),rand(ip+vec2(1,0)),u.x),mix(rand(ip+vec2(0,1)),rand(ip+vec2(1,1)),u.x),u.y);
-        }
-        float fbm(vec2 p,float t){
-          float s=0.0,a=0.65,f=2.2;
-          for(int i=0;i<6;i++){s+=a*noise(p*f+vec2(t*0.27,t*0.18));f*=2.0;a*=0.5;}
-          return s;
-        }
-        void main(){
-          float inner=${DISK_IN.toFixed(2)},outer=${DISK_OUT.toFixed(2)};
-          float nP = clamp((vR-inner)/(outer-inner),0.0,1.0);
-          float angle=atan(vPos.y,vPos.x);
-          float ov=1.0/sqrt(max(vR,0.1));
-          float dop=0.0,beam=1.0;
-          if(length(uCamPos)>0.01){
-            vec3 tang=normalize(vec3(-vPos.y,vPos.x,0));
-            dop=dot(normalize(uCamPos-vPos),tang)*ov*0.3;
-            beam=clamp(1.0+dop*0.4,0.5,2.0);
+    /* ─── Lighting for GLB model ─────────────── */
+    // Very dim ambient so nothing is pitch black
+    scene.add(new THREE.AmbientLight(0x0a0805, 0.6));
+
+    // Warm orange core glow (simulates accretion disk heat)
+    const coreLight = new THREE.PointLight(0xff6622, 6, 0, 1.8);
+    coreLight.position.set(0, 0, 0);
+    scene.add(coreLight);
+
+    // Cooler rim light from above-left
+    const rimLight = new THREE.PointLight(0x4488ff, 1.2, 0, 2);
+    rimLight.position.set(-3, 4, 2);
+    scene.add(rimLight);
+
+    // Warm fill from below-right
+    const fillLight = new THREE.PointLight(0xff9944, 0.8, 0, 2);
+    fillLight.position.set(3, -2, -1);
+    scene.add(fillLight);
+
+    /* ─── GLB Load ──────────────────────────── */
+    let blackHoleModel = null;
+    let camStartPos    = new THREE.Vector3();
+    let camEndPos      = new THREE.Vector3();
+    let modelRadius    = 1;
+    let running        = true;
+
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+
+    const loader = new GLTFLoader();
+    loader.setDRACOLoader(dracoLoader);
+
+    // fake progress before load completes
+    let fakeProgress = 0;
+    const fakeTimer = setInterval(() => {
+      fakeProgress = Math.min(fakeProgress + Math.random()*4, 75);
+      loadFill.style.width = fakeProgress + '%';
+    }, 80);
+
+    loader.load(
+      './black_hole.glb',
+
+      /* onLoad */
+      (gltf) => {
+        clearInterval(fakeTimer);
+        loadFill.style.width = '100%';
+
+        blackHoleModel = gltf.scene;
+
+        /* Auto-centre & scale */
+        const box    = new THREE.Box3().setFromObject(blackHoleModel);
+        const centre = box.getCenter(new THREE.Vector3());
+        const size   = box.getSize(new THREE.Vector3());
+        modelRadius  = Math.max(size.x, size.y, size.z) * 0.5;
+
+        // Normalize so largest dimension = ~3 units
+        const normScale = 3 / (modelRadius * 2);
+        blackHoleModel.scale.setScalar(normScale);
+        blackHoleModel.position.sub(centre.multiplyScalar(normScale));
+
+        // Recalc after scale
+        const box2   = new THREE.Box3().setFromObject(blackHoleModel);
+        const size2  = box2.getSize(new THREE.Vector3());
+        modelRadius  = Math.max(size2.x, size2.y, size2.z) * 0.5;
+
+        scene.add(blackHoleModel);
+
+        // Camera: start far back, zoom to just inside the model
+        const startDist = modelRadius * 5.5;
+        const endDist   = modelRadius * 0.18;
+        camStartPos.set(0, modelRadius * 0.45, startDist);
+        camEndPos.set(0, 0, endDist);
+
+        camera.position.copy(camStartPos);
+        camera.lookAt(0, 0, 0);
+
+        /* Enhance materials for dark space look */
+        blackHoleModel.traverse(child => {
+          if (child.isMesh) {
+            child.material.envMapIntensity = 0;
+            // Boost emissive if present
+            if (child.material.emissive) {
+              const em = child.material.emissive;
+              if (em.r+em.g+em.b < 0.1) {
+                // Give it a subtle orange warmth
+                child.material.emissiveIntensity = 0.15;
+                child.material.emissive.set(0x331a00);
+              }
+            }
           }
-          float spd=4.8/(pow(vR,1.6)+1.1);
-          vec2 coord=vec2(vR*1.9,(angle-uTime*spd*0.52)*3.6);
-          float pat=fbm(coord,uTime*0.17)*0.8 + sin(angle*2.3+vR*5.8-uTime*0.6)*0.32*0.32;
-          float temp=clamp(ov*(1.0+pat*0.3),0.0,2.0);
-          vec3 ci=mix(uColorHot,uColorMid,smoothstep(0.0,0.4,nP)*(1.0-temp*0.3));
-          vec3 co=mix(uColorMid,uColorEdge,smoothstep(0.4,0.8,nP));
-          vec3 cd=mix(uColorEdge,uColorDeep,smoothstep(0.8,1.0,nP));
-          vec3 col=mix(mix(ci,co,smoothstep(0.4,0.8,nP)),cd,smoothstep(0.8,1.0,nP));
-          col*=vec3(1.0+dop*0.15,1.0,1.0-dop*0.15);
-          float bright=(pat+0.5)*1.15*pow(1.0-smoothstep(0.0,0.8,nP),1.9)*3.0*beam;
-          col*=bright;
-          float hot=smoothstep(3.0,5.0,bright)*smoothstep(0.0,0.1,nP);
-          col=mix(col,vec3(1.0),hot*0.45);
-          float ia=smoothstep(0.0,0.06,nP);
-          float oa=1.0-smoothstep(0.85,1.0,nP);
-          float na=clamp(pat*0.35+0.75,0.65,1.0);
-          gl_FragColor=vec4(clamp(col,0.0,8.0),ia*oa*na);
-        }`,
-      transparent:true, side:THREE.DoubleSide, depthWrite:false, blending:THREE.AdditiveBlending
-    });
+        });
 
-    const disk = new THREE.Mesh(
-      new THREE.RingGeometry(DISK_IN, DISK_OUT, 128, 64),
-      diskMat
+        // Hide loading, show intro
+        setTimeout(() => {
+          loadingEl.classList.add('done');
+          setTimeout(() => { loadingEl.style.display = 'none'; }, 900);
+        }, 300);
+      },
+
+      /* onProgress */
+      (xhr) => {
+        if (xhr.lengthComputable) {
+          const pct = (xhr.loaded / xhr.total) * 100;
+          loadFill.style.width = Math.max(fakeProgress, pct) + '%';
+        }
+      },
+
+      /* onError */
+      (err) => {
+        console.warn('GLB load failed:', err);
+        clearInterval(fakeTimer);
+        // Fall back gracefully — just show a dark void
+        camStartPos.set(0, 2, 10);
+        camEndPos.set(0, 0, 0.5);
+        camera.position.copy(camStartPos);
+        loadingEl.classList.add('done');
+        setTimeout(() => { loadingEl.style.display='none'; }, 900);
+      }
     );
-    disk.rotation.x  = Math.PI / 2.6;
-    disk.renderOrder  = 1;
-    scene.add(disk);
 
-    /* ─── Photon sphere ─────────────────── */
-    const photonMat = new THREE.ShaderMaterial({
-      uniforms: { uTime:{value:0}, uColor:{value:T.photon.clone()} },
-      vertexShader: `
-        varying vec3 vN,vVP;
-        void main(){
-          vec4 mv=modelViewMatrix*vec4(position,1.0);
-          vVP=-mv.xyz; vN=normalize(normalMatrix*normal);
-          gl_Position=projectionMatrix*mv;
-        }`,
-      fragmentShader: `
-        uniform float uTime; uniform vec3 uColor;
-        varying vec3 vN,vVP;
-        void main(){
-          float f=pow(1.0-abs(dot(normalize(vVP),vN)),3.0);
-          float p=sin(uTime*2.0)*0.1+0.9;
-          gl_FragColor=vec4(uColor,f*0.3*p);
-        }`,
-      transparent:true, side:THREE.FrontSide, depthWrite:false, blending:THREE.AdditiveBlending
-    });
-    const photon = new THREE.Mesh(new THREE.SphereGeometry(PHOTON_R,64,32), photonMat);
-    photon.renderOrder = 4;
-    scene.add(photon);
-
-    /* ─── Lensing sphere ────────────────── */
-    const lensMat = new THREE.ShaderMaterial({
-      uniforms: { uTime:{value:0}, uColor:{value:T.lensing.clone()} },
-      vertexShader: `
-        varying vec3 vN,vVP;
-        void main(){
-          vec4 mv=modelViewMatrix*vec4(position,1.0);
-          vVP=-mv.xyz; vN=normalize(normalMatrix*normal);
-          gl_Position=projectionMatrix*mv;
-        }`,
-      fragmentShader: `
-        uniform float uTime; uniform vec3 uColor;
-        varying vec3 vN,vVP;
-        float rand(vec2 n){return fract(sin(dot(n,vec2(12.9898,4.1414)))*43758.5453);}
-        float noise(vec2 p){
-          vec2 ip=floor(p),u=fract(p); u=u*u*(3.0-2.0*u);
-          float r=mix(mix(rand(ip),rand(ip+vec2(1,0)),u.x),mix(rand(ip+vec2(0,1)),rand(ip+vec2(1,1)),u.x),u.y);
-          return r*r;
-        }
-        void main(){
-          vec3 vd=normalize(vVP);
-          float fF=pow(1.0-abs(dot(vd,vN)),5.2);
-          float p=sin(uTime*0.55+length(vVP)*0.12)*0.12+0.95;
-          float nV=noise(vN.xy*7.0+uTime*0.35)*0.12;
-          vec3 dN=normalize(vN+vec3(nV,nV*0.6,0));
-          float a=fF*0.68*p+pow(1.0-abs(dot(vd,dN)),8.5)*0.38;
-          gl_FragColor=vec4(uColor,clamp(a,0.0,1.0)*0.9);
-        }`,
-      transparent:true, side:THREE.FrontSide, depthWrite:false, blending:THREE.AdditiveBlending
-    });
-    const lens = new THREE.Mesh(new THREE.SphereGeometry(LENSING_R,64,32), lensMat);
-    lens.scale.multiplyScalar(1.62);
-    lens.renderOrder = 2;
-    scene.add(lens);
-
-    /* ─── Glow sphere ───────────────────── */
-    const glowMat = new THREE.ShaderMaterial({
-      uniforms: { uTime:{value:0}, uGlow:{value:T.glow.clone()} },
-      vertexShader: `
-        varying vec3 vN,vVP;
-        void main(){
-          vec4 mv=modelViewMatrix*vec4(position,1.0);
-          vVP=-mv.xyz; vN=normalize(normalMatrix*normal);
-          gl_Position=projectionMatrix*mv;
-        }`,
-      fragmentShader: `
-        uniform float uTime; uniform vec3 uGlow;
-        varying vec3 vN,vVP;
-        float rand(vec2 n){return fract(sin(dot(n,vec2(12.9898,4.1414)))*43758.5453);}
-        float noise(vec2 p){
-          vec2 ip=floor(p),u=fract(p); u=u*u*(3.0-2.0*u);
-          return mix(mix(rand(ip),rand(ip+vec2(1,0)),u.x),mix(rand(ip+vec2(0,1)),rand(ip+vec2(1,1)),u.x),u.y);
-        }
-        void main(){
-          float i=pow(0.68-dot(vN,normalize(vVP)),2.6);
-          float p=sin(uTime*0.7+vN.y*1.8)*0.18+0.88;
-          float f=noise(vN.xz*9.0+uTime*1.8)*0.35+0.75;
-          gl_FragColor=vec4(uGlow,clamp(i*p*f,0.0,1.0)*0.92);
-        }`,
-      transparent:true, side:THREE.BackSide, blending:THREE.AdditiveBlending, depthWrite:false
-    });
-    const glow = new THREE.Mesh(new THREE.SphereGeometry(BH_R,64,32), glowMat);
-    glow.scale.multiplyScalar(1.07 * 1.16);
-    glow.renderOrder = 3;
-    scene.add(glow);
-
-    /* ─── Animate loop ──────────────────── */
+    /* ─── Animate ────────────────────────────── */
     const clock = new THREE.Clock();
-    let running = true;
 
     function animate() {
       if (!running) return;
@@ -951,132 +880,138 @@
       const t  = clock.getElapsedTime();
       const dt = clock.getDelta();
 
-      starMat.uniforms.uTime.value   = t;
-      diskMat.uniforms.uTime.value   = t;
-      diskMat.uniforms.uCamPos.value.copy(camera.position);
-      lensMat.uniforms.uTime.value   = t;
-      glowMat.uniforms.uTime.value   = t;
-      photonMat.uniforms.uTime.value = t;
+      // Slowly rotate the black hole model
+      if (blackHoleModel) {
+        blackHoleModel.rotation.y += dt * 0.12;
+        // Subtle tilt oscillation
+        blackHoleModel.rotation.x = Math.sin(t * 0.18) * 0.04;
+      }
 
-      stars.rotation.y += dt * 0.004;
-      stars.rotation.x += dt * 0.0015;
+      // Pulse the core light
+      coreLight.intensity = 5.5 + Math.sin(t * 1.4) * 0.8;
+      coreLight.color.setHSL(0.06 + Math.sin(t*0.5)*0.02, 1, 0.55);
+
+      starMat.uniforms.uTime.value = t;
+
+      stars.rotation.y += dt * 0.003;
+      stars.rotation.x += dt * 0.001;
 
       composer.render(dt);
     }
     animate();
 
-    /* ─── Resize ────────────────────────── */
+    /* ─── Resize ─────────────────────────────── */
     window.addEventListener('resize', () => {
-      camera.aspect = innerWidth / innerHeight;
+      camera.aspect = innerWidth/innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(innerWidth, innerHeight);
       composer.setSize(innerWidth, innerHeight);
       bloom.resolution.set(innerWidth, innerHeight);
     });
 
-    /* ═══════════════════════════════════════
+    /* ═══════════════════════════════════════════
        SCROLL-DRIVEN CAMERA + TRANSITION
-    ═══════════════════════════════════════ */
-    const intro    = document.getElementById('intro');
-    const overlay  = document.getElementById('overlay');
-    const driver   = document.getElementById('driver');
-    const portfolio= document.getElementById('portfolio');
-    const pgrid    = document.getElementById('p-grid');
-    const vignette = document.getElementById('vignette');
-    const hint     = document.getElementById('scroll-hint');
-    const nameLbl  = document.getElementById('intro-name');
+    ═══════════════════════════════════════════ */
+    let introComplete   = false;
+    let transitionFired = false;
 
-    let introComplete    = false;
-    let transitionFired  = false;
+    /* Gentle idle drift while user hasn't scrolled yet */
+    let idleTime = 0;
+    const idleDrift = setInterval(() => {
+      if (introComplete || window.scrollY > 2) { clearInterval(idleDrift); return; }
+      idleTime += 0.016;
+      if (!blackHoleModel) return;
+      const drift = idleTime * 0.008;
+      const base  = camStartPos.clone();
+      camera.position.set(
+        base.x + Math.sin(idleTime*0.3)*0.25,
+        base.y - drift * 8,
+        base.z - drift * 20
+      );
+      camera.lookAt(0, 0, 0);
+      if (idleTime > 3) clearInterval(idleDrift);
+    }, 16);
 
     function getProgress() {
-      const max = driver.offsetHeight - innerHeight;
+      const max = driverEl.offsetHeight - innerHeight;
       return max > 0 ? Math.min(window.scrollY / max, 1) : 0;
     }
 
-    /* Camera path: start (0,4.2,9.5) → end (0,0.25,0.55) */
     function updateCamera(p) {
-      const e  = 1 - Math.pow(1 - p, 2.8); // strong ease-in
-      // slight leftward spiral as we approach
-      const x  = Math.sin(p * Math.PI * 0.25) * 0.8 * (1 - e);
-      const y  = 4.2  + (0.25  - 4.2)  * e;
-      const z  = 9.5  + (0.55  - 9.5)  * e;
-      camera.position.set(x, y, z);
+      // Cubic ease-in — slow at start, rockets toward the end
+      const e = 1 - Math.pow(1 - p, 3);
+
+      // Slight leftward spiral sweep as we approach
+      const angle = p * Math.PI * 0.18;
+      const x = Math.sin(angle) * camStartPos.z * 0.06 * (1-e);
+
+      camera.position.set(
+        x,
+        camStartPos.y + (camEndPos.y - camStartPos.y) * e,
+        camStartPos.z + (camEndPos.z - camStartPos.z) * e
+      );
       camera.lookAt(0, 0, 0);
     }
 
     function beginTransition() {
       transitionFired = true;
 
-      /* fade to black */
-      overlay.style.transition  = 'opacity 0.75s ease';
-      overlay.style.opacity     = '1';
+      // Ramp up bloom for dramatic approach
+      bloom.strength = 2.4;
+
+      // Fade to black
+      overlayEl.style.transition = 'opacity 0.7s ease';
+      overlayEl.style.opacity    = '1';
 
       setTimeout(() => {
-        /* white flash — crossing the event horizon */
-        overlay.style.background   = '#ffffff';
-        overlay.style.transition   = 'opacity 0.08s ease';
-        overlay.style.opacity      = '0.85';
+        // White event-horizon flash
+        overlayEl.style.background  = '#ffffff';
+        overlayEl.style.transition  = 'opacity 0.07s ease';
+        overlayEl.style.opacity     = '0.9';
 
         setTimeout(() => {
-          /* show portfolio */
-          introComplete = true;
-          running = false;          // stop render loop
-          intro.style.display = 'none';
-          driver.style.display= 'none';
+          // Reveal portfolio
+          introComplete             = true;
+          running                   = false;
+          introEl.style.display     = 'none';
+          driverEl.style.display    = 'none';
           window.scrollTo(0, 0);
 
-          portfolio.classList.add('visible');
-          pgrid.classList.add('on');
+          portfolioEl.classList.add('visible');
+          pgridEl.classList.add('on');
 
-          /* fade overlay out from white → transparent */
-          overlay.style.background  = '#000000';
-          overlay.style.transition  = 'opacity 1s ease 0.15s';
-          overlay.style.opacity     = '0';
+          // Fade overlay away
+          overlayEl.style.background  = '#000000';
+          overlayEl.style.transition  = 'opacity 1.1s ease 0.1s';
+          overlayEl.style.opacity     = '0';
 
         }, 100);
-      }, 800);
+      }, 750);
     }
 
     window.addEventListener('scroll', () => {
       if (introComplete || transitionFired) return;
-
       const p = getProgress();
 
-      /* fade name + hint */
-      nameLbl.style.opacity = Math.max(0, 1 - p * 3.5).toString();
-      hint.style.opacity    = Math.max(0, 1 - p * 4.5).toString();
+      // Fade name + hint
+      nameEl.style.opacity = Math.max(0, 1 - p * 3.8).toString();
+      hintEl.style.opacity = Math.max(0, 1 - p * 5).toString();
 
-      /* vignette closes in */
-      if (p > 0.25) {
-        vignette.style.opacity = Math.min(1, (p - 0.25) / 0.55).toString();
+      // Vignette darkens from edges
+      if (p > 0.2) {
+        vignetteEl.style.opacity = Math.min(1, (p-0.2)/0.5).toString();
       }
 
-      /* bloom intensifies on approach */
-      bloom.strength = 0.7 + p * 1.2;
+      // Bloom ramps up on approach
+      bloom.strength = 1.2 + p * 1.4;
 
-      /* camera zoom */
+      // Camera zoom
       updateCamera(p);
 
-      /* trigger transition near the end */
-      if (p >= 0.88 && !transitionFired) {
-        beginTransition();
-      }
-    }, { passive: true });
+      // Trigger at 87%
+      if (p >= 0.87 && !transitionFired) beginTransition();
 
-    /* Initial subtle camera drift before user scrolls */
-    let initDrift = 0;
-    const driftId = setInterval(() => {
-      if (introComplete || window.scrollY > 5) { clearInterval(driftId); return; }
-      initDrift += 0.003;
-      camera.position.set(
-        Math.sin(initDrift * 0.4) * 0.3,
-        4.2 - initDrift * 0.08,
-        9.5 - initDrift * 0.15
-      );
-      camera.lookAt(0, 0, 0);
-      if (initDrift > 2) clearInterval(driftId);
-    }, 16);
+    }, { passive: true });
 
   </script>
 </body>

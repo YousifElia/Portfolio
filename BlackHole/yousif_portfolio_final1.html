@@ -10,7 +10,7 @@
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
       --bg:#060606;--fg:#d8d0c4;--fg-muted:#5e5850;
-      --accent:#c96832;--border:rgba(200,185,160,0.07);--card:#0c0a08;
+      --accent:#5fb3d4;--border:rgba(200,185,160,0.07);--card:#0c0a08;
       --mono:'JetBrains Mono',monospace;--serif:'Cormorant Garamond',serif;
       --sans:'Source Sans 3',sans-serif;
     }
@@ -22,7 +22,7 @@
     #loading.done{opacity:0;pointer-events:none}
     .load-name{font-family:var(--serif);font-size:clamp(1.6rem,4vw,2.4rem);font-weight:300;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.7)}
     .load-bar{width:160px;height:1px;background:rgba(255,255,255,.1);overflow:hidden}
-    .load-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#ffaa55);transition:width .15s ease}
+    .load-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#aaddff);transition:width .15s ease}
     .load-sub{font-family:var(--mono);font-size:.5rem;letter-spacing:.2em;color:rgba(255,255,255,.18);text-transform:uppercase}
 
     /* ── Intro ── */
@@ -270,9 +270,9 @@ function makeDiskMaterial(opacity) {
       uCamPos:    {value:new THREE.Vector3()},
       uOpacity:   {value:opacity},
       uColorHot:  {value:new THREE.Color(0xffffff)},
-      uColorMid:  {value:new THREE.Color(0xffcc55)},
-      uColorEdge: {value:new THREE.Color(0xff7711)},
-      uColorDeep: {value:new THREE.Color(0x661100)},
+      uColorMid:  {value:new THREE.Color(0x88ccff)},
+      uColorEdge: {value:new THREE.Color(0x2266cc)},
+      uColorDeep: {value:new THREE.Color(0x000a33)},
     },
     vertexShader:`
       varying vec3 vPos; varying float vR;
@@ -308,8 +308,8 @@ function makeDiskMaterial(opacity) {
           beam        = clamp(pow(doppler,2.0),0.32,2.6);
         }
 
-        float spd=4.8/(pow(vR,1.6)+1.1);
-        vec2 coord=vec2(vR*1.9,(angle+uTime*spd*.52)*3.6);
+        float spd=13.0/(pow(vR,1.6)+1.1);
+        vec2 coord=vec2(vR*1.9,(angle+uTime*spd*1.2)*3.6);
         float pat=fbm(coord,uTime*.17)*.8+sin(angle*2.3+vR*5.8-uTime*.6)*.1;
 
         vec3 ci=mix(uColorHot,uColorMid,smoothstep(0.,.4,nP));
@@ -319,7 +319,7 @@ function makeDiskMaterial(opacity) {
 
         /* Subtle Doppler tint — redshift on the receding side,
            gently cooled white on the approaching side. */
-        col*=mix(vec3(1.18,0.66,0.36), vec3(0.94,0.97,1.06),
+        col*=mix(vec3(0.36,0.66,1.18), vec3(0.94,0.99,1.10),
                  clamp((doppler-0.6)/0.95, 0.0, 1.0));
 
         /* Softer inner-edge falloff so the bright ring no longer
@@ -437,19 +437,19 @@ const bhMat = new THREE.ShaderMaterial({
       float fres = pow(1.0 - max(dot(vNormal, vViewDir), 0.0), 2.6);
       col += vec3(0.10, 0.20, 0.38) * fres * 0.45;
 
-      /* Warm equatorial halo — the actual light wrap. Disk photons
-         bent around the silhouette appear as a hot crescent hugging
+      /* Cool equatorial halo — the actual light wrap. Disk photons
+         bent around the silhouette appear as a cyan crescent hugging
          the sphere along the disk plane (clamped to grazing so it
          doesn't bleed across the whole face). */
       float eq   = 1.0 - abs(p.y);
       float wrap = pow(eq, 5.0) * fres;
-      col += vec3(1.0, 0.45, 0.15) * wrap * uHalo * 2.0;
+      col += vec3(0.30, 0.70, 1.0) * wrap * uHalo * 2.0;
 
       /* Thin photon-grazing highlight — the sharp crescent at the
          rim where light has orbited the hole once or twice before
          escaping. This is the inner edge of the photon ring. */
       float graze = pow(fres, 1.4) * pow(eq, 3.0);
-      col += vec3(1.0, 0.88, 0.70) * graze * uGraze * 0.75;
+      col += vec3(0.80, 0.92, 1.0) * graze * uGraze * 0.75;
 
       gl_FragColor = vec4(col, 1.0);
     }
@@ -546,14 +546,14 @@ const lensingMat = new THREE.ShaderMaterial({
       float slitBand = pow(1.0 - smoothstep(0.0, slitW, slitDist), 2.0);
       float slit     = slitBand * uSlitIntensity;
 
-      /* ── Equatorial rim — wider, hotter golden wrap. This is the
+      /* ── Equatorial rim — wider, cool cyan wrap. This is the
          disk's light visibly bending along the disk plane around the
          shadow; together with the lensed bg sampling above it gives
          the "light wraps around the sphere" look. ── */
       float equator  = 1.0 - abs(vWorldNorm.y);
       float rimNoise = sin(vWorldNorm.x * uNoiseScale * 0.7 + uTime * 1.3) * 0.5 + 0.5;
       float diskWrap = pow(equator, 3.8) * 1.6;
-      vec3  diskColor= mix(vec3(1.0, 0.55, 0.15), vec3(1.0, 0.90, 0.55), equator * rimNoise) * diskWrap;
+      vec3  diskColor= mix(vec3(0.30, 0.65, 1.0), vec3(0.80, 0.95, 1.0), equator * rimNoise) * diskWrap;
 
       /* Combine — bgColor carries the lensed disk image, so its weight
          is bumped: the wrap reads as a clear arc above and below the
@@ -691,19 +691,23 @@ const raymarchMat = new THREE.ShaderMaterial({
     /* Disk emission at a plane-crossing point. Turbulent cloud
        pattern, inner-to-outer temperature gradient, and
        relativistic Doppler beaming (approaching side bright +
-       blueshifted; receding side dim + redshifted). */
+       blueshifted; receding side dim + redshifted). Beyond uDiskOut
+       the function fades into a cool dust halo — wispy, blue-tinted
+       cloud noise that reads as interstellar dust drawn around the
+       disc, so the silhouette isn't framed by hard black. */
     vec3 diskEmission(float r, float ang, vec3 inPlane, vec3 rayDir){
       float nP = clamp((r - uDiskIn) / (uDiskOut - uDiskIn), 0.0, 1.0);
       float ia = smoothstep(0.0,  0.04, nP);
-      float oa = 1.0 - smoothstep(0.93, 1.0, nP);
+      float oa = 1.0 - smoothstep(0.86, 1.0, nP);
 
-      vec2  coord = vec2(ang * 6.0 + r * 0.4, r * 2.2);
-      float pat   = fbm2(coord + uTime * 0.12) * 0.7 + 0.4;
-      pat += sin(ang * 3.0 + r * 4.5 - uTime * 0.6) * 0.06;
+      float swirl = uTime * (1.8 / (pow(r, 1.2) + 0.6));
+      vec2  coord = vec2(ang * 6.0 + r * 0.4 + swirl * 3.0, r * 2.2);
+      float pat   = fbm2(coord + uTime * 0.38) * 0.7 + 0.4;
+      pat += sin(ang * 3.0 + r * 4.5 - uTime * 2.1 - swirl * 1.8) * 0.06;
 
-      vec3 hot = vec3(1.00, 0.95, 0.78);
-      vec3 mid = vec3(1.00, 0.55, 0.18);
-      vec3 cl  = vec3(0.65, 0.13, 0.04);
+      vec3 hot = vec3(0.92, 0.97, 1.00);
+      vec3 mid = vec3(0.40, 0.75, 1.00);
+      vec3 cl  = vec3(0.04, 0.12, 0.42);
       vec3 c   = mix(hot, mid, smoothstep(0.0, 0.40, nP));
       c        = mix(c,   cl,  smoothstep(0.40, 1.0, nP));
 
@@ -718,11 +722,26 @@ const raymarchMat = new THREE.ShaderMaterial({
       float doppler = 1.0 / (gamma * (1.0 - beta * mu));
       brightness *= clamp(pow(doppler, 2.2), 0.2, 3.5);
 
-      c *= mix(vec3(1.22, 0.58, 0.28),
-               vec3(0.92, 0.96, 1.10),
-               clamp((doppler - 0.6) / 1.0, 0.0, 1.0));
+      vec3 dopTint = mix(vec3(0.28, 0.58, 1.22),
+                        vec3(0.92, 0.99, 1.12),
+                        clamp((doppler - 0.6) / 1.0, 0.0, 1.0));
+      c *= dopTint;
 
-      return c * brightness * ia * oa;
+      /* Dust halo: lives in (uDiskOut, uDiskOut * 2.4). A wispier,
+         lower-octave cloud pattern, cool blue, drifting tangentially
+         with the disc. Fades cubically to nothing at the outer edge. */
+      float dustExtent = uDiskOut * 1.4;
+      float nDust    = clamp((r - uDiskOut) / dustExtent, 0.0, 1.0);
+      float dustMask = step(uDiskOut, r) * pow(1.0 - nDust, 2.4);
+      vec2  dustCoord = vec2(ang * 2.6 + swirl * 1.3, r * 0.7);
+      float dustPat   = fbm2(dustCoord + uTime * 0.16);
+      dustPat = pow(dustPat, 1.4);
+      vec3 dustCol = mix(vec3(0.05, 0.16, 0.42),
+                         vec3(0.30, 0.62, 1.00),
+                         dustPat);
+      vec3 dustEmit = dustCol * dustPat * dustMask * 0.65 * dopTint;
+
+      return c * brightness * ia * oa + dustEmit;
     }
 
     void main(){
@@ -770,13 +789,18 @@ const raymarchMat = new THREE.ShaderMaterial({
           vec3  xPos    = mix(rayPos, nextPos, t);
           vec3  inPlane = xPos - diskN * dot(xPos, diskN);
           float rCross  = length(inPlane);
-          if(rCross >= uDiskIn && rCross <= uDiskOut){
+          if(rCross >= uDiskIn && rCross <= uDiskOut * 2.4){
             float du   = dot(inPlane, diskX);
             float dv   = dot(inPlane, diskZ);
             float ang  = atan(dv, du);
             vec3  emit = diskEmission(rCross, ang, inPlane, rayDir);
-            col += emit * tr * uDiskOpacity;
-            tr  *= 1.0 - uDiskOpacity * 0.7;
+            /* Dust halo region (r > uDiskOut) is thin, so it shouldn't
+               consume the same transmittance as the dense disc — drop
+               extinction sharply past the bright disc edge. */
+            float dustWeight = smoothstep(uDiskOut * 1.05, uDiskOut, rCross);
+            float diskAlpha  = uDiskOpacity * mix(0.18, 1.0, dustWeight);
+            col += emit * tr * diskAlpha;
+            tr  *= 1.0 - diskAlpha * 0.7;
           }
         }
 

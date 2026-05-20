@@ -17,34 +17,37 @@
     html{font-size:100%}
     body{background:var(--bg);color:var(--fg);font-family:var(--sans);overflow-y:auto;overflow-x:hidden}
 
-    #loading{position:fixed;inset:0;z-index:100;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;transition:opacity 0.8s ease}
+    /* ── Loading ── */
+    #loading{position:fixed;inset:0;z-index:100;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;transition:opacity .8s ease}
     #loading.done{opacity:0;pointer-events:none}
     .load-name{font-family:var(--serif);font-size:clamp(1.6rem,4vw,2.4rem);font-weight:300;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.7)}
     .load-bar{width:160px;height:1px;background:rgba(255,255,255,.1);overflow:hidden}
-    .load-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#ffaa55);transition:width .25s ease}
+    .load-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#ffaa55);transition:width .15s ease}
     .load-sub{font-family:var(--mono);font-size:.5rem;letter-spacing:.2em;color:rgba(255,255,255,.18);text-transform:uppercase}
 
+    /* ── Intro ── */
     #intro{position:fixed;inset:0;z-index:10;background:#000}
     #intro canvas{position:absolute!important;inset:0;width:100%!important;height:100%!important}
+    #intro.hidden{display:none}
 
-    /* Name: 36% from top — sits above the disk line which lands ~55–62% of screen */
+    /* Name — sits above the disk line */
     #intro-name{
-      position:absolute;top:36%;left:50%;transform:translate(-50%,-50%);
-      text-align:center;pointer-events:none;z-index:16;transition:opacity .5s ease;
+      position:absolute;top:34%;left:50%;transform:translate(-50%,-50%);
+      text-align:center;pointer-events:none;z-index:20;transition:opacity .5s ease;
     }
     #intro-name h1{
       font-family:var(--serif);font-size:clamp(2rem,4.8vw,3.2rem);font-weight:300;
-      letter-spacing:.18em;color:rgba(255,255,255,.9);text-transform:uppercase;
-      text-shadow:0 2px 40px rgba(0,0,0,.9),0 0 80px rgba(0,0,0,.7);
+      letter-spacing:.18em;color:rgba(255,255,255,.92);text-transform:uppercase;
+      text-shadow:0 2px 40px rgba(0,0,0,.95),0 0 80px rgba(0,0,0,.8);
     }
     #intro-name p{
       font-family:var(--mono);font-size:.53rem;letter-spacing:.26em;
-      color:rgba(255,255,255,.32);text-transform:uppercase;margin-top:12px;
-      text-shadow:0 1px 16px rgba(0,0,0,.95);
+      color:rgba(255,255,255,.3);text-transform:uppercase;margin-top:12px;
+      text-shadow:0 1px 16px rgba(0,0,0,.99);
     }
 
-    #scroll-hint{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);z-index:16;display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:none;transition:opacity .4s ease}
-    #scroll-hint span{font-family:var(--mono);font-size:.5rem;letter-spacing:.22em;color:rgba(255,255,255,.2);text-transform:uppercase}
+    #scroll-hint{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);z-index:20;display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:none;transition:opacity .4s ease}
+    #scroll-hint span{font-family:var(--mono);font-size:.5rem;letter-spacing:.22em;color:rgba(255,255,255,.18);text-transform:uppercase}
     .hint-line{width:1px;height:28px;background:linear-gradient(to bottom,rgba(255,255,255,.18),transparent);animation:hint-drop 2s ease-in-out infinite}
     @keyframes hint-drop{0%{opacity:0;transform:scaleY(.4) translateY(-8px)}40%{opacity:1}100%{opacity:0;transform:scaleY(1) translateY(8px)}}
 
@@ -52,6 +55,7 @@
     #overlay{position:fixed;inset:0;background:#000;z-index:40;opacity:0;pointer-events:none}
     #driver{height:420vh;position:relative;z-index:5}
 
+    /* ── Portfolio ── */
     #portfolio{position:relative;min-height:100vh;background:var(--bg);z-index:6;opacity:0;transition:opacity 1.1s ease}
     #portfolio.visible{opacity:1}
     .p-grid{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(circle,rgba(180,165,140,.05) 1px,transparent 1px);background-size:38px 38px;opacity:0;transition:opacity 1.2s ease .4s}
@@ -115,7 +119,7 @@
 <div id="loading">
   <div class="load-name">Yousif Elia</div>
   <div class="load-bar"><div class="load-fill" id="load-fill"></div></div>
-  <div class="load-sub">Loading scene</div>
+  <div class="load-sub" id="load-sub">Initializing</div>
 </div>
 
 <div id="intro">
@@ -142,80 +146,24 @@
       <p class="p-bio">Second-year Computer Science student at the University of Windsor, seeking internships. I build things that solve real problems — focused on clean architecture and understanding the <em>why</em> behind every decision.</p>
       <span class="p-avail"><span class="p-dot"></span>Available for internships · Fall 2026</span>
     </div>
-
     <div class="p-section">
       <span class="p-lbl">Resume</span><hr class="p-rule">
       <a class="p-dl" href="YousifElia-SWE.pdf" target="_blank" rel="noopener">Download full resume ↗</a>
     </div>
-
     <div class="p-section">
       <span class="p-lbl">Projects</span>
       <div class="p-projs">
-        <a class="p-proj" href="#" target="_blank">
-          <span class="p-proj-yr">2026</span>
-          <div>
-            <p class="p-proj-name">myAdvice</p>
-            <p class="p-proj-desc">Centralized system for advising operations across teams.</p>
-            <ul class="p-proj-bullets">
-              <li>Engineered backend infrastructure with JavaFX and REST APIs.</li>
-              <li>Built MariaDB schemas to track user metrics and contractual data.</li>
-              <li>Containerized with Docker for seamless team collaboration.</li>
-              <li>Redesigned UX workflows, cutting required user actions by ~80%.</li>
-            </ul>
-            <div class="p-tags"><span>JavaFX</span><span>REST</span><span>Hibernate</span><span>MariaDB</span><span>Docker</span></div>
-          </div>
-          <span class="p-proj-arr">↗</span>
-        </a>
-        <a class="p-proj" href="#" target="_blank">
-          <span class="p-proj-yr">2026</span>
-          <div>
-            <p class="p-proj-name">MedCheck</p>
-            <p class="p-proj-desc">Web app that compares drug name, dosage, and price against crowdsourced data to flag potential overpayment.</p>
-            <div class="p-tags"><span>Web App</span><span>Pricing</span><span>Data</span></div>
-          </div>
-          <span class="p-proj-arr">↗</span>
-        </a>
-        <a class="p-proj" href="#" target="_blank">
-          <span class="p-proj-yr">2025</span>
-          <div>
-            <p class="p-proj-name">StudySync Dashboard</p>
-            <p class="p-proj-desc">Productivity dashboard for students tracking assignments and focus sessions with the Pomodoro technique.</p>
-            <div class="p-tags"><span>React</span><span>Tailwind</span><span>Vite</span></div>
-          </div>
-          <span class="p-proj-arr">↗</span>
-        </a>
-        <a class="p-proj" href="#" target="_blank">
-          <span class="p-proj-yr">2025</span>
-          <div>
-            <p class="p-proj-name">Inventory API</p>
-            <p class="p-proj-desc">RESTful API for small-business inventory management with JWT auth and role-based access control.</p>
-            <div class="p-tags"><span>Node.js</span><span>Express</span><span>PostgreSQL</span></div>
-          </div>
-          <span class="p-proj-arr">↗</span>
-        </a>
+        <a class="p-proj" href="#"><span class="p-proj-yr">2026</span><div><p class="p-proj-name">myAdvice</p><p class="p-proj-desc">Centralized system for advising operations across teams.</p><ul class="p-proj-bullets"><li>JavaFX + REST API backend.</li><li>MariaDB schemas for user metrics.</li><li>Containerized with Docker.</li><li>Redesigned UX, cutting user actions by ~80%.</li></ul><div class="p-tags"><span>JavaFX</span><span>REST</span><span>Hibernate</span><span>MariaDB</span><span>Docker</span></div></div><span class="p-proj-arr">↗</span></a>
+        <a class="p-proj" href="#"><span class="p-proj-yr">2026</span><div><p class="p-proj-name">MedCheck</p><p class="p-proj-desc">Compares drug pricing against crowdsourced data to flag overpayment.</p><div class="p-tags"><span>Web App</span><span>Pricing</span></div></div><span class="p-proj-arr">↗</span></a>
+        <a class="p-proj" href="#"><span class="p-proj-yr">2025</span><div><p class="p-proj-name">StudySync Dashboard</p><p class="p-proj-desc">Productivity dashboard with Pomodoro technique.</p><div class="p-tags"><span>React</span><span>Tailwind</span><span>Vite</span></div></div><span class="p-proj-arr">↗</span></a>
+        <a class="p-proj" href="#"><span class="p-proj-yr">2025</span><div><p class="p-proj-name">Inventory API</p><p class="p-proj-desc">RESTful API with JWT auth and role-based access.</p><div class="p-tags"><span>Node.js</span><span>Express</span><span>PostgreSQL</span></div></div><span class="p-proj-arr">↗</span></a>
       </div>
     </div>
-
     <div class="p-section">
       <span class="p-lbl">Leadership</span>
-      <div class="p-exp">
-        <span class="p-exp-date">Mar 2026 – Present</span>
-        <div>
-          <p class="p-exp-title">Head of Events</p>
-          <p class="p-exp-org">University of Windsor</p>
-          <p class="p-exp-desc">Lead planning and coordination for student events and campus engagement initiatives.</p>
-        </div>
-      </div>
-      <div class="p-exp">
-        <span class="p-exp-date">Mar 2024 – Sep 2024</span>
-        <div>
-          <p class="p-exp-title">Math Tutor</p>
-          <p class="p-exp-org">Private Tutoring</p>
-          <p class="p-exp-desc">Tutored high school students in mathematics, reinforcing problem-solving fundamentals.</p>
-        </div>
-      </div>
+      <div class="p-exp"><span class="p-exp-date">Mar 2026 – Present</span><div><p class="p-exp-title">Head of Events</p><p class="p-exp-org">University of Windsor</p><p class="p-exp-desc">Lead planning and coordination for student events and campus engagement.</p></div></div>
+      <div class="p-exp"><span class="p-exp-date">Mar 2024 – Sep 2024</span><div><p class="p-exp-title">Math Tutor</p><p class="p-exp-org">Private Tutoring</p><p class="p-exp-desc">Tutored high school students in mathematics and problem-solving.</p></div></div>
     </div>
-
     <div class="p-section">
       <span class="p-lbl">Personal Interests</span>
       <div class="p-interests">
@@ -225,306 +173,728 @@
         <a class="p-int" href="physical.html"><span class="p-int-icon">P</span><div><p class="p-int-title">Physical</p><p class="p-int-desc">Training, sports, staying active</p></div></a>
       </div>
     </div>
-
     <footer class="p-foot">
       <span class="p-copy">© 2026 Yousif Elia</span>
-      <nav class="p-links">
-        <a href="#">GitHub</a>
-        <a href="#">LinkedIn</a>
-        <a href="#">Email</a>
-      </nav>
+      <nav class="p-links"><a href="#">GitHub</a><a href="#">LinkedIn</a><a href="#">Email</a></nav>
     </footer>
   </div>
 </main>
 
 <script type="module">
 import * as THREE from 'https://esm.sh/three@0.160.0';
-import { GLTFLoader }      from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
 import { EffectComposer }  from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass }      from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/UnrealBloomPass.js';
+import { ShaderPass }      from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/ShaderPass.js';
 
-const $ = id => document.getElementById(id);
-const loadingEl = $('loading'), loadFill = $('load-fill'),
-      introEl = $('intro'), overlayEl = $('overlay'),
-      driverEl = $('driver'), portfolioEl = $('portfolio'),
-      pgridEl = $('p-grid'), vignetteEl = $('vignette'),
-      hintEl = $('scroll-hint'), nameEl = $('intro-name');
+/* ─── DOM refs ─────────────────────────────────── */
+const loadingEl  = document.getElementById('loading');
+const loadFill   = document.getElementById('load-fill');
+const loadSub    = document.getElementById('load-sub');
+const introEl    = document.getElementById('intro');
+const overlayEl  = document.getElementById('overlay');
+const driverEl   = document.getElementById('driver');
+const portfolioEl= document.getElementById('portfolio');
+const pgridEl    = document.getElementById('p-grid');
+const vignetteEl = document.getElementById('vignette');
+const hintEl     = document.getElementById('scroll-hint');
+const nameEl     = document.getElementById('intro-name');
 
-/* ── Renderer ─────────────────────────────── */
-const scene    = new THREE.Scene();
-const camera   = new THREE.PerspectiveCamera(52, innerWidth/innerHeight, 0.01, 3000);
+/* ─── Renderer ─────────────────────────────────── */
 const renderer = new THREE.WebGLRenderer({ antialias:true, powerPreference:'high-performance' });
-renderer.setSize(innerWidth, innerHeight);
 renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+renderer.setSize(innerWidth, innerHeight);
 renderer.outputColorSpace  = THREE.SRGBColorSpace;
 renderer.toneMapping       = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.0;
+renderer.toneMappingExposure = 1.1;
 introEl.appendChild(renderer.domElement);
 
-/* ── Bloom — kept low so sphere stays dark ── */
+const W = innerWidth, H = innerHeight;
+
+/* ─── Two scenes ────────────────────────────────
+   bgScene  → rendered first to bgTarget (stars + disk back)
+   fgScene  → rendered second (sphere + lensing shell + disk front + stars) */
+const bgScene  = new THREE.Scene();
+const fgScene  = new THREE.Scene();
+const camera   = new THREE.PerspectiveCamera(52, W/H, 0.01, 3000);
+
+/* Render target that bgScene draws into */
+const bgTarget = new THREE.WebGLRenderTarget(W, H, {
+  minFilter: THREE.LinearFilter,
+  magFilter: THREE.LinearFilter,
+  format: THREE.RGBAFormat,
+  type: THREE.HalfFloatType,
+});
+
+/* ─── Post-processing ──────────────────────────── */
 const composer = new EffectComposer(renderer);
-composer.addPass(new RenderPass(scene, camera));
-const bloom = new UnrealBloomPass(
-  new THREE.Vector2(innerWidth, innerHeight),
-  0.55,   // strength
-  0.60,   // radius
-  0.82    // threshold — only hottest disk parts glow
-);
+composer.addPass(new RenderPass(fgScene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(W, H), 0.45, 0.55, 0.85);
 composer.addPass(bloom);
 
-/* ── Sparse stars (2500) ──────────────────── */
-const N = 2500;
-const sp = new Float32Array(N*3), sc = new Float32Array(N*3), ss = new Float32Array(N);
-for (let i = 0; i < N; i++) {
-  const phi = Math.acos(1-2*(i+.5)/N), th = 2*Math.PI*i/1.618;
-  const r = 400 + Math.random()*600;
-  sp[i*3]=r*Math.sin(phi)*Math.cos(th); sp[i*3+1]=r*Math.sin(phi)*Math.sin(th); sp[i*3+2]=r*Math.cos(phi);
-  sc[i*3]=0.92; sc[i*3+1]=0.95; sc[i*3+2]=1.0;
-  ss[i] = Math.random()<.95 ? Math.random()*.4+.1 : Math.random()*.9+.4;
+/* ─── Shared constants ─────────────────────────── */
+const R          = 1.0;
+const DISK_IN    = R * 1.18;
+const DISK_OUT   = R * 7.5;
+const DISK_TILT  = THREE.MathUtils.degToRad(6);   /* whole-system tilt */
+const SHADOW_SIZE= 1.20;                          /* black-hole shadow radius ×R — sits just outside the disk inner edge so the bright inner rim hugs the silhouette */
+
+/* ─── Stars (shared between both scenes) ──────── */
+function makeStars(n, scene) {
+  const sp = new Float32Array(n*3), sc = new Float32Array(n*3), ss = new Float32Array(n);
+  for (let i=0;i<n;i++){
+    const phi=Math.acos(1-2*(i+.5)/n), th=2*Math.PI*i/1.618;
+    const r=300+Math.random()*700;
+    sp[i*3]=r*Math.sin(phi)*Math.cos(th); sp[i*3+1]=r*Math.sin(phi)*Math.sin(th); sp[i*3+2]=r*Math.cos(phi);
+    sc[i*3]=.92; sc[i*3+1]=.95; sc[i*3+2]=1.0;
+    ss[i]=Math.random()<.95?Math.random()*.4+.1:Math.random()*.9+.5;
+  }
+  const g=new THREE.BufferGeometry();
+  g.setAttribute('position',new THREE.BufferAttribute(sp,3));
+  g.setAttribute('color',   new THREE.BufferAttribute(sc,3));
+  g.setAttribute('size',    new THREE.BufferAttribute(ss,1));
+  scene.add(new THREE.Points(g, new THREE.ShaderMaterial({
+    vertexShader:`attribute float size;attribute vec3 color;varying vec3 vC;void main(){vC=color;vec4 mv=modelViewMatrix*vec4(position,1.);gl_PointSize=size*(300./-mv.z);gl_Position=projectionMatrix*mv;}`,
+    fragmentShader:`varying vec3 vC;void main(){float r=length(gl_PointCoord-.5);float a=1.-smoothstep(.38,.5,r);if(a<.01)discard;gl_FragColor=vec4(vC,a*.7);}`,
+    blending:THREE.AdditiveBlending,depthWrite:false,transparent:true
+  })));
 }
-const sGeo = new THREE.BufferGeometry();
-sGeo.setAttribute('position', new THREE.BufferAttribute(sp,3));
-sGeo.setAttribute('color',    new THREE.BufferAttribute(sc,3));
-sGeo.setAttribute('size',     new THREE.BufferAttribute(ss,1));
-scene.add(new THREE.Points(sGeo, new THREE.ShaderMaterial({
-  vertexShader:`attribute float size;attribute vec3 color;varying vec3 vC;void main(){vC=color;vec4 mv=modelViewMatrix*vec4(position,1.);gl_PointSize=size*(300./-mv.z);gl_Position=projectionMatrix*mv;}`,
-  fragmentShader:`varying vec3 vC;void main(){float r=length(gl_PointCoord-.5);float a=1.-smoothstep(.38,.5,r);if(a<.01)discard;gl_FragColor=vec4(vC,a*.7);}`,
-  blending:THREE.AdditiveBlending,depthWrite:false,transparent:true
-})));
+makeStars(2000, bgScene);
+makeStars(2000, fgScene);
 
-/* ── Scene constants ──────────────────────── */
-const R       = 1.0;
-const DISK_IN = R * 1.18;
-const DISK_OUT= R * 7.5;
+/* ─── Disk shader factory ──────────────────────── */
+function makeDiskMaterial(opacity) {
+  return new THREE.ShaderMaterial({
+    uniforms:{
+      uTime:      {value:0},
+      uCamPos:    {value:new THREE.Vector3()},
+      uOpacity:   {value:opacity},
+      uColorHot:  {value:new THREE.Color(0xffffff)},
+      uColorMid:  {value:new THREE.Color(0xffcc55)},
+      uColorEdge: {value:new THREE.Color(0xff7711)},
+      uColorDeep: {value:new THREE.Color(0x661100)},
+    },
+    vertexShader:`
+      varying vec3 vPos; varying float vR;
+      void main(){ vPos=position; vR=length(position.xy);
+        gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+    fragmentShader:`
+      uniform float uTime, uOpacity;
+      uniform vec3 uColorHot,uColorMid,uColorEdge,uColorDeep,uCamPos;
+      varying vec3 vPos; varying float vR;
+      float rand(vec2 n){return fract(sin(dot(n,vec2(12.9898,4.1414)))*43758.5453);}
+      float noise(vec2 p){vec2 ip=floor(p),u=fract(p);u=u*u*(3.-2.*u);
+        return mix(mix(rand(ip),rand(ip+vec2(1,0)),u.x),mix(rand(ip+vec2(0,1)),rand(ip+vec2(1,1)),u.x),u.y);}
+      float fbm(vec2 p,float t){float s=0.,a=.65,f=2.2;
+        for(int i=0;i<6;i++){s+=a*noise(p*f+vec2(t*.27,t*.18));f*=2.;a*=.5;}return s;}
+      void main(){
+        float inner=${DISK_IN.toFixed(4)},outer=${DISK_OUT.toFixed(4)};
+        float nP=clamp((vR-inner)/(outer-inner),0.,1.);
+        float angle=atan(vPos.y,vPos.x);
 
-/* ── Disk material (CodePen shader) ──────── */
-const diskMat = new THREE.ShaderMaterial({
+        /* Relativistic Doppler beaming. uCamPos is the camera in
+           disk-local space, so velocity, line-of-sight and the dot
+           product all share one consistent frame. Power = 2 (not
+           the full δ³) so the bright side glows without blowing
+           out the shadow sitting right behind it. */
+        float beta = clamp(0.42/sqrt(max(vR*0.5,0.18)),0.0,0.82);
+        float beam = 1.0, doppler = 1.0;
+        if(length(uCamPos)>0.01){
+          vec3 velDir = normalize(vec3(vPos.y,-vPos.x,0.0));
+          vec3 los    = normalize(uCamPos-vPos);
+          float mu    = dot(los,velDir);
+          float gamma = 1.0/sqrt(1.0-beta*beta);
+          doppler     = 1.0/(gamma*(1.0-beta*mu));
+          beam        = clamp(pow(doppler,2.0),0.32,2.6);
+        }
+
+        float spd=4.8/(pow(vR,1.6)+1.1);
+        vec2 coord=vec2(vR*1.9,(angle+uTime*spd*.52)*3.6);
+        float pat=fbm(coord,uTime*.17)*.8+sin(angle*2.3+vR*5.8-uTime*.6)*.1;
+
+        vec3 ci=mix(uColorHot,uColorMid,smoothstep(0.,.4,nP));
+        vec3 co=mix(uColorMid,uColorEdge,smoothstep(.4,.8,nP));
+        vec3 cd=mix(uColorEdge,uColorDeep,smoothstep(.8,1.,nP));
+        vec3 col=mix(mix(ci,co,smoothstep(.4,.8,nP)),cd,smoothstep(.8,1.,nP));
+
+        /* Subtle Doppler tint — redshift on the receding side,
+           gently cooled white on the approaching side. */
+        col*=mix(vec3(1.18,0.66,0.36), vec3(0.94,0.97,1.06),
+                 clamp((doppler-0.6)/0.95, 0.0, 1.0));
+
+        /* Softer inner-edge falloff so the bright ring no longer
+           drowns the shadow it's hugging. */
+        float rb=pow(1.-smoothstep(0.,.9,nP),1.8)*1.95;
+        float bright=(pat+.5)*rb*beam;
+        col*=bright;
+        col=mix(col,vec3(1.),smoothstep(5.5,9.5,bright)*smoothstep(0.,.06,nP)*.35);
+
+        float ia=smoothstep(0.,.05,nP),oa=1.-smoothstep(.9,1.,nP);
+        float a=ia*oa*clamp(pat*.3+.8,.5,1.)*uOpacity*clamp(beam*0.32+0.42,0.30,1.0);
+        gl_FragColor=vec4(clamp(col,0.,7.),a);}`,
+    transparent:true, side:THREE.DoubleSide,
+    depthWrite:false, depthTest:true,
+    blending:THREE.AdditiveBlending
+  });
+}
+
+/* The disk is tilted as a whole through a pivot group. Rotating the
+   ring mesh's own Z axis only spins the texture within its own plane
+   (the geometry is azimuthally symmetric), so the tilt has to come
+   from a parent the flat disk is nested inside. */
+
+/* Disk in bg scene (appears behind sphere — lensed image) */
+const bgDiskMat  = makeDiskMaterial(1.00);   /* full opacity — feeds the lensed wrap */
+const bgDisk     = new THREE.Mesh(new THREE.RingGeometry(DISK_IN, DISK_OUT, 256, 64), bgDiskMat);
+bgDisk.rotation.x = Math.PI/2;
+const bgDiskPivot = new THREE.Group();
+bgDiskPivot.rotation.z = DISK_TILT;
+bgDiskPivot.add(bgDisk);
+bgScene.add(bgDiskPivot);
+
+/* Disk in fg scene (appears in front) */
+const fgDiskMat = makeDiskMaterial(1.0);
+const fgDisk    = new THREE.Mesh(new THREE.RingGeometry(DISK_IN, DISK_OUT, 256, 64), fgDiskMat);
+fgDisk.rotation.x = Math.PI/2;
+fgDisk.renderOrder = 2;
+const fgDiskPivot = new THREE.Group();
+fgDiskPivot.rotation.z = DISK_TILT;
+fgDiskPivot.add(fgDisk);
+fgScene.add(fgDiskPivot);
+
+/* ─── Black hole shadow ─────────────────────────
+   Stylised "menacing" surface instead of a flat black sphere:
+   storm-band clouds swirl clockwise, ridged fissures pulse with
+   ember light, a cold-blue Fresnel rim cinematically frames the
+   silhouette, and a warm equatorial leak picks up the disk's
+   heat bending around the shadow. Still dark enough overall that
+   it reads as the event horizon, not a planet. */
+const sphereGeo = new THREE.SphereGeometry(R, 192, 96);
+const bhMat = new THREE.ShaderMaterial({
+  uniforms: {
+    uTime:  { value: 0 },
+    uHalo:  { value: 1.0 },   /* warm equatorial light wrap */
+    uGraze: { value: 1.0 },   /* photon-grazing highlight   */
+  },
+  vertexShader: `
+    varying vec3 vNormal;
+    varying vec3 vViewDir;
+    varying vec3 vLocalPos;
+    void main(){
+      vLocalPos = position;
+      vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
+      vViewDir  = normalize(-mvPos.xyz);
+      vNormal   = normalize(normalMatrix * normal);
+      gl_Position = projectionMatrix * mvPos;
+    }
+  `,
+  fragmentShader: `
+    uniform float uTime, uHalo, uGraze;
+    varying vec3 vNormal;
+    varying vec3 vViewDir;
+    varying vec3 vLocalPos;
+
+    /* 3D value noise — only used to break up the silhouette so the
+       sphere reads as 3D, not a flat 2D disk. No bands, no embers. */
+    float h31(vec3 p){
+      p = fract(p * 0.1031);
+      p += dot(p, p.yzx + 33.33);
+      return fract((p.x + p.y) * p.z);
+    }
+    float n3(vec3 p){
+      vec3 i = floor(p), f = fract(p);
+      f = f*f*(3.0 - 2.0*f);
+      float a = h31(i + vec3(0,0,0)), b = h31(i + vec3(1,0,0));
+      float c = h31(i + vec3(0,1,0)), d = h31(i + vec3(1,1,0));
+      float e = h31(i + vec3(0,0,1)), g = h31(i + vec3(1,0,1));
+      float k = h31(i + vec3(0,1,1)), l = h31(i + vec3(1,1,1));
+      return mix(mix(mix(a,b,f.x), mix(c,d,f.x), f.y),
+                 mix(mix(e,g,f.x), mix(k,l,f.x), f.y), f.z);
+    }
+    float fbm(vec3 p){
+      float v = 0.0, a = 0.55;
+      for(int i = 0; i < 4; i++){
+        v += a * n3(p);
+        p  = p * 2.07 + 17.7;
+        a *= 0.5;
+      }
+      return v;
+    }
+
+    void main(){
+      vec3 p = normalize(vLocalPos);
+
+      /* Near-black base with a faint, slow drift so the surface
+         isn't perfectly dead-flat. Kept far below the disk's
+         brightness — the sphere is the absence of light, the
+         wrap around it is where everything happens. */
+      float drift = fbm(p * 3.5 + uTime * 0.04);
+      vec3  col   = vec3(0.005, 0.007, 0.011);
+      col *= 0.85 + drift * 0.15;
+
+      /* Cool-blue Fresnel rim — frames the silhouette and reads as
+         the gravitational redshift of light grazing the horizon. */
+      float fres = pow(1.0 - max(dot(vNormal, vViewDir), 0.0), 2.6);
+      col += vec3(0.10, 0.20, 0.38) * fres * 0.45;
+
+      /* Warm equatorial halo — the actual light wrap. Disk photons
+         bent around the silhouette appear as a hot crescent hugging
+         the sphere along the disk plane (clamped to grazing so it
+         doesn't bleed across the whole face). */
+      float eq   = 1.0 - abs(p.y);
+      float wrap = pow(eq, 5.0) * fres;
+      col += vec3(1.0, 0.45, 0.15) * wrap * uHalo * 2.0;
+
+      /* Thin photon-grazing highlight — the sharp crescent at the
+         rim where light has orbited the hole once or twice before
+         escaping. This is the inner edge of the photon ring. */
+      float graze = pow(fres, 1.4) * pow(eq, 3.0);
+      col += vec3(1.0, 0.88, 0.70) * graze * uGraze * 0.75;
+
+      gl_FragColor = vec4(col, 1.0);
+    }
+  `,
+});
+const bhMesh = new THREE.Mesh(sphereGeo, bhMat);
+bhMesh.scale.setScalar(SHADOW_SIZE);
+bhMesh.rotation.z = DISK_TILT;          /* align storm bands with the tilted disk */
+bhMesh.renderOrder = 1;
+fgScene.add(bhMesh);
+
+/* ─── Gravitational lensing shell ───────────────
+   A sphere slightly bigger than the black hole.
+   Custom shader:
+   1. At the edges → samples bgTarget (the bg scene) but
+      deflects UVs radially inward → fakes light bending
+   2. Creates bright white photon ring at grazing angles */
+const lensingMat = new THREE.ShaderMaterial({
   uniforms:{
-    uTime:     { value: 0 },
-    uCamPos:   { value: new THREE.Vector3() },
-    uColorHot: { value: new THREE.Color(0xffffff) },
-    uColorMid: { value: new THREE.Color(0xffcc55) },
-    uColorEdge:{ value: new THREE.Color(0xff7711) },
-    uColorDeep:{ value: new THREE.Color(0x661100) },
+    tBg:           {value: bgTarget.texture},
+    uRes:          {value: new THREE.Vector2(W, H)},
+    uTime:         {value: 0},
+    uTiltDeg:      {value: 6.0},
+    uSlitWidth:    {value: 0.18},
+    uSlitIntensity:{value: 0.8},
+    uLensAmount:   {value: 0.55},
+    uNoiseScale:   {value: 2.4},
   },
   vertexShader:`
-    varying vec3 vPos; varying float vR;
+    varying vec3 vNorm;
+    varying vec3 vViewDir;
+    varying vec3 vWorldNorm;
     void main(){
-      vPos = position;
-      vR   = length(position.xy);
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
+      vViewDir   = normalize(-mvPos.xyz);
+      vNorm      = normalize(normalMatrix * normal);
+      vWorldNorm = normalize((modelMatrix * vec4(normal, 0.0)).xyz);
+      gl_Position = projectionMatrix * mvPos;
     }`,
   fragmentShader:`
+    uniform sampler2D tBg;
+    uniform vec2 uRes;
     uniform float uTime;
-    uniform vec3  uColorHot, uColorMid, uColorEdge, uColorDeep, uCamPos;
-    varying vec3  vPos;
-    varying float vR;
+    uniform float uTiltDeg;
+    uniform float uSlitWidth;
+    uniform float uSlitIntensity;
+    uniform float uLensAmount;
+    uniform float uNoiseScale;
+    varying vec3 vNorm;
+    varying vec3 vViewDir;
+    varying vec3 vWorldNorm;
 
-    float rand(vec2 n){ return fract(sin(dot(n, vec2(12.9898,4.1414))) * 43758.5453); }
-    float noise(vec2 p){
-      vec2 ip = floor(p), u = fract(p);
-      u = u*u*(3.0-2.0*u);
-      return mix(
-        mix(rand(ip), rand(ip+vec2(1,0)), u.x),
-        mix(rand(ip+vec2(0,1)), rand(ip+vec2(1,1)), u.x), u.y);
+    void main(){
+      vec2 screenUV = gl_FragCoord.xy / uRes;
+
+      float cosA  = dot(vViewDir, vNorm);
+      float edge  = 1.0 - abs(cosA);           // 0 = face-on, 1 = edge-on
+
+      /* ── Gravitational lensing distortion — a wider grazing band
+         so the lensed disk visibly wraps the shadow instead of only
+         flashing right at the photon ring. ── */
+      vec2 center   = vec2(0.5);
+      vec2 toCenter = center - screenUV;
+      float dist    = length(toCenter);
+      float lensStr = pow(edge, 2.2) * uLensAmount;
+      vec2 lensedUV = screenUV + normalize(toCenter) * lensStr * (1.0 - smoothstep(0.0, 0.78, dist));
+
+      /* Smear the lensed background tangentially (clockwise) so stars
+         and the disk image streak as if dragged by the hole's spin —
+         the "violent motion" you can't get from a single sample. */
+      vec2  tang  = vec2(-toCenter.y, toCenter.x) / max(dist, 0.001);
+      float smear = edge * 0.014 + lensStr * 0.045;
+      vec3  bgColor = texture2D(tBg, lensedUV - tang * smear * 0.6).rgb * 0.55
+                    + texture2D(tBg, lensedUV).rgb                       * 0.30
+                    + texture2D(tBg, lensedUV + tang * smear * 0.6).rgb * 0.15;
+
+      /* ── Photon ring + a sharper inner sub-ring. Real black-hole
+         images show multiple thin rings just inside the shadow edge
+         (light that orbited the hole one extra time before escaping);
+         a second sharper band fakes that nested-ring look. ── */
+      float ring1 = pow(edge, 20.0) * 2.4;
+      float ring2 = pow(edge, 45.0) * 1.4;
+      float ring  = (ring1 + ring2) * (0.92 + sin(uTime * 1.6) * 0.08);
+
+      /* ── Narrow tilted equatorial slit ──
+         Rotate the equatorial plane by uTiltDeg then find band width. */
+      float tiltRad  = uTiltDeg * 3.14159265 / 180.0;
+      vec3  slitAxis = normalize(vec3(sin(tiltRad), cos(tiltRad), 0.0));
+      float slitDist = abs(dot(vWorldNorm, slitAxis));
+      /* Curl noise wiggles the slit edge */
+      float curlN    = sin(vWorldNorm.x * uNoiseScale + uTime * 0.9)
+                     * cos(vWorldNorm.z * uNoiseScale * 1.3 + uTime * 0.6) * 0.5 + 0.5;
+      float slitW    = uSlitWidth * (0.8 + curlN * 0.25);
+      float slitBand = pow(1.0 - smoothstep(0.0, slitW, slitDist), 2.0);
+      float slit     = slitBand * uSlitIntensity;
+
+      /* ── Equatorial rim — wider, hotter golden wrap. This is the
+         disk's light visibly bending along the disk plane around the
+         shadow; together with the lensed bg sampling above it gives
+         the "light wraps around the sphere" look. ── */
+      float equator  = 1.0 - abs(vWorldNorm.y);
+      float rimNoise = sin(vWorldNorm.x * uNoiseScale * 0.7 + uTime * 1.3) * 0.5 + 0.5;
+      float diskWrap = pow(equator, 3.8) * 1.6;
+      vec3  diskColor= mix(vec3(1.0, 0.55, 0.15), vec3(1.0, 0.90, 0.55), equator * rimNoise) * diskWrap;
+
+      /* Combine — bgColor carries the lensed disk image, so its weight
+         is bumped: the wrap reads as a clear arc above and below the
+         shadow, just like a real black-hole image. */
+      vec3 col = bgColor * lensStr * 13.0
+               + vec3(1.0, 0.97, 0.90) * ring
+               + vec3(1.0, 0.97, 0.90) * slit
+               + diskColor;
+
+      float alpha = clamp(lensStr * 7.0 + ring * 0.55 + diskWrap * 0.55 + slitBand * 0.35, 0.0, 1.0);
+      gl_FragColor = vec4(col, alpha);
+    }`,
+  transparent:true,
+  side: THREE.FrontSide,
+  depthWrite: false,
+  depthTest: true,
+  blending: THREE.AdditiveBlending,
+});
+
+const lensingMesh = new THREE.Mesh(
+  new THREE.SphereGeometry(R * 1.08, 128, 64),
+  lensingMat
+);
+lensingMesh.scale.setScalar(1.62); /* shell is bigger than sphere */
+lensingMesh.renderOrder = 3;
+fgScene.add(lensingMesh);
+
+/* ─── Raymarched black-hole pass ────────────────
+   Ported from rodrigo-marcet/raymarching (Unity HLSL → GLSL).
+   A fullscreen quad whose fragment shader marches rays from the
+   camera through gravitationally-curved space. Per pixel:
+     1. reconstruct the world ray from the screen UV;
+     2. bend the ray toward the singularity in tiny steps
+        (Δdir ∝ -pos / |pos|³, Newtonian-like — the deflection
+        accumulates so light visibly orbits the hole near grazing);
+     3. accumulate disk emission whenever the bent ray crosses
+        the tilted equatorial plane (so the disk's far side is
+        actually lensed over the top of the shadow, not faked);
+     4. return black if the ray falls inside the event horizon,
+        otherwise sample a procedural starfield in the *deflected*
+        direction — distant stars naturally streak around the
+        photon ring without any post-process.
+   This pass renders last (renderOrder 999, depthTest off, opaque)
+   so it cleanly paints over the legacy disk/sphere/lensing meshes;
+   they're left in the scene as a quick toggle-back fallback. */
+const raymarchMat = new THREE.ShaderMaterial({
+  uniforms: {
+    uTime:        { value: 0 },
+    uResolution:  { value: new THREE.Vector2(W, H) },
+    uCamPos:      { value: new THREE.Vector3() },
+    uInvProj:     { value: new THREE.Matrix4() },
+    uCamWorld:    { value: new THREE.Matrix4() },
+    uHorizonR:    { value: 1.0  },
+    uMass:        { value: 0.55 },
+    uStepSize:    { value: 0.10 },
+    uMaxSteps:    { value: 180  },
+    uDiskIn:      { value: 1.45 },
+    uDiskOut:     { value: 7.0  },
+    uDiskTilt:    { value: DISK_TILT },
+    uDiskOpacity: { value: 0.45 },
+  },
+  vertexShader: `
+    varying vec2 vUv;
+    void main(){
+      vUv = uv;
+      gl_Position = vec4(position.xy, 0.0, 1.0);
     }
-    float fbm(vec2 p, float t){
-      float s=0.0, a=0.65, f=2.2;
-      for(int i=0;i<6;i++){ s+=a*noise(p*f+vec2(t*.27,t*.18)); f*=2.0; a*=0.5; }
-      return s;
+  `,
+  fragmentShader: `
+    precision highp float;
+    uniform float uTime;
+    uniform vec2  uResolution;
+    uniform vec3  uCamPos;
+    uniform mat4  uInvProj, uCamWorld;
+    uniform float uHorizonR, uMass, uStepSize, uMaxSteps;
+    uniform float uDiskIn, uDiskOut, uDiskTilt, uDiskOpacity;
+    varying vec2 vUv;
+
+    float h31(vec3 p){
+      p = fract(p * 0.1031);
+      p += dot(p, p.yzx + 33.33);
+      return fract((p.x + p.y) * p.z);
+    }
+    float n2(vec2 p){
+      vec2 i = floor(p), f = fract(p);
+      f = f*f*(3.0 - 2.0*f);
+      float a = h31(vec3(i, 0.0));
+      float b = h31(vec3(i + vec2(1.0, 0.0), 0.0));
+      float c = h31(vec3(i + vec2(0.0, 1.0), 0.0));
+      float d = h31(vec3(i + vec2(1.0, 1.0), 0.0));
+      return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+    }
+    float fbm2(vec2 p){
+      float v = 0.0, a = 0.5;
+      for(int i = 0; i < 5; i++){
+        v += a * n2(p);
+        p  = p * 2.07 + 17.7;
+        a *= 0.5;
+      }
+      return v;
+    }
+
+    /* Multi-octave procedural starfield, sampled by a 3D direction.
+       Sampling the *deflected* ray direction gives ring-shaped
+       streaking near the photon sphere for free. */
+    vec3 sampleStars(vec3 dir){
+      vec3 col = vec3(0.0);
+      for(int i = 0; i < 3; i++){
+        float fi    = float(i);
+        float scale = 80.0 * exp2(fi);
+        vec3  d     = dir * scale;
+        vec3  cell  = floor(d);
+        vec3  fr    = fract(d);
+        float h     = h31(cell + fi * 7.3);
+        float thr   = 0.988 - fi * 0.003;
+        if(h > thr){
+          vec3 cen = vec3(
+            h31(cell + 1.7 + fi),
+            h31(cell + 3.1 + fi),
+            h31(cell + 5.5 + fi)
+          );
+          vec3  sp = fr - cen;
+          float br = exp(-dot(sp, sp) * 80.0);
+          vec3  ti = mix(vec3(0.78, 0.86, 1.00),
+                         vec3(1.00, 0.95, 0.82),
+                         h31(cell + 11.0 + fi));
+          col += ti * br * (h - thr) * 25.0;
+        }
+      }
+      float gas = fbm2(dir.xy * 2.0 + dir.zx * 1.2);
+      col += vec3(0.030, 0.038, 0.060) * gas * 0.6;
+      return col;
+    }
+
+    /* Disk emission at a plane-crossing point. Turbulent cloud
+       pattern, inner-to-outer temperature gradient, and
+       relativistic Doppler beaming (approaching side bright +
+       blueshifted; receding side dim + redshifted). */
+    vec3 diskEmission(float r, float ang, vec3 inPlane, vec3 rayDir){
+      float nP = clamp((r - uDiskIn) / (uDiskOut - uDiskIn), 0.0, 1.0);
+      float ia = smoothstep(0.0,  0.04, nP);
+      float oa = 1.0 - smoothstep(0.93, 1.0, nP);
+
+      vec2  coord = vec2(ang * 6.0 + r * 0.4, r * 2.2);
+      float pat   = fbm2(coord + uTime * 0.12) * 0.7 + 0.4;
+      pat += sin(ang * 3.0 + r * 4.5 - uTime * 0.6) * 0.06;
+
+      vec3 hot = vec3(1.00, 0.95, 0.78);
+      vec3 mid = vec3(1.00, 0.55, 0.18);
+      vec3 cl  = vec3(0.65, 0.13, 0.04);
+      vec3 c   = mix(hot, mid, smoothstep(0.0, 0.40, nP));
+      c        = mix(c,   cl,  smoothstep(0.40, 1.0, nP));
+
+      float brightness = pow(1.0 - smoothstep(0.0, 0.95, nP), 1.4) * 2.2;
+      brightness *= pat;
+
+      vec3  diskN   = vec3(sin(uDiskTilt), -cos(uDiskTilt), 0.0);
+      vec3  velDir  = normalize(cross(diskN, inPlane));
+      float mu      = dot(velDir, -rayDir);
+      float beta    = clamp(0.55 / sqrt(max(r * 0.5, 0.2)), 0.0, 0.86);
+      float gamma   = 1.0 / sqrt(1.0 - beta * beta);
+      float doppler = 1.0 / (gamma * (1.0 - beta * mu));
+      brightness *= clamp(pow(doppler, 2.2), 0.2, 3.5);
+
+      c *= mix(vec3(1.22, 0.58, 0.28),
+               vec3(0.92, 0.96, 1.10),
+               clamp((doppler - 0.6) / 1.0, 0.0, 1.0));
+
+      return c * brightness * ia * oa;
     }
 
     void main(){
-      float inner = ${DISK_IN.toFixed(4)};
-      float outer = ${DISK_OUT.toFixed(4)};
-      float nP    = clamp((vR - inner) / (outer - inner), 0.0, 1.0);
-      float angle = atan(vPos.y, vPos.x);
-      float ov    = 1.0 / sqrt(max(vR, 0.1));
+      /* Reconstruct the world-space ray for this pixel from three's
+         own projection — guarantees the raymarch sees exactly the
+         camera that the rest of the scene was framed for. */
+      vec2 ndc   = vUv * 2.0 - 1.0;
+      vec4 vClip = uInvProj * vec4(ndc, 1.0, 1.0);
+      vec3 vDir  = vClip.xyz / vClip.w;
+      vec3 rayDir = normalize((uCamWorld * vec4(vDir, 0.0)).xyz);
+      vec3 rayPos = uCamPos;
 
-      /* Doppler brightening on approaching side */
-      float dop = 0.0, beam = 1.0;
-      if(length(uCamPos) > 0.01){
-        vec3 tang = normalize(vec3(-vPos.y, vPos.x, 0.0));
-        dop  = dot(normalize(uCamPos - vPos), tang) * ov * 0.3;
-        beam = clamp(1.0 + dop * 0.4, 0.5, 2.0);
+      /* Tilted equatorial disk plane: roll the default -Y normal
+         around world Z by uDiskTilt — matches the existing
+         disk-pivot rotation so tilt slider stays meaningful. */
+      vec3 diskN = vec3(sin(uDiskTilt), -cos(uDiskTilt), 0.0);
+      vec3 diskZ = vec3(0.0, 0.0, 1.0);
+      vec3 diskX = normalize(cross(diskN, diskZ));
+
+      vec3  col      = vec3(0.0);
+      float tr       = 1.0;            /* remaining transmittance */
+      bool  captured = false;
+      float prevSide = dot(rayPos, diskN);
+
+      for(int i = 0; i < 240; i++){
+        if(float(i) >= uMaxSteps) break;
+        float r = length(rayPos);
+        if(r < uHorizonR){ captured = true; break; }
+
+        /* Adaptive step — fine near the hole, coarse far away. */
+        float dt = uStepSize * (1.0 + r * 0.12);
+
+        /* Newtonian-like ray deflection — the integrated bend over
+           many steps is what produces the photon ring and the
+           disk's lensed over-the-top arc. */
+        vec3 accel = -rayPos * (uMass / (r * r * r));
+        rayDir = normalize(rayDir + accel * dt);
+
+        vec3  nextPos = rayPos + rayDir * dt;
+        float curSide = dot(nextPos, diskN);
+
+        /* Disk plane crossing — sign change of dot(pos, diskN). */
+        if(prevSide * curSide < 0.0 && tr > 0.005){
+          float t       = prevSide / (prevSide - curSide);
+          vec3  xPos    = mix(rayPos, nextPos, t);
+          vec3  inPlane = xPos - diskN * dot(xPos, diskN);
+          float rCross  = length(inPlane);
+          if(rCross >= uDiskIn && rCross <= uDiskOut){
+            float du   = dot(inPlane, diskX);
+            float dv   = dot(inPlane, diskZ);
+            float ang  = atan(dv, du);
+            vec3  emit = diskEmission(rCross, ang, inPlane, rayDir);
+            col += emit * tr * uDiskOpacity;
+            tr  *= 1.0 - uDiskOpacity * 0.7;
+          }
+        }
+
+        prevSide = curSide;
+        rayPos   = nextPos;
+
+        /* Early-out: ray well past the hole and heading further out. */
+        if(r > 80.0 && dot(rayDir, rayPos) > 0.0) break;
       }
 
-      float spd   = 4.8 / (pow(vR, 1.6) + 1.1);
-      vec2  coord = vec2(vR * 1.9, (angle - uTime * spd * 0.52) * 3.6);
-      float pat   = fbm(coord, uTime * 0.17) * 0.8
-                  + sin(angle*2.3 + vR*5.8 - uTime*0.6) * 0.1;
+      if(!captured && tr > 0.005){
+        col += sampleStars(rayDir) * tr;
+      }
 
-      /* Colour gradient inner→outer */
-      vec3 ci  = mix(uColorHot,  uColorMid,  smoothstep(0.0, 0.4, nP));
-      vec3 co  = mix(uColorMid,  uColorEdge, smoothstep(0.4, 0.8, nP));
-      vec3 cd  = mix(uColorEdge, uColorDeep, smoothstep(0.8, 1.0, nP));
-      vec3 col = mix(mix(ci, co, smoothstep(0.4, 0.8, nP)), cd, smoothstep(0.8, 1.0, nP));
-      col *= vec3(1.0 + dop*0.15, 1.0, 1.0 - dop*0.15);
-
-      float radBright = pow(1.0 - smoothstep(0.0, 0.9, nP), 2.2) * 3.4;
-      float bright    = (pat + 0.5) * radBright * beam;
-      col *= bright;
-      /* White-hot inner edge */
-      col  = mix(col, vec3(1.0), smoothstep(3.0,6.0,bright)*smoothstep(0.0,0.06,nP)*0.5);
-
-      float ia = smoothstep(0.0, 0.05, nP);
-      float oa = 1.0 - smoothstep(0.9, 1.0, nP);
-      gl_FragColor = vec4(clamp(col, 0.0, 10.0), ia * oa * clamp(pat*0.3+0.8, 0.5, 1.0));
-    }`,
-  transparent: true,
-  side:        THREE.DoubleSide,
-  depthWrite:  false,
-  depthTest:   true,
-  blending:    THREE.AdditiveBlending,
+      gl_FragColor = vec4(col, 1.0);
+    }
+  `,
+  depthTest:  false,
+  depthWrite: false,
 });
 
-/* ── Pure black occluder material ──────────
-   depthWrite:true means the sphere writes to the
-   depth buffer → disk fragments behind it are culled. */
-const blackMat = new THREE.MeshBasicMaterial({
-  color:      0x000000,
-  side:       THREE.FrontSide,
-  depthWrite: true,
-  depthTest:  true,
-});
-
-/* ── Main group ───────────────────────────── */
-const BH = new THREE.Group();
-scene.add(BH);
-
-/* Disk lives in BH group, renderOrder 1 (after sphere) */
-const disk = new THREE.Mesh(
-  new THREE.RingGeometry(DISK_IN, DISK_OUT, 256, 64),
-  diskMat
+const raymarchQuad = new THREE.Mesh(
+  new THREE.PlaneGeometry(2, 2),
+  raymarchMat
 );
-disk.rotation.x  = Math.PI / 2 - 0.09;   // ~5° from fully edge-on → thin blade
-disk.renderOrder = 1;
-BH.add(disk);
+raymarchQuad.frustumCulled = false;
+raymarchQuad.renderOrder   = 999;
+fgScene.add(raymarchQuad);
 
-/* Camera defaults — updated after GLB loads */
-const camStart = new THREE.Vector3(0, 2.8, 8.0);
-const camEnd   = new THREE.Vector3(0, 0.5, 0.4);
-let running = true;
+/* ─── Camera ───────────────────────────────────── */
+/* Camera sits much closer to the disk plane — viewing nearly edge-on
+   is what reveals the bottom of the sphere and the disk arcing over
+   the top, the way real black-hole images look. */
+const camStart = new THREE.Vector3(0, 1.4, 11.5);
+const camEnd   = new THREE.Vector3(0, 0.18, 0.35);
 camera.position.copy(camStart);
 camera.lookAt(0, 0, 0);
 
-/* ── Fake progress bar while GLB fetches ── */
-let fakeP = 0;
-const fakeT = setInterval(() => {
-  fakeP = Math.min(fakeP + Math.random() * 4, 80);
-  loadFill.style.width = fakeP + '%';
-}, 80);
+/* ─── Animation clock ──────────────────────────── */
+let t = 0;
+let running = true;
 
-/* ── GLB Load ─────────────────────────────── */
-new GLTFLoader().load(
-  './black_hole.glb',
-
-  /* onLoad */
-  gltf => {
-    clearInterval(fakeT);
-    loadFill.style.width = '100%';
-    console.log('[BH] ✓ black_hole.glb loaded');
-
-    const root = gltf.scene;
-
-    /* Normalise: GLB root bakes in scale=0.01.
-       Sphere radius after that = ~0.866 units.
-       Scale by 1/0.866 so sphere radius ≈ R=1.0 */
-    root.scale.setScalar(1.0 / 0.866);
-
-    /* Shift so bounding-box centre lands at origin */
-    const box = new THREE.Box3().setFromObject(root);
-    root.position.sub(box.getCenter(new THREE.Vector3()));
-
-    /* Apply materials per-mesh */
-    root.traverse(child => {
-      if (!child.isMesh) return;
-      const b = new THREE.Box3().setFromObject(child);
-      const s = b.getSize(new THREE.Vector3());
-      const flatness = Math.min(s.x, s.y, s.z) / Math.max(s.x, s.y, s.z);
-
-      if (flatness < 0.15) {
-        /* Flat mesh = Spline ring → hide (we use our own CodePen disk) */
-        child.visible = false;
-      } else {
-        /* Sphere half → pure black, writes depth, renders first */
-        child.material    = blackMat;
-        child.renderOrder = 0;
-      }
-    });
-
-    BH.add(root);
-
-    /* Camera elevated so name clears the disk line */
-    camStart.set(0, 2.8, 8.0);
-    camEnd.set(0, 0.5, 0.4);
-    camera.position.copy(camStart);
-    camera.lookAt(0, 0, 0);
-
-    setTimeout(() => {
-      loadingEl.classList.add('done');
-      setTimeout(() => { loadingEl.style.display = 'none'; }, 900);
-    }, 300);
-  },
-
-  /* onProgress */
-  xhr => {
-    if (xhr.lengthComputable)
-      loadFill.style.width = Math.max(fakeP, xhr.loaded / xhr.total * 100) + '%';
-  },
-
-  /* onError — fallback to Three.js sphere */
-  err => {
-    clearInterval(fakeT);
-    console.error('[BH] GLB failed:', err.message || err);
-
-    const fallback = new THREE.Mesh(new THREE.SphereGeometry(R, 96, 64), blackMat);
-    fallback.renderOrder = 0;
-    BH.add(fallback);
-
-    camStart.set(0, 2.8, 8.0);
-    camEnd.set(0, 0.5, 0.4);
-    camera.position.copy(camStart);
-    camera.lookAt(0, 0, 0);
-
-    loadingEl.classList.add('done');
-    setTimeout(() => { loadingEl.style.display = 'none'; }, 900);
-  }
-);
-
-/* ── Render loop ──────────────────────────── */
-const clock = new THREE.Clock();
-function animate() {
-  if (!running) return;
-  requestAnimationFrame(animate);
-  const t = clock.getElapsedTime(), dt = clock.getDelta();
-  BH.rotation.y += dt * 0.055;
-  diskMat.uniforms.uTime.value = t;
-  diskMat.uniforms.uCamPos.value.copy(camera.position);
-  composer.render(dt);
+const _camLocal = new THREE.Vector3();
+function syncDiskUniforms(mat, mesh) {
+  mat.uniforms.uTime.value = t;
+  /* Camera in disk-local space: the disk lives inside a tilted pivot,
+     and the beaming math (velocity vs. line-of-sight) must be done in
+     one consistent reference frame or the bright side picks the wrong
+     half of the disk. */
+  mesh.updateWorldMatrix(true, false);
+  _camLocal.copy(camera.position);
+  mesh.worldToLocal(_camLocal);
+  mat.uniforms.uCamPos.value.copy(_camLocal);
 }
-animate();
 
+function tick() {
+  if (!running) return;
+  requestAnimationFrame(tick);
+  t += 0.016;
+
+  /* Feed the raymarch shader the current camera transform — the
+     fragment shader uses these to reconstruct a world ray per pixel
+     that matches three's projection exactly. */
+  camera.updateMatrixWorld(true);
+  raymarchMat.uniforms.uTime.value     = t;
+  raymarchMat.uniforms.uCamPos.value.copy(camera.position);
+  raymarchMat.uniforms.uInvProj.value.copy(camera.projectionMatrixInverse);
+  raymarchMat.uniforms.uCamWorld.value.copy(camera.matrixWorld);
+
+  composer.render();
+}
+
+/* ─── Resize ───────────────────────────────────── */
 window.addEventListener('resize', () => {
-  camera.aspect = innerWidth / innerHeight;
+  const w = innerWidth, h = innerHeight;
+  camera.aspect = w/h;
   camera.updateProjectionMatrix();
-  renderer.setSize(innerWidth, innerHeight);
-  composer.setSize(innerWidth, innerHeight);
-  bloom.resolution.set(innerWidth, innerHeight);
+  renderer.setSize(w, h);
+  composer.setSize(w, h);
+  bloom.resolution.set(w, h);
+  raymarchMat.uniforms.uResolution.value.set(w, h);
 });
 
-/* ── Scroll → zoom ────────────────────────── */
+/* ─── Boot ─────────────────────────────────────── */
+let fakeP = 0;
+const fakeT = setInterval(() => {
+  fakeP = Math.min(fakeP + Math.random()*5, 95);
+  loadFill.style.width = fakeP + '%';
+  if (fakeP < 30) loadSub.textContent = 'Initializing';
+  else if (fakeP < 60) loadSub.textContent = 'Building scene';
+  else loadSub.textContent = 'Compiling shaders';
+}, 80);
+
+/* Allow a short frame for shaders to compile */
+requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
+    clearInterval(fakeT);
+    loadFill.style.width = '100%';
+    setTimeout(() => {
+      loadingEl.classList.add('done');
+      setTimeout(() => { loadingEl.style.display='none'; }, 900);
+      tick();
+    }, 300);
+  });
+});
+
+/* ─── Scroll → camera dive ─────────────────────── */
 let introComplete = false, transitionFired = false;
 
+/* Gentle idle drift */
 let idleT = 0;
 const idleDrift = setInterval(() => {
   if (introComplete || scrollY > 4) { clearInterval(idleDrift); return; }
   idleT += 0.016;
   camera.position.set(
-    camStart.x + Math.sin(idleT * .2) * .08,
-    camStart.y - idleT * .015,
-    camStart.z - idleT * .05
+    camStart.x + Math.sin(idleT*.2)*.08,
+    camStart.y - idleT*.016,
+    camStart.z - idleT*.055
   );
   camera.lookAt(0, 0, 0);
 }, 16);
@@ -535,7 +905,7 @@ function getP() {
 }
 
 function updateCamera(p) {
-  const e = 1 - Math.pow(1 - p, 3);
+  const e = 1 - Math.pow(1-p, 3);
   camera.position.set(
     0,
     camStart.y + (camEnd.y - camStart.y) * e,
@@ -546,7 +916,7 @@ function updateCamera(p) {
 
 function beginTransition() {
   transitionFired = true;
-  bloom.strength = 2.4;
+  bloom.strength = 2.6;
   overlayEl.style.transition = 'opacity .65s ease';
   overlayEl.style.opacity = '1';
   setTimeout(() => {
@@ -555,7 +925,7 @@ function beginTransition() {
     overlayEl.style.opacity = '.92';
     setTimeout(() => {
       introComplete = true; running = false;
-      introEl.style.display = 'none';
+      introEl.classList.add('hidden');
       driverEl.style.display = 'none';
       window.scrollTo(0, 0);
       portfolioEl.classList.add('visible');
@@ -570,13 +940,50 @@ function beginTransition() {
 window.addEventListener('scroll', () => {
   if (introComplete || transitionFired) return;
   const p = getP();
-  nameEl.style.opacity = Math.max(0, 1 - p * 4) + '';
-  hintEl.style.opacity = Math.max(0, 1 - p * 5) + '';
-  if (p > .12) vignetteEl.style.opacity = Math.min(1, (p - .12) / .5) + '';
-  bloom.strength = .55 + p * 2.0;
+  nameEl.style.opacity  = Math.max(0, 1-p*4) + '';
+  hintEl.style.opacity  = Math.max(0, 1-p*5) + '';
+  if (p > .12) vignetteEl.style.opacity = Math.min(1,(p-.12)/.5) + '';
+  bloom.strength = .45 + p * 1.6;
   updateCamera(p);
   if (p >= .88 && !transitionFired) beginTransition();
-}, { passive: true });
+}, { passive:true });
+
+/* ─── Dev GUI (?dev) ────────────────────────────── */
+if (new URLSearchParams(location.search).has('dev')) {
+  import('https://esm.sh/lil-gui@0.19.2').then(({ GUI }) => {
+    const gui = new GUI({ title: 'Black Hole Dev', width: 240 });
+
+    const slitF = gui.addFolder('Slit (Image 1)');
+    slitF.add(lensingMat.uniforms.uTiltDeg,       'value', 0,   90,  0.1).name('uTiltDeg');
+    slitF.add(lensingMat.uniforms.uSlitWidth,      'value', 0.05,0.5, 0.01).name('uSlitWidth');
+    slitF.add(lensingMat.uniforms.uSlitIntensity,  'value', 1,   10,  0.1).name('uSlitIntensity');
+
+    const lensF = gui.addFolder('Lensing & Distortion');
+    lensF.add(lensingMat.uniforms.uLensAmount, 'value', 0,   0.6, 0.01).name('uLensAmount');
+    lensF.add(lensingMat.uniforms.uNoiseScale, 'value', 0.5, 6,   0.1).name('uNoiseScale');
+
+    const bloomF = gui.addFolder('Bloom');
+    bloomF.add(bloom, 'strength',  0, 3,   0.05).name('strength');
+    bloomF.add(bloom, 'radius',    0, 2,   0.05).name('radius');
+    bloomF.add(bloom, 'threshold', 0, 1,   0.01).name('threshold');
+
+    const camF = gui.addFolder('Camera');
+    camF.add(camStart, 'y', -5, 5,  0.1).name('Start Y').onChange(() => { if (!introComplete) camera.position.copy(camStart); });
+    camF.add(camStart, 'z',  1, 20, 0.1).name('Start Z').onChange(() => { if (!introComplete) camera.position.copy(camStart); });
+
+    const rmF = gui.addFolder('Raymarch BH');
+    rmF.add(raymarchMat.uniforms.uMass,        'value', 0.0,  2.0,  0.01 ).name('Mass');
+    rmF.add(raymarchMat.uniforms.uHorizonR,    'value', 0.5,  2.0,  0.05 ).name('Horizon R');
+    rmF.add(raymarchMat.uniforms.uStepSize,    'value', 0.03, 0.30, 0.005).name('Step size');
+    rmF.add(raymarchMat.uniforms.uMaxSteps,    'value', 40,   240,  1    ).name('Max steps');
+    rmF.add(raymarchMat.uniforms.uDiskIn,      'value', 1.0,  3.0,  0.05 ).name('Disk inner');
+    rmF.add(raymarchMat.uniforms.uDiskOut,     'value', 3.0,  12.0, 0.1  ).name('Disk outer');
+    rmF.add(raymarchMat.uniforms.uDiskOpacity, 'value', 0.0,  1.0,  0.05 ).name('Disk opacity');
+    rmF.add({ tilt: THREE.MathUtils.radToDeg(DISK_TILT) }, 'tilt', 0, 45, 0.5)
+       .name('Disk tilt (°)')
+       .onChange(v => raymarchMat.uniforms.uDiskTilt.value = THREE.MathUtils.degToRad(v));
+  });
+}
 </script>
 </body>
 </html>

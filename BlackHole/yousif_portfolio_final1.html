@@ -185,7 +185,6 @@ import * as THREE from 'https://esm.sh/three@0.160.0';
 import { EffectComposer }  from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass }      from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/UnrealBloomPass.js';
-import { ShaderPass }      from 'https://esm.sh/three@0.160.0/examples/jsm/postprocessing/ShaderPass.js';
 
 /* ─── DOM refs ─────────────────────────────────── */
 const loadingEl  = document.getElementById('loading');
@@ -211,375 +210,42 @@ introEl.appendChild(renderer.domElement);
 
 const W = innerWidth, H = innerHeight;
 
-/* ─── Two scenes ────────────────────────────────
-   bgScene  → rendered first to bgTarget (stars + disk back)
-   fgScene  → rendered second (sphere + lensing shell + disk front + stars) */
-const bgScene  = new THREE.Scene();
-const fgScene  = new THREE.Scene();
-const camera   = new THREE.PerspectiveCamera(52, W/H, 0.01, 3000);
-
-/* Render target that bgScene draws into */
-const bgTarget = new THREE.WebGLRenderTarget(W, H, {
-  minFilter: THREE.LinearFilter,
-  magFilter: THREE.LinearFilter,
-  format: THREE.RGBAFormat,
-  type: THREE.HalfFloatType,
-});
+/* ─── Single scene ──────────────────────────────
+   The black hole is produced entirely by one fullscreen raymarch
+   pass (see below): every pixel is a ray integrated through curved
+   space. With no geometry to depth-sort and nothing to occlude,
+   one scene holding one quad is the entire renderer. */
+const scene  = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(52, W/H, 0.01, 3000);
 
 /* ─── Post-processing ──────────────────────────── */
 const composer = new EffectComposer(renderer);
-composer.addPass(new RenderPass(fgScene, camera));
+composer.addPass(new RenderPass(scene, camera));
 const bloom = new UnrealBloomPass(new THREE.Vector2(W, H), 0.45, 0.55, 0.85);
 composer.addPass(bloom);
 
 /* ─── Shared constants ─────────────────────────── */
-const R          = 1.0;
-const DISK_IN    = R * 1.18;
-const DISK_OUT   = R * 7.5;
-const DISK_TILT  = THREE.MathUtils.degToRad(6);   /* whole-system tilt */
-const SHADOW_SIZE= 1.20;                          /* black-hole shadow radius ×R — sits just outside the disk inner edge so the bright inner rim hugs the silhouette */
+const DISK_TILT = THREE.MathUtils.degToRad(6);   /* equatorial-plane tilt — read by the raymarch pass and the dev GUI */
 
-/* ─── Stars (shared between both scenes) ──────── */
-function makeStars(n, scene) {
-  const sp = new Float32Array(n*3), sc = new Float32Array(n*3), ss = new Float32Array(n);
-  for (let i=0;i<n;i++){
-    const phi=Math.acos(1-2*(i+.5)/n), th=2*Math.PI*i/1.618;
-    const r=300+Math.random()*700;
-    sp[i*3]=r*Math.sin(phi)*Math.cos(th); sp[i*3+1]=r*Math.sin(phi)*Math.sin(th); sp[i*3+2]=r*Math.cos(phi);
-    sc[i*3]=.92; sc[i*3+1]=.95; sc[i*3+2]=1.0;
-    ss[i]=Math.random()<.95?Math.random()*.4+.1:Math.random()*.9+.5;
-  }
-  const g=new THREE.BufferGeometry();
-  g.setAttribute('position',new THREE.BufferAttribute(sp,3));
-  g.setAttribute('color',   new THREE.BufferAttribute(sc,3));
-  g.setAttribute('size',    new THREE.BufferAttribute(ss,1));
-  scene.add(new THREE.Points(g, new THREE.ShaderMaterial({
-    vertexShader:`attribute float size;attribute vec3 color;varying vec3 vC;void main(){vC=color;vec4 mv=modelViewMatrix*vec4(position,1.);gl_PointSize=size*(300./-mv.z);gl_Position=projectionMatrix*mv;}`,
-    fragmentShader:`varying vec3 vC;void main(){float r=length(gl_PointCoord-.5);float a=1.-smoothstep(.38,.5,r);if(a<.01)discard;gl_FragColor=vec4(vC,a*.7);}`,
-    blending:THREE.AdditiveBlending,depthWrite:false,transparent:true
-  })));
-}
-makeStars(2000, bgScene);
-makeStars(2000, fgScene);
+/* Stars are no longer geometry — the raymarch pass samples a
+   procedural starfield in the *deflected* ray direction, so the
+   background is lensed for free and stays coherent with the hole. */
 
-/* ─── Disk shader factory ──────────────────────── */
-function makeDiskMaterial(opacity) {
-  return new THREE.ShaderMaterial({
-    uniforms:{
-      uTime:      {value:0},
-      uCamPos:    {value:new THREE.Vector3()},
-      uOpacity:   {value:opacity},
-      uColorHot:  {value:new THREE.Color(0xffffff)},
-      uColorMid:  {value:new THREE.Color(0x88ccff)},
-      uColorEdge: {value:new THREE.Color(0x2266cc)},
-      uColorDeep: {value:new THREE.Color(0x000a33)},
-    },
-    vertexShader:`
-      varying vec3 vPos; varying float vR;
-      void main(){ vPos=position; vR=length(position.xy);
-        gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
-    fragmentShader:`
-      uniform float uTime, uOpacity;
-      uniform vec3 uColorHot,uColorMid,uColorEdge,uColorDeep,uCamPos;
-      varying vec3 vPos; varying float vR;
-      float rand(vec2 n){return fract(sin(dot(n,vec2(12.9898,4.1414)))*43758.5453);}
-      float noise(vec2 p){vec2 ip=floor(p),u=fract(p);u=u*u*(3.-2.*u);
-        return mix(mix(rand(ip),rand(ip+vec2(1,0)),u.x),mix(rand(ip+vec2(0,1)),rand(ip+vec2(1,1)),u.x),u.y);}
-      float fbm(vec2 p,float t){float s=0.,a=.65,f=2.2;
-        for(int i=0;i<6;i++){s+=a*noise(p*f+vec2(t*.27,t*.18));f*=2.;a*=.5;}return s;}
-      void main(){
-        float inner=${DISK_IN.toFixed(4)},outer=${DISK_OUT.toFixed(4)};
-        float nP=clamp((vR-inner)/(outer-inner),0.,1.);
-        float angle=atan(vPos.y,vPos.x);
+/* The accretion disk is no longer mesh geometry. It is integrated
+   inside the raymarch pass as emission accumulated along each ray
+   (see diskEmission below) — the only representation that can be
+   lensed over the shadow and self-occlude correctly. */
 
-        /* Relativistic Doppler beaming. uCamPos is the camera in
-           disk-local space, so velocity, line-of-sight and the dot
-           product all share one consistent frame. Power = 2 (not
-           the full δ³) so the bright side glows without blowing
-           out the shadow sitting right behind it. */
-        float beta = clamp(0.42/sqrt(max(vR*0.5,0.18)),0.0,0.82);
-        float beam = 1.0, doppler = 1.0;
-        if(length(uCamPos)>0.01){
-          vec3 velDir = normalize(vec3(vPos.y,-vPos.x,0.0));
-          vec3 los    = normalize(uCamPos-vPos);
-          float mu    = dot(los,velDir);
-          float gamma = 1.0/sqrt(1.0-beta*beta);
-          doppler     = 1.0/(gamma*(1.0-beta*mu));
-          beam        = clamp(pow(doppler,2.0),0.32,2.6);
-        }
+/* The event-horizon shadow is no longer a textured sphere. The
+   raymarch returns near-black for rays that fall inside the horizon
+   (captured == true) — the shadow is the absence of escaping light,
+   produced by ray capture rather than a shaded surface. */
 
-        float spd=13.0/(pow(vR,1.6)+1.1);
-        vec2 coord=vec2(vR*1.9,(angle+uTime*spd*1.2)*3.6);
-        float pat=fbm(coord,uTime*.17)*.8+sin(angle*2.3+vR*5.8-uTime*.6)*.1;
-
-        vec3 ci=mix(uColorHot,uColorMid,smoothstep(0.,.4,nP));
-        vec3 co=mix(uColorMid,uColorEdge,smoothstep(.4,.8,nP));
-        vec3 cd=mix(uColorEdge,uColorDeep,smoothstep(.8,1.,nP));
-        vec3 col=mix(mix(ci,co,smoothstep(.4,.8,nP)),cd,smoothstep(.8,1.,nP));
-
-        /* Subtle Doppler tint — redshift on the receding side,
-           gently cooled white on the approaching side. */
-        col*=mix(vec3(0.36,0.66,1.18), vec3(0.94,0.99,1.10),
-                 clamp((doppler-0.6)/0.95, 0.0, 1.0));
-
-        /* Softer inner-edge falloff so the bright ring no longer
-           drowns the shadow it's hugging. */
-        float rb=pow(1.-smoothstep(0.,.9,nP),1.8)*1.95;
-        float bright=(pat+.5)*rb*beam;
-        col*=bright;
-        col=mix(col,vec3(1.),smoothstep(5.5,9.5,bright)*smoothstep(0.,.06,nP)*.35);
-
-        float ia=smoothstep(0.,.05,nP),oa=1.-smoothstep(.9,1.,nP);
-        float a=ia*oa*clamp(pat*.3+.8,.5,1.)*uOpacity*clamp(beam*0.32+0.42,0.30,1.0);
-        gl_FragColor=vec4(clamp(col,0.,7.),a);}`,
-    transparent:true, side:THREE.DoubleSide,
-    depthWrite:false, depthTest:true,
-    blending:THREE.AdditiveBlending
-  });
-}
-
-/* The disk is tilted as a whole through a pivot group. Rotating the
-   ring mesh's own Z axis only spins the texture within its own plane
-   (the geometry is azimuthally symmetric), so the tilt has to come
-   from a parent the flat disk is nested inside. */
-
-/* Disk in bg scene (appears behind sphere — lensed image) */
-const bgDiskMat  = makeDiskMaterial(1.00);   /* full opacity — feeds the lensed wrap */
-const bgDisk     = new THREE.Mesh(new THREE.RingGeometry(DISK_IN, DISK_OUT, 256, 64), bgDiskMat);
-bgDisk.rotation.x = Math.PI/2;
-const bgDiskPivot = new THREE.Group();
-bgDiskPivot.rotation.z = DISK_TILT;
-bgDiskPivot.add(bgDisk);
-bgScene.add(bgDiskPivot);
-
-/* Disk in fg scene (appears in front) */
-const fgDiskMat = makeDiskMaterial(1.0);
-const fgDisk    = new THREE.Mesh(new THREE.RingGeometry(DISK_IN, DISK_OUT, 256, 64), fgDiskMat);
-fgDisk.rotation.x = Math.PI/2;
-fgDisk.renderOrder = 2;
-const fgDiskPivot = new THREE.Group();
-fgDiskPivot.rotation.z = DISK_TILT;
-fgDiskPivot.add(fgDisk);
-fgScene.add(fgDiskPivot);
-
-/* ─── Black hole shadow ─────────────────────────
-   Stylised "menacing" surface instead of a flat black sphere:
-   storm-band clouds swirl clockwise, ridged fissures pulse with
-   ember light, a cold-blue Fresnel rim cinematically frames the
-   silhouette, and a warm equatorial leak picks up the disk's
-   heat bending around the shadow. Still dark enough overall that
-   it reads as the event horizon, not a planet. */
-const sphereGeo = new THREE.SphereGeometry(R, 192, 96);
-const bhMat = new THREE.ShaderMaterial({
-  uniforms: {
-    uTime:  { value: 0 },
-    uHalo:  { value: 1.0 },   /* warm equatorial light wrap */
-    uGraze: { value: 1.0 },   /* photon-grazing highlight   */
-  },
-  vertexShader: `
-    varying vec3 vNormal;
-    varying vec3 vViewDir;
-    varying vec3 vLocalPos;
-    void main(){
-      vLocalPos = position;
-      vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
-      vViewDir  = normalize(-mvPos.xyz);
-      vNormal   = normalize(normalMatrix * normal);
-      gl_Position = projectionMatrix * mvPos;
-    }
-  `,
-  fragmentShader: `
-    uniform float uTime, uHalo, uGraze;
-    varying vec3 vNormal;
-    varying vec3 vViewDir;
-    varying vec3 vLocalPos;
-
-    /* 3D value noise — only used to break up the silhouette so the
-       sphere reads as 3D, not a flat 2D disk. No bands, no embers. */
-    float h31(vec3 p){
-      p = fract(p * 0.1031);
-      p += dot(p, p.yzx + 33.33);
-      return fract((p.x + p.y) * p.z);
-    }
-    float n3(vec3 p){
-      vec3 i = floor(p), f = fract(p);
-      f = f*f*(3.0 - 2.0*f);
-      float a = h31(i + vec3(0,0,0)), b = h31(i + vec3(1,0,0));
-      float c = h31(i + vec3(0,1,0)), d = h31(i + vec3(1,1,0));
-      float e = h31(i + vec3(0,0,1)), g = h31(i + vec3(1,0,1));
-      float k = h31(i + vec3(0,1,1)), l = h31(i + vec3(1,1,1));
-      return mix(mix(mix(a,b,f.x), mix(c,d,f.x), f.y),
-                 mix(mix(e,g,f.x), mix(k,l,f.x), f.y), f.z);
-    }
-    float fbm(vec3 p){
-      float v = 0.0, a = 0.55;
-      for(int i = 0; i < 4; i++){
-        v += a * n3(p);
-        p  = p * 2.07 + 17.7;
-        a *= 0.5;
-      }
-      return v;
-    }
-
-    void main(){
-      vec3 p = normalize(vLocalPos);
-
-      /* Near-black base with a faint, slow drift so the surface
-         isn't perfectly dead-flat. Kept far below the disk's
-         brightness — the sphere is the absence of light, the
-         wrap around it is where everything happens. */
-      float drift = fbm(p * 3.5 + uTime * 0.04);
-      vec3  col   = vec3(0.005, 0.007, 0.011);
-      col *= 0.85 + drift * 0.15;
-
-      /* Cool-blue Fresnel rim — frames the silhouette and reads as
-         the gravitational redshift of light grazing the horizon. */
-      float fres = pow(1.0 - max(dot(vNormal, vViewDir), 0.0), 2.6);
-      col += vec3(0.10, 0.20, 0.38) * fres * 0.45;
-
-      /* Cool equatorial halo — the actual light wrap. Disk photons
-         bent around the silhouette appear as a cyan crescent hugging
-         the sphere along the disk plane (clamped to grazing so it
-         doesn't bleed across the whole face). */
-      float eq   = 1.0 - abs(p.y);
-      float wrap = pow(eq, 5.0) * fres;
-      col += vec3(0.30, 0.70, 1.0) * wrap * uHalo * 2.0;
-
-      /* Thin photon-grazing highlight — the sharp crescent at the
-         rim where light has orbited the hole once or twice before
-         escaping. This is the inner edge of the photon ring. */
-      float graze = pow(fres, 1.4) * pow(eq, 3.0);
-      col += vec3(0.80, 0.92, 1.0) * graze * uGraze * 0.75;
-
-      gl_FragColor = vec4(col, 1.0);
-    }
-  `,
-});
-const bhMesh = new THREE.Mesh(sphereGeo, bhMat);
-bhMesh.scale.setScalar(SHADOW_SIZE);
-bhMesh.rotation.z = DISK_TILT;          /* align storm bands with the tilted disk */
-bhMesh.renderOrder = 1;
-fgScene.add(bhMesh);
-
-/* ─── Gravitational lensing shell ───────────────
-   A sphere slightly bigger than the black hole.
-   Custom shader:
-   1. At the edges → samples bgTarget (the bg scene) but
-      deflects UVs radially inward → fakes light bending
-   2. Creates bright white photon ring at grazing angles */
-const lensingMat = new THREE.ShaderMaterial({
-  uniforms:{
-    tBg:           {value: bgTarget.texture},
-    uRes:          {value: new THREE.Vector2(W, H)},
-    uTime:         {value: 0},
-    uTiltDeg:      {value: 6.0},
-    uSlitWidth:    {value: 0.18},
-    uSlitIntensity:{value: 0.8},
-    uLensAmount:   {value: 0.55},
-    uNoiseScale:   {value: 2.4},
-  },
-  vertexShader:`
-    varying vec3 vNorm;
-    varying vec3 vViewDir;
-    varying vec3 vWorldNorm;
-    void main(){
-      vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
-      vViewDir   = normalize(-mvPos.xyz);
-      vNorm      = normalize(normalMatrix * normal);
-      vWorldNorm = normalize((modelMatrix * vec4(normal, 0.0)).xyz);
-      gl_Position = projectionMatrix * mvPos;
-    }`,
-  fragmentShader:`
-    uniform sampler2D tBg;
-    uniform vec2 uRes;
-    uniform float uTime;
-    uniform float uTiltDeg;
-    uniform float uSlitWidth;
-    uniform float uSlitIntensity;
-    uniform float uLensAmount;
-    uniform float uNoiseScale;
-    varying vec3 vNorm;
-    varying vec3 vViewDir;
-    varying vec3 vWorldNorm;
-
-    void main(){
-      vec2 screenUV = gl_FragCoord.xy / uRes;
-
-      float cosA  = dot(vViewDir, vNorm);
-      float edge  = 1.0 - abs(cosA);           // 0 = face-on, 1 = edge-on
-
-      /* ── Gravitational lensing distortion — a wider grazing band
-         so the lensed disk visibly wraps the shadow instead of only
-         flashing right at the photon ring. ── */
-      vec2 center   = vec2(0.5);
-      vec2 toCenter = center - screenUV;
-      float dist    = length(toCenter);
-      float lensStr = pow(edge, 2.2) * uLensAmount;
-      vec2 lensedUV = screenUV + normalize(toCenter) * lensStr * (1.0 - smoothstep(0.0, 0.78, dist));
-
-      /* Smear the lensed background tangentially (clockwise) so stars
-         and the disk image streak as if dragged by the hole's spin —
-         the "violent motion" you can't get from a single sample. */
-      vec2  tang  = vec2(-toCenter.y, toCenter.x) / max(dist, 0.001);
-      float smear = edge * 0.014 + lensStr * 0.045;
-      vec3  bgColor = texture2D(tBg, lensedUV - tang * smear * 0.6).rgb * 0.55
-                    + texture2D(tBg, lensedUV).rgb                       * 0.30
-                    + texture2D(tBg, lensedUV + tang * smear * 0.6).rgb * 0.15;
-
-      /* ── Photon ring + a sharper inner sub-ring. Real black-hole
-         images show multiple thin rings just inside the shadow edge
-         (light that orbited the hole one extra time before escaping);
-         a second sharper band fakes that nested-ring look. ── */
-      float ring1 = pow(edge, 20.0) * 2.4;
-      float ring2 = pow(edge, 45.0) * 1.4;
-      float ring  = (ring1 + ring2) * (0.92 + sin(uTime * 1.6) * 0.08);
-
-      /* ── Narrow tilted equatorial slit ──
-         Rotate the equatorial plane by uTiltDeg then find band width. */
-      float tiltRad  = uTiltDeg * 3.14159265 / 180.0;
-      vec3  slitAxis = normalize(vec3(sin(tiltRad), cos(tiltRad), 0.0));
-      float slitDist = abs(dot(vWorldNorm, slitAxis));
-      /* Curl noise wiggles the slit edge */
-      float curlN    = sin(vWorldNorm.x * uNoiseScale + uTime * 0.9)
-                     * cos(vWorldNorm.z * uNoiseScale * 1.3 + uTime * 0.6) * 0.5 + 0.5;
-      float slitW    = uSlitWidth * (0.8 + curlN * 0.25);
-      float slitBand = pow(1.0 - smoothstep(0.0, slitW, slitDist), 2.0);
-      float slit     = slitBand * uSlitIntensity;
-
-      /* ── Equatorial rim — wider, cool cyan wrap. This is the
-         disk's light visibly bending along the disk plane around the
-         shadow; together with the lensed bg sampling above it gives
-         the "light wraps around the sphere" look. ── */
-      float equator  = 1.0 - abs(vWorldNorm.y);
-      float rimNoise = sin(vWorldNorm.x * uNoiseScale * 0.7 + uTime * 1.3) * 0.5 + 0.5;
-      float diskWrap = pow(equator, 3.8) * 1.6;
-      vec3  diskColor= mix(vec3(0.30, 0.65, 1.0), vec3(0.80, 0.95, 1.0), equator * rimNoise) * diskWrap;
-
-      /* Combine — bgColor carries the lensed disk image, so its weight
-         is bumped: the wrap reads as a clear arc above and below the
-         shadow, just like a real black-hole image. */
-      vec3 col = bgColor * lensStr * 13.0
-               + vec3(1.0, 0.97, 0.90) * ring
-               + vec3(1.0, 0.97, 0.90) * slit
-               + diskColor;
-
-      float alpha = clamp(lensStr * 7.0 + ring * 0.55 + diskWrap * 0.55 + slitBand * 0.35, 0.0, 1.0);
-      gl_FragColor = vec4(col, alpha);
-    }`,
-  transparent:true,
-  side: THREE.FrontSide,
-  depthWrite: false,
-  depthTest: true,
-  blending: THREE.AdditiveBlending,
-});
-
-const lensingMesh = new THREE.Mesh(
-  new THREE.SphereGeometry(R * 1.08, 128, 64),
-  lensingMat
-);
-lensingMesh.scale.setScalar(1.62); /* shell is bigger than sphere */
-lensingMesh.renderOrder = 3;
-fgScene.add(lensingMesh);
+/* Gravitational lensing is no longer a screen-space distortion on a
+   shell. It happens continuously along each ray inside the raymarch
+   pass: the ray direction is bent every integration step, so the
+   photon ring and the disk's lensed-over-the-top arc emerge from the
+   geometry itself rather than from UV displacement. */
 
 /* ─── Raymarched black-hole pass ────────────────
    Ported from rodrigo-marcet/raymarching (Unity HLSL → GLSL).
@@ -596,9 +262,9 @@ fgScene.add(lensingMesh);
         otherwise sample a procedural starfield in the *deflected*
         direction — distant stars naturally streak around the
         photon ring without any post-process.
-   This pass renders last (renderOrder 999, depthTest off, opaque)
-   so it cleanly paints over the legacy disk/sphere/lensing meshes;
-   they're left in the scene as a quick toggle-back fallback. */
+   This is now the renderer's only pass — the legacy compositing
+   layers (bg/fg disk meshes, shadow sphere, lensing shell) have all
+   been removed; every visible feature is integrated here. */
 const raymarchMat = new THREE.ShaderMaterial({
   uniforms: {
     uTime:        { value: 0 },
@@ -606,8 +272,8 @@ const raymarchMat = new THREE.ShaderMaterial({
     uCamPos:      { value: new THREE.Vector3() },
     uInvProj:     { value: new THREE.Matrix4() },
     uCamWorld:    { value: new THREE.Matrix4() },
-    uHorizonR:    { value: 1.0  },
-    uMass:        { value: 0.55 },
+    uHorizonR:    { value: 0.85 },
+    uMass:        { value: 0.82 },
     uStepSize:    { value: 0.10 },
     uMaxSteps:    { value: 180  },
     uDiskIn:      { value: 1.45 },
@@ -797,27 +463,35 @@ const raymarchMat = new THREE.ShaderMaterial({
       float tr       = 1.0;            /* remaining transmittance */
       bool  captured = false;
       float prevSide = dot(rayPos, diskN);
+      float minR     = 1e9;            /* closest approach to the hole */
 
       for(int i = 0; i < 240; i++){
         if(float(i) >= uMaxSteps) break;
         float r = length(rayPos);
+        minR = min(minR, r);
         if(r < uHorizonR){ captured = true; break; }
 
         /* Adaptive step — fine near the hole, coarse far away. */
         float dt = uStepSize * (1.0 + r * 0.12);
 
-        /* Volumetric cloud shroud — wraps the horizon in a slowly
-           churning bank of dark gas so the silhouette reads as a 3D
-           body veiled in cloud instead of a flat black cutout.
-           Densest just outside the horizon, gone by ~3.3R. */
+        /* Volumetric cloud shroud — wraps the horizon in a churning
+           bank of dark gas. The sample point is rotated around the
+           vertical axis over time so the cloud visibly swirls around
+           the sphere instead of sitting still, and it veils the
+           silhouette so the shadow no longer reads as a hard black
+           cutout. Densest just outside the horizon, gone by ~3.3R. */
         if(r < uHorizonR * 3.3 && tr > 0.01){
           float atmoT = clamp((uHorizonR * 3.3 - r) / (uHorizonR * 2.3), 0.0, 1.0);
-          vec3  cp    = rayPos * 0.9 + vec3(uTime * 0.16, uTime * 0.10, -uTime * 0.07);
+          float ca    = uTime * 0.55;
+          mat2  crot  = mat2(cos(ca), -sin(ca), sin(ca), cos(ca));
+          vec3  cp    = rayPos;
+          cp.xz       = crot * cp.xz;
+          cp          = cp * 0.95 + vec3(0.0, uTime * 0.12, 0.0);
           float cloud = pow(fbm3(cp), 1.4);
           float density  = atmoT * atmoT * cloud;
           vec3  cloudCol = mix(vec3(0.030, 0.055, 0.11),
                                vec3(0.20, 0.36, 0.64), cloud);
-          col += cloudCol * density * tr * dt * 0.7;
+          col += cloudCol * density * tr * dt * 0.9;
           tr  *= 1.0 - density * 0.22 * dt;
         }
 
@@ -858,9 +532,32 @@ const raymarchMat = new THREE.ShaderMaterial({
         if(r > 80.0 && dot(rayDir, rayPos) > 0.0) break;
       }
 
-      if(!captured && tr > 0.005){
+      if(captured){
+        /* Translucent veil instead of a dead-black void — a faint
+           deflected-star wash and a dark-blue haze, so the shadow
+           reads as deep gas you can almost see into rather than an
+           opaque black circle. */
+        col += sampleStars(rayDir) * 0.035;
+        col += vec3(0.014, 0.028, 0.060);
+      } else if(tr > 0.005){
         col += sampleStars(rayDir) * tr;
       }
+
+      /* Photon ring — light that grazed the photon sphere bends all
+         the way around the hole. Its brightness sweeps around the
+         ring over time (two azimuthal waves at different speeds) so
+         the lensed light visibly orbits the sphere instead of
+         sitting frozen. minR is the ray's closest approach, so the
+         ring's shape is the real lensed geometry, not a screen circle. */
+      float gd     = (minR - uHorizonR * 1.55) * 3.5;
+      float graze  = exp(-gd * gd);
+      vec2  scr    = vUv - 0.5;
+      scr.x       *= uResolution.x / uResolution.y;
+      float scrAng = atan(scr.y, scr.x);
+      float w1     = 0.5 + 0.5 * sin(scrAng * 2.0 - uTime * 2.6);
+      float w2     = 0.5 + 0.5 * sin(scrAng * 5.0 + uTime * 1.7);
+      float ringI  = graze * (0.25 + w1 * 0.42 + w2 * 0.22);
+      col += vec3(1.0, 0.94, 0.82) * ringI;
 
       gl_FragColor = vec4(col, 1.0);
     }
@@ -873,9 +570,8 @@ const raymarchQuad = new THREE.Mesh(
   new THREE.PlaneGeometry(2, 2),
   raymarchMat
 );
-raymarchQuad.frustumCulled = false;
-raymarchQuad.renderOrder   = 999;
-fgScene.add(raymarchQuad);
+raymarchQuad.frustumCulled = false;   /* clip-space quad — never frustum-cull */
+scene.add(raymarchQuad);
 
 /* ─── Camera ───────────────────────────────────── */
 /* Camera sits much closer to the disk plane — viewing nearly edge-on
@@ -889,19 +585,6 @@ camera.lookAt(0, 0, 0);
 /* ─── Animation clock ──────────────────────────── */
 let t = 0;
 let running = true;
-
-const _camLocal = new THREE.Vector3();
-function syncDiskUniforms(mat, mesh) {
-  mat.uniforms.uTime.value = t;
-  /* Camera in disk-local space: the disk lives inside a tilted pivot,
-     and the beaming math (velocity vs. line-of-sight) must be done in
-     one consistent reference frame or the bright side picks the wrong
-     half of the disk. */
-  mesh.updateWorldMatrix(true, false);
-  _camLocal.copy(camera.position);
-  mesh.worldToLocal(_camLocal);
-  mat.uniforms.uCamPos.value.copy(_camLocal);
-}
 
 function tick() {
   if (!running) return;
@@ -1023,15 +706,6 @@ window.addEventListener('scroll', () => {
 if (new URLSearchParams(location.search).has('dev')) {
   import('https://esm.sh/lil-gui@0.19.2').then(({ GUI }) => {
     const gui = new GUI({ title: 'Black Hole Dev', width: 240 });
-
-    const slitF = gui.addFolder('Slit (Image 1)');
-    slitF.add(lensingMat.uniforms.uTiltDeg,       'value', 0,   90,  0.1).name('uTiltDeg');
-    slitF.add(lensingMat.uniforms.uSlitWidth,      'value', 0.05,0.5, 0.01).name('uSlitWidth');
-    slitF.add(lensingMat.uniforms.uSlitIntensity,  'value', 1,   10,  0.1).name('uSlitIntensity');
-
-    const lensF = gui.addFolder('Lensing & Distortion');
-    lensF.add(lensingMat.uniforms.uLensAmount, 'value', 0,   0.6, 0.01).name('uLensAmount');
-    lensF.add(lensingMat.uniforms.uNoiseScale, 'value', 0.5, 6,   0.1).name('uNoiseScale');
 
     const bloomF = gui.addFolder('Bloom');
     bloomF.add(bloom, 'strength',  0, 3,   0.05).name('strength');

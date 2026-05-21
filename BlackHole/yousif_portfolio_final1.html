@@ -656,6 +656,33 @@ const raymarchMat = new THREE.ShaderMaterial({
       return v;
     }
 
+    /* 3D value noise + fbm — used for the volumetric cloud shroud
+       around the horizon. Sampling in 3D (not 2D-projected) is what
+       lets the cloud look like it has depth as the camera moves. */
+    float n3(vec3 p){
+      vec3 i = floor(p), f = fract(p);
+      f = f*f*(3.0 - 2.0*f);
+      float a = h31(i);
+      float b = h31(i + vec3(1.0, 0.0, 0.0));
+      float c = h31(i + vec3(0.0, 1.0, 0.0));
+      float d = h31(i + vec3(1.0, 1.0, 0.0));
+      float e = h31(i + vec3(0.0, 0.0, 1.0));
+      float g = h31(i + vec3(1.0, 0.0, 1.0));
+      float k = h31(i + vec3(0.0, 1.0, 1.0));
+      float l = h31(i + vec3(1.0, 1.0, 1.0));
+      return mix(mix(mix(a,b,f.x), mix(c,d,f.x), f.y),
+                 mix(mix(e,g,f.x), mix(k,l,f.x), f.y), f.z);
+    }
+    float fbm3(vec3 p){
+      float v = 0.0, a = 0.55;
+      for(int i = 0; i < 4; i++){
+        v += a * n3(p);
+        p  = p * 2.07 + vec3(17.7, 9.3, 5.1);
+        a *= 0.5;
+      }
+      return v;
+    }
+
     /* Multi-octave procedural starfield, sampled by a 3D direction.
        Sampling the *deflected* ray direction gives ring-shaped
        streaking near the photon sphere for free. */
@@ -700,7 +727,7 @@ const raymarchMat = new THREE.ShaderMaterial({
       float ia = smoothstep(0.0,  0.04, nP);
       float oa = 1.0 - smoothstep(0.86, 1.0, nP);
 
-      float swirl = uTime * (1.8 / (pow(r, 1.2) + 0.6));
+      float swirl = uTime * (2.8 / (pow(r, 1.1) + 0.5));
       vec2  coord = vec2(ang * 6.0 + r * 0.4 + swirl * 3.0, r * 2.2);
       float pat   = fbm2(coord + uTime * 0.38) * 0.7 + 0.4;
       pat += sin(ang * 3.0 + r * 4.5 - uTime * 2.1 - swirl * 1.8) * 0.06;
@@ -720,26 +747,31 @@ const raymarchMat = new THREE.ShaderMaterial({
       float beta    = clamp(0.55 / sqrt(max(r * 0.5, 0.2)), 0.0, 0.86);
       float gamma   = 1.0 / sqrt(1.0 - beta * beta);
       float doppler = 1.0 / (gamma * (1.0 - beta * mu));
-      brightness *= clamp(pow(doppler, 2.2), 0.2, 3.5);
+      /* Softer Doppler dimming — the receding side stays bright
+         enough that its swirling motion is still readable instead
+         of going near-black and looking frozen. */
+      brightness *= clamp(pow(doppler, 1.5), 0.5, 2.6);
 
       vec3 dopTint = mix(vec3(0.28, 0.58, 1.22),
                         vec3(0.92, 0.99, 1.12),
                         clamp((doppler - 0.6) / 1.0, 0.0, 1.0));
       c *= dopTint;
 
-      /* Dust halo: lives in (uDiskOut, uDiskOut * 2.4). A wispier,
-         lower-octave cloud pattern, cool blue, drifting tangentially
-         with the disc. Fades cubically to nothing at the outer edge. */
-      float dustExtent = uDiskOut * 1.4;
+      /* Dust halo: a thick cloud shell drifting around the disc,
+         fading out well past 3x the disc edge. Lower-octave cloud
+         noise tinted cool blue, with a uniform baseline so the
+         silhouette is framed by a continuous cloud body rather than
+         thin wisps. */
+      float dustExtent = uDiskOut * 2.2;
       float nDust    = clamp((r - uDiskOut) / dustExtent, 0.0, 1.0);
-      float dustMask = step(uDiskOut, r) * pow(1.0 - nDust, 2.4);
-      vec2  dustCoord = vec2(ang * 2.6 + swirl * 1.3, r * 0.7);
-      float dustPat   = fbm2(dustCoord + uTime * 0.16);
-      dustPat = pow(dustPat, 1.4);
-      vec3 dustCol = mix(vec3(0.05, 0.16, 0.42),
-                         vec3(0.30, 0.62, 1.00),
+      float dustMask = step(uDiskOut, r) * pow(1.0 - nDust, 1.6);
+      vec2  dustCoord = vec2(ang * 2.2 + swirl * 1.5, r * 0.55);
+      float dustPat   = fbm2(dustCoord + uTime * 0.20);
+      dustPat = pow(dustPat, 1.05);
+      vec3 dustCol = mix(vec3(0.06, 0.18, 0.46),
+                         vec3(0.40, 0.70, 1.05),
                          dustPat);
-      vec3 dustEmit = dustCol * dustPat * dustMask * 0.65 * dopTint;
+      vec3 dustEmit = dustCol * (dustPat * 0.6 + 0.45) * dustMask * 1.15 * dopTint;
 
       return c * brightness * ia * oa + dustEmit;
     }
@@ -774,6 +806,21 @@ const raymarchMat = new THREE.ShaderMaterial({
         /* Adaptive step — fine near the hole, coarse far away. */
         float dt = uStepSize * (1.0 + r * 0.12);
 
+        /* Volumetric cloud shroud — wraps the horizon in a slowly
+           churning bank of dark gas so the silhouette reads as a 3D
+           body veiled in cloud instead of a flat black cutout.
+           Densest just outside the horizon, gone by ~3.3R. */
+        if(r < uHorizonR * 3.3 && tr > 0.01){
+          float atmoT = clamp((uHorizonR * 3.3 - r) / (uHorizonR * 2.3), 0.0, 1.0);
+          vec3  cp    = rayPos * 0.9 + vec3(uTime * 0.16, uTime * 0.10, -uTime * 0.07);
+          float cloud = pow(fbm3(cp), 1.4);
+          float density  = atmoT * atmoT * cloud;
+          vec3  cloudCol = mix(vec3(0.030, 0.055, 0.11),
+                               vec3(0.20, 0.36, 0.64), cloud);
+          col += cloudCol * density * tr * dt * 0.7;
+          tr  *= 1.0 - density * 0.22 * dt;
+        }
+
         /* Newtonian-like ray deflection — the integrated bend over
            many steps is what produces the photon ring and the
            disk's lensed over-the-top arc. */
@@ -789,7 +836,7 @@ const raymarchMat = new THREE.ShaderMaterial({
           vec3  xPos    = mix(rayPos, nextPos, t);
           vec3  inPlane = xPos - diskN * dot(xPos, diskN);
           float rCross  = length(inPlane);
-          if(rCross >= uDiskIn && rCross <= uDiskOut * 2.4){
+          if(rCross >= uDiskIn && rCross <= uDiskOut * 3.3){
             float du   = dot(inPlane, diskX);
             float dv   = dot(inPlane, diskZ);
             float ang  = atan(dv, du);

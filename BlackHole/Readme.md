@@ -1,4 +1,4 @@
-(Redesign on my portfolio...)
+(Redesigning my portfolio...)
 # Portfolio with a 3D Black Hole
 
 ### Usage

@@ -200,17 +200,16 @@
   .wrap{max-width:var(--maxw);margin:0 auto;padding-inline:var(--gutter)}
   .wrap-narrow{max-width:var(--maxw-narrow);margin:0 auto;padding-inline:var(--gutter)}
 
-  /* Mono eyebrow titles every section. The numeral hints at structure
-     without resorting to "01 / 04" pagination chrome. */
+  /* Mono eyebrow above every section h2. Sits on its own line, a
+     single typographic mark — no leading rule, no numeral. The label
+     itself does the work. */
   .eyebrow{
     font-family:var(--mono);
-    font-size:.78rem;font-weight:500;
-    letter-spacing:.14em;text-transform:uppercase;
-    color:var(--fg-dim);
-    display:inline-flex;align-items:center;gap:.6rem;
-  }
-  .eyebrow::before{
-    content:"";width:14px;height:1px;background:var(--fg-dim);
+    font-size:.74rem;font-weight:500;
+    letter-spacing:.18em;text-transform:uppercase;
+    color:var(--accent);
+    display:block;
+    margin-bottom:.4rem;
   }
 
   /* ════════════════════════════════════════════════════════════════
@@ -486,14 +485,15 @@
   .section-head{margin-bottom:var(--s-6);max-width:var(--maxw-narrow)}
   .section-head h2{
     font-size:var(--t-h2);
-    margin-top:.8rem;
+    margin-top:.1rem;
     color:var(--fg);
-    letter-spacing:-.01em;
+    letter-spacing:-.015em;
+    line-height:1.15;
   }
   .section-lede{
     font-size:var(--t-lead);
     color:var(--fg-mid);
-    margin-top:.7rem;
+    margin-top:.9rem;
     max-width:54ch;
     line-height:1.55;
   }
@@ -520,23 +520,18 @@
   }
   .project:hover,
   .project:focus-within{
-    transform:translateY(-3px);
+    /* Softer lift — premium portfolios under-animate hovers. The
+       border + shadow change carries the affordance; the translate
+       is a whisper, not a jump. */
+    transform:translateY(-2px);
     border-color:var(--border-hi);
-    box-shadow:0 16px 36px rgba(26,24,22,.08);
+    box-shadow:0 12px 28px rgba(26,24,22,.06);
   }
   .project-top{
     display:flex;justify-content:space-between;align-items:baseline;
     margin-bottom:.8rem;
   }
-  .project-year{font-family:var(--mono);font-size:.78rem;color:var(--fg-dim)}
-  .project-flag{
-    font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;
-    text-transform:uppercase;
-    color:var(--accent);
-    padding:.2rem .55rem;
-    border:1px solid var(--accent-soft);border-radius:4px;
-    background:var(--accent-soft);
-  }
+  .project-year{font-family:var(--mono);font-size:.78rem;color:var(--fg-dim);letter-spacing:.02em}
   .project h3{
     font-family:var(--sans);font-size:var(--t-h3);font-weight:600;
     margin-bottom:.35rem;letter-spacing:-.005em;
@@ -581,6 +576,17 @@
   .project-links a:hover{color:var(--accent);border-bottom-color:currentColor}
   .project-links .muted{color:var(--fg-dim);pointer-events:none}
 
+  /* Quiet handoff line beneath the project grid. Frames the black
+     hole as the obvious follow-up read without shouting. */
+  .work-aside{
+    margin-top:2.6rem;
+    text-align:center;
+    font-size:var(--t-sm);
+    color:var(--fg-dim);
+    font-family:var(--sans);
+  }
+  .work-aside .text-link{font-size:var(--t-sm)}
+
   /* ════════════════════════════════════════════════════════════════
      8. BLACK HOLE — DEDICATED PERSONAL PROJECT / EXPERIMENT
         Lives in the LIGHT body, with text + diagram + metrics +
@@ -600,16 +606,17 @@
   }
   .experiment-head h2{
     font-size:var(--t-h2);
-    margin:.6rem 0 .8rem;
+    margin:.1rem 0 .9rem;
     color:var(--fg);
-    letter-spacing:-.01em;
+    letter-spacing:-.015em;
+    line-height:1.15;
   }
   .experiment-lede{
     font-size:var(--t-lead);
     color:var(--fg-mid);
     line-height:1.55;
-    max-width:52ch;
-    margin-bottom:2.4rem;
+    max-width:54ch;
+    margin-bottom:2.6rem;
   }
   .experiment-lede em{font-style:italic;color:var(--fg);font-weight:500}
 
@@ -733,29 +740,27 @@
          maintain, makes the site feel alive, and lets recruiters see
          recency without any infrastructure.
   ════════════════════════════════════════════════════════════════ */
+  /* Slimmed Notes list — two columns (date · text), no tags. The
+     section is meant to feel light and optional. */
   .updates{list-style:none;display:grid;gap:0;
     border-top:1px solid var(--border)}
   .upd{
     display:grid;
-    grid-template-columns:120px 1fr auto;
-    gap:1.2rem;
-    padding:.95rem 0;
+    grid-template-columns:110px 1fr;
+    gap:1.4rem;
+    padding:1rem 0;
     border-bottom:1px solid var(--border);
     align-items:baseline;
   }
   .upd-date{font-family:var(--mono);font-size:.76rem;color:var(--fg-dim)}
-  .upd-text{font-size:.95rem;color:var(--fg)}
+  .upd-text{font-size:.95rem;color:var(--fg-mid);line-height:1.55}
   .upd-text strong{color:var(--fg);font-weight:600}
-  .upd-tag{
-    font-family:var(--mono);font-size:.7rem;letter-spacing:.04em;
-    color:var(--fg-dim);
-    padding:.15rem .5rem;
-    border:1px solid var(--border);border-radius:4px;
-    text-transform:lowercase;
+  .upd-text code{
+    font-family:var(--mono);font-size:.85em;
+    background:var(--bg-soft);padding:.08rem .35rem;border-radius:3px;
   }
   @media (max-width:580px){
     .upd{grid-template-columns:1fr;gap:.25rem}
-    .upd-tag{justify-self:start}
   }
 
   /* ════════════════════════════════════════════════════════════════
@@ -1263,97 +1268,82 @@
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════
-       SECTION 5 · LATEST FROM THE LAB
-       A compact, manual changelog. Reads like a developer's git log,
-       not a marketing blog: date · note · scope tag. Cheap to keep
-       current; signals the site is alive without a CMS.
-
-       TODO: keep this list to ~5-8 entries; prune the bottom as new
-       ones land. Or wire to the GitHub API later for live commits.
-  ════════════════════════════════════════════════════════════════ -->
-  <section class="section" id="updates">
-    <div class="wrap">
-      <div class="section-head reveal">
-        <p class="eyebrow">Latest from the lab</p>
-        <h2>Recent notes &amp; experiments.</h2>
-      </div>
-
-      <ul class="updates reveal">
-        <li class="upd">
-          <span class="upd-date">2026 · 05</span>
-          <span class="upd-text"><strong>Portfolio rewrite</strong> — moved to a dark-hero / light-body layout, dropped the loading screen, added a real case study for the renderer.</span>
-          <span class="upd-tag">site</span>
-        </li>
-        <li class="upd">
-          <span class="upd-date">2026 · 04</span>
-          <span class="upd-text">Drafted a Kerr-metric geodesic integrator in <code>src/shaders/kerr.glsl</code> — not wired into the live demo yet, but the math checks out against the Schwarzschild limit.</span>
-          <span class="upd-tag">graphics</span>
-        </li>
-        <li class="upd">
-          <span class="upd-date">2026 · 03</span>
-          <span class="upd-text">Started at <strong>Stellantis</strong> as a Database Specialist co-op. First sprint: a reporting pipeline that turned a 40-minute manual export into a one-click view.</span>
-          <span class="upd-tag">work</span>
-        </li>
-        <li class="upd">
-          <span class="upd-date">2026 · 02</span>
-          <span class="upd-text">Shipped <strong>myAdvice v1</strong>, reducing advising workflow steps by ~80%. Wrote a postmortem on the JavaFX-vs-React decision.</span>
-          <span class="upd-tag">ship</span>
-        </li>
-        <li class="upd">
-          <span class="upd-date">2026 · 01</span>
-          <span class="upd-text">Added Doppler beaming + a triangular-PDF dither to the disk shader. Banding gone, receding side still readable.</span>
-          <span class="upd-tag">graphics</span>
-        </li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       SECTION 6 · ABOUT  — short, voiced, no manifesto.
+       SECTION 5 · ABOUT  (now before Notes — humanises before
+       signalling activity; cleaner narrative arc).
+       Short, voiced, no manifesto. Two paragraphs.
   ════════════════════════════════════════════════════════════════ -->
   <section class="section" id="about">
     <div class="wrap">
       <div class="section-head reveal">
         <p class="eyebrow">About</p>
-        <h2>Who's behind the renderer.</h2>
+        <h2>A bit about me.</h2>
       </div>
 
       <div class="about-grid">
         <div class="about-body reveal">
           <p>
-            I'm a <strong>second-year Software Engineering co-op
-            student at the University of Windsor</strong>, currently
-            working as a Database Specialist at Stellantis. By day I
-            write SQL and Python against real production data; by
-            night I render black holes in fragment shaders.
+            I'm a <strong>second-year Software Engineering student
+            at the University of Windsor</strong>, currently doing my
+            co-op as a Database Specialist at Stellantis. Most of my
+            work is the unglamorous, useful kind — SQL, Python,
+            REST APIs, and the systems that sit around them.
           </p>
           <p>
-            I'm drawn to problems where the interesting part is the
-            design itself — the shape of a data model, the numerical
-            integration scheme, the architecture of a system. The
-            black hole on this page isn't a library I imported; it's a
-            raymarcher I wrote to understand how light actually
-            behaves around mass. <strong>That's the throughline:
-            understand the why, then build the thing.</strong>
+            What I care about is the part most people skip:
+            understanding <em>why</em> a design works before building
+            it. The black hole on this page is the clearest example —
+            it isn't a library I imported, it's a raymarcher I wrote
+            to understand how light actually behaves around mass.
+            That's the throughline in everything here.
           </p>
           <p>
-            Looking for a Summer / Fall 2026 internship — open to
-            backend, data, or anywhere the problem is hard and the
-            team cares about the craft. <em>Offline: lifting, ambient
-            music, and the math of general relativity.</em>
+            Looking for a <strong>Summer or Fall 2026 internship</strong>
+            in backend, data, or anywhere the problem is hard.
+            <em>Outside of code: lifting, ambient music, the math of
+            general relativity.</em>
           </p>
         </div>
 
         <div class="reveal">
           <dl class="facts">
-            <div><dt>Education</dt><dd>B.Sc. Software Eng.<br>University of Windsor</dd></div>
             <div><dt>Now</dt><dd>Database Specialist Co-op<br>Stellantis</dd></div>
-            <div><dt>Focus</dt><dd>Backend, data, graphics</dd></div>
+            <div><dt>Study</dt><dd>B.Sc. Software Engineering<br>University of Windsor</dd></div>
+            <div><dt>Focus</dt><dd>Backend · Data · Graphics</dd></div>
             <div><dt>Available</dt><dd>Summer / Fall 2026</dd></div>
             <div><dt>Location</dt><dd>Windsor, Ontario</dd></div>
           </dl>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       SECTION 6 · NOTES  (slimmed: 3 entries, no tag column).
+       Optional and light. Reads like a developer's git log, signals
+       recency without becoming a blog.
+       TODO: trim/replace entries as new ones land.
+  ════════════════════════════════════════════════════════════════ -->
+  <section class="section" id="notes">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Notes</p>
+        <h2>What I'm working on.</h2>
+      </div>
+
+      <ul class="updates reveal">
+        <li class="upd">
+          <span class="upd-date">2026 · 05</span>
+          <span class="upd-text">Rebuilt this site — dark-hero / light-body, added a real write-up for the black hole.</span>
+        </li>
+        <li class="upd">
+          <span class="upd-date">2026 · 04</span>
+          <span class="upd-text">Drafted a true Kerr-metric geodesic integrator (<code>src/shaders/kerr.glsl</code>). Math checks against the Schwarzschild limit; not yet wired into the live demo.</span>
+        </li>
+        <li class="upd">
+          <span class="upd-date">2026 · 03</span>
+          <span class="upd-text">Started at <strong>Stellantis</strong>. First sprint: a reporting pipeline that turned a 40-minute manual export into a one-click view.</span>
+        </li>
+      </ul>
     </div>
   </section>
 </main>
@@ -1371,24 +1361,25 @@
       <p class="eyebrow">Connect</p>
       <h2>Let's talk.</h2>
       <p class="connect-lede">
-        Open to Summer and Fall 2026 internships. The fastest way to
-        reach me is email — or grab a 20-minute slot if you'd rather
-        chat.
+        Open to Summer / Fall 2026 internships. If something here
+        caught your eye, the fastest way is to grab a slot — or send
+        a note.
       </p>
 
+      <!-- ONE primary action. Everything else is a quieter row of
+           known destinations (résumé / GitHub / LinkedIn). Recruiters
+           don't need to compare three buttons. -->
       <div class="connect-actions">
-        <!-- PRIMARY CTA — scaffolded as "Book a chat". Wired to email
-             until a Cal.com / Calendly link is set up; then swap the
-             href and that's it (no other changes needed). -->
-        <a class="btn btn-primary" href="mailto:yousif.eliaa@gmail.com?subject=Book%20a%20chat%20-%20portfolio">Book a 20-min chat</a>
-        <a class="btn btn-ghost" href="mailto:yousif.eliaa@gmail.com">Email me directly</a>
+        <!-- TODO: swap mailto for Cal.com / Calendly link once set up. -->
+        <a class="btn btn-primary" href="mailto:yousif.eliaa@gmail.com?subject=Book%20a%20chat%20-%20portfolio">Book a chat →</a>
+        <a class="btn btn-ghost" href="mailto:yousif.eliaa@gmail.com">yousif.eliaa@gmail.com</a>
       </div>
 
       <div class="connect-secondary">
         <!-- TODO: real URLs for GitHub + LinkedIn. -->
+        <a href="YousifElia-SWE.pdf" target="_blank" rel="noopener">Résumé (PDF) ↗</a>
         <a href="#" target="_blank" rel="noopener">GitHub ↗</a>
         <a href="#" target="_blank" rel="noopener">LinkedIn ↗</a>
-        <a href="YousifElia-SWE.pdf" target="_blank" rel="noopener">Résumé (PDF) ↗</a>
       </div>
     </div>
 

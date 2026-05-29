@@ -1,14 +1,20 @@
 Front Page
 
 Yousif Elia
-  Software Engineer @ Stellantis
+  Software Engineer @Stellantis | Head of Events @CSS Society
 
 Resume | LinkedIn | GitHub | Email | More About Me ->
 
 ---------------------------------------------------------
 
         Work                Education 
-  Backend Specialist      University of Windsor
+    Backend Specialist      University of Windsor
+
+Features Projects
+
+MedCheck                LinkedIn  blockage
+myAdvice                BlackHole Simulation
+
 
 More About Me -> Music, Shows, Hobbies
 

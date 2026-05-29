@@ -3,7 +3,7 @@ Front Page
 Yousif Elia
   Software Engineer @ Stellantis
 
-
+Resume | LinkedIn | GitHub | Email | More About Me ->
 
 
 

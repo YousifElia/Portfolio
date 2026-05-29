@@ -8,6 +8,7 @@ Resume | LinkedIn | GitHub | Email | More About Me ->
 ---------------------------------------------------------
 
         Work                Education 
+  Backend Specialist      University of Windsor
 
 More About Me -> Music, Shows, Hobbies
 

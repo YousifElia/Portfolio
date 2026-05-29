@@ -5,10 +5,11 @@ Yousif Elia
 
 Resume | LinkedIn | GitHub | Email | More About Me ->
 
+---------------------------------------------------------
 
+        Work                Education 
 
-
-
+More About Me -> Music, Shows, Hobbies
 
 (Redesigning my portfolio... Trying to be creative with the style)
 # Portfolio with a 3D Black Hole

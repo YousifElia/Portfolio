@@ -4,7 +4,9 @@ My personal site: a single static page, four sections (work, experience, stack,
 contact), and a **real-time gravitationally-lensed black hole** rendered live in
 a WebGL fragment shader.
 
-**Live:** https://yousifelia.github.io/Portfolio/
+**Live:** not published yet — enable GitHub Pages (Settings → Pages → deploy
+from `main`, folder `/`) and the site goes up at
+`https://yousifelia.github.io/Portfolio/`.
 
 ## Run it locally
 

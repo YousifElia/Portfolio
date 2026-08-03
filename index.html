@@ -1,593 +1,1002 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" content="#070a13" media="(prefers-color-scheme: dark)">
-  <meta name="theme-color" content="#f7f4ec">
-
-  <title>Yousif Elia — Software Engineer</title>
-
-  <!-- Inline SVG favicon: small black-hole ring glyph. No extra request,
-       no 404. Stays neutral against both dark and light browser chrome. -->
-  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%230a0908'/%3E%3Ccircle%20cx='16'%20cy='16'%20r='8.5'%20fill='none'%20stroke='%23f6f2ea'%20stroke-width='2.3'/%3E%3Ccircle%20cx='16'%20cy='16'%20r='3.6'%20fill='%230a0908'/%3E%3C/svg%3E">
-
-  <!-- ─────────────────────────────────────────────────────────────
-       META / OPEN GRAPH
-       TODO: og-cover.png (1200×630), real canonical URL.
-  ───────────────────────────────────────────────────────────── -->
-  <meta name="description" content="Yousif Elia — Software Engineering student at the University of Windsor, on co-op at Stellantis. Builds full-stack systems on a strong database foundation, shipped a privacy Chrome extension, and hand-writes GLSL black holes for fun.">
-  <meta name="author" content="Yousif Elia">
-  <link rel="canonical" href="https://example.com/"><!-- TODO: real domain -->
-
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Yousif Elia">
-  <meta property="og:locale" content="en_CA">
-  <meta property="og:title" content="Yousif Elia — Software Engineer">
-  <meta property="og:description" content="Software Engineering co-op at Stellantis. Full-stack systems on a strong database foundation, a shipped Chrome extension, and a real-time raytraced black hole.">
-  <meta property="og:image" content="og-cover.png"><!-- TODO: real OG cover -->
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:url" content="https://example.com/"><!-- TODO -->
-
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Yousif Elia — Software Engineer">
-  <meta name="twitter:description" content="Software Engineering co-op at Stellantis. Real-time raytraced black hole inside.">
-  <meta name="twitter:image" content="og-cover.png">
-
-  <!-- Structured data — recruiters' ATS pipelines sometimes parse this. -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Yousif Elia",
-    "jobTitle": "Software Engineering Co-op",
-    "worksFor": { "@type": "Organization", "name": "Stellantis" },
-    "description": "Software Engineering co-op student at the University of Windsor.",
-    "email": "mailto:yousif.eliaa@gmail.com",
-    "url": "https://example.com/",
-    "alumniOf": { "@type": "CollegeOrUniversity", "name": "University of Windsor" },
-    "address": { "@type": "PostalAddress", "addressLocality": "Windsor", "addressRegion": "ON", "addressCountry": "CA" },
-    "knowsAbout": ["Software Engineering", "Databases", "SQL", "Python", "REST APIs", "WebGL", "GLSL"],
-    "sameAs": ["https://github.com/YousifElia", "https://www.linkedin.com/in/yousif-elia"]
-  }
-  </script>
-
-  <!-- Set .js synchronously so scroll-reveal elements only start hidden
-       when JS is present. Theme is resolved before first paint so there
-       is never a flash of the wrong palette. -->
-  <script>
-    document.documentElement.classList.add('js');
-    (function () {
-      var t = localStorage.getItem('theme');
-      if (t !== 'light' && t !== 'dark') {
-        t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      }
-      document.documentElement.setAttribute('data-theme', t);
-    })();
-  </script>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- Typographic signature: Instrument Serif (italic) for headings — the
-       editorial voice; Manrope for body — warm, rounded, distinct from the
-       default-Inter look; JetBrains Mono for labels/code. -->
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="/src/styles/site.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
 </head>
-
 <body>
-<a class="skip-link" href="#work">Skip to projects</a>
+<x-dc>
+<helmet>
+  <meta name="description" content="Yousif Elia — full-stack software engineer. Stellantis co-op, real-time GLSL black hole, shipped Chrome extension.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Manrope:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <style>
+    html{scroll-padding-top:72px;scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+    body{margin:0;background:#0b1320;color:#c7b8a6;font-family:'Manrope',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+    a{color:#c7b8a6;text-decoration-thickness:1px;text-underline-offset:3px}
+    a:hover{color:#b46a55}
+    ::selection{background:rgba(180,106,85,.14);color:#f2efe8}
+    @keyframes caret-blink{0%,55%{opacity:1}56%,100%{opacity:0}}
+    @keyframes wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(16deg)}40%,80%{transform:rotate(-8deg)}}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+    @keyframes twinkle{0%,100%{opacity:var(--two,.8)}50%{opacity:calc(var(--two,.8) * .3)}}
+    @keyframes star-breathe{0%,100%{filter:brightness(1)}50%{filter:brightness(.72)}}
+    @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+    .tw{animation:twinkle var(--twd,3.5s) ease-in-out var(--twdel,0s) infinite}
+    .star-hit:hover .star-lbl{color:#c6d2ee}
+    .star-hit:hover .star-lbl strong{color:#ffffff}
+    .star-hit:hover .star-core{transform:scale(1.18)}
+    .star-hit:active .star-core{transform:scale(1.45)}
+    [data-cursor]{position:fixed;left:0;top:0;width:0;height:0;pointer-events:none;z-index:400;opacity:0;transition:opacity .35s}
+    [data-cursor]>i{display:block;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;border:1px solid color-mix(in srgb,var(--acc,#b46a55) 60%,transparent);background:color-mix(in srgb,var(--acc,#b46a55) 7%,transparent);transform:scale(.32);transition:transform .32s cubic-bezier(.2,.7,.2,1),background-color .32s,border-color .32s}
+    [data-cursor][data-hot]>i{transform:scale(1);background:color-mix(in srgb,var(--acc,#b46a55) 15%,transparent);border-color:color-mix(in srgb,var(--acc,#b46a55) 85%,transparent)}
+    [data-cardmedia]>*{transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+    [data-card]:hover [data-cardmedia]>*{transform:scale(1.035)}
+    [data-rsp="skillrow"]>div>span{transition:transform .2s cubic-bezier(.2,.7,.2,1),border-color .2s,color .2s}
+    [data-rsp="skillrow"]>div>span:hover{transform:translateY(-2px);border-color:rgba(180,106,85,.6);color:#f2efe8}
+    @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}html{scroll-behavior:auto}}
+    :focus-visible{outline:2px solid #b46a55;outline-offset:3px;border-radius:4px}
+    nav a[data-active]{color:#f2efe8!important}
+    @media (max-width:860px){
+      [data-rsp="hero"]{grid-template-columns:1fr!important}
+      [data-rsp="hero"]>img{width:96px!important;height:96px!important}
+      [data-rsp="band"]{grid-template-columns:1fr!important;gap:2.2rem!important}
+      [data-rsp="hole"]{grid-template-columns:1fr!important}
+      [data-rsp="hole"]>div:last-child{border-left:none!important;border-top:1px solid rgba(242,239,232,.08)!important}
+      [data-rsp="navlinks"]{display:none!important}
+      [data-rsp="cards"]{grid-template-columns:1fr 1fr!important}
+      [data-rsp="notes"]{grid-template-columns:1fr 1fr!important}
+      [data-rsp="head"]{flex-wrap:wrap!important}
+      [data-skycap]{display:none!important}
+    }
+    @media (max-width:1100px){.star-lbl{white-space:normal!important;width:9rem!important;line-height:1.45!important}}
+    @media (max-width:620px){
+      [data-rsp="cards"]{grid-template-columns:1fr!important}
+      [data-rsp="notes"]{grid-template-columns:1fr!important}
+      [data-rsp="metrics"]{grid-template-columns:1fr!important}
+      [data-rsp="skillrow"]{grid-template-columns:1fr!important;gap:.3rem!important}
+      [data-rsp="contact"]{grid-template-columns:1fr!important}
+      [data-wrap]{padding-left:20px!important;padding-right:20px!important}
+      [data-rsp="sky"]{height:520px!important}
+      .star-lbl{font-size:.58rem!important;white-space:normal!important;line-height:1.4!important;left:50%!important;right:auto!important;top:calc(100% + .3rem)!important;transform:translateX(-50%)!important;text-align:center!important;width:7.2rem!important}
+      #top{padding-top:40px!important;padding-bottom:24px!important}
+      #work,#experience,#stack{padding-top:44px!important;padding-bottom:44px!important}
+    }
+    @media (pointer:coarse){a[aria-label="GitHub"],a[aria-label="LinkedIn"],a[aria-label="Email"]{width:44px!important;height:44px!important}}
+  </style>
+</helmet>
 
-<!-- ═══════════════════════ NAVIGATION ═══════════════════════════
-     Sticky, blurred backdrop, minimal links + theme toggle. The
-     résumé is the persistent CTA — the thing a recruiter wants in
-     one click from anywhere.
-══════════════════════════════════════════════════════════════════ -->
-<nav class="nav" id="nav" aria-label="Primary">
-  <div class="wrap">
-    <a class="nav-brand" href="#top">yousif elia</a>
-    <ul class="nav-links">
-      <li><a href="#about">about</a></li>
-      <li><a href="#work">projects</a></li>
-      <li><a href="#milestones">milestones</a></li>
-      <li><a href="#connect">contact</a></li>
-    </ul>
-    <div class="nav-right">
-      <a class="nav-cta" href="YousifElia-SWE.pdf" target="_blank" rel="noopener">résumé</a>
-      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle dark mode">
-        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 3.5a1 1 0 0 1 1 1V23a1 1 0 1 1-2 0v-1.5a1 1 0 0 1 1-1ZM12 0a1 1 0 0 1 1 1v1.5a1 1 0 1 1-2 0V1a1 1 0 0 1 1-1Zm12 12a1 1 0 0 1-1 1h-1.5a1 1 0 1 1 0-2H23a1 1 0 0 1 1 1ZM3.5 12a1 1 0 0 1-1 1H1a1 1 0 1 1 0-2h1.5a1 1 0 0 1 1 1Zm16.98 8.48a1 1 0 0 1-1.41 0l-1.06-1.06a1 1 0 1 1 1.41-1.42l1.06 1.07a1 1 0 0 1 0 1.41ZM5.99 5.99a1 1 0 0 1-1.41 0L3.52 4.93a1 1 0 0 1 1.41-1.41L5.99 4.58a1 1 0 0 1 0 1.41Zm14.49-1.06-1.06 1.06a1 1 0 1 1-1.42-1.41l1.07-1.06a1 1 0 0 1 1.41 1.41ZM5.99 18.01a1 1 0 0 1 0 1.41l-1.06 1.06a1 1 0 0 1-1.41-1.41l1.06-1.06a1 1 0 0 1 1.41 0Z"/></svg>
-        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.64 13.03a1 1 0 0 0-1.05-.14 8.05 8.05 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1c0-1.1.22-2.18.65-3.19a1 1 0 0 0-1.27-1.32A10.14 10.14 0 0 0 1.9 10.46 10.14 10.14 0 0 0 12.04 20.6a10.1 10.1 0 0 0 9.86-6.5 1 1 0 0 0-.26-1.07Z"/></svg>
-      </button>
+<div ref="{{rootRef}}" style="--acc:#b46a55;background:#0b1320;min-height:100vh" data-screen-label="Portfolio v2 — full page">
+  <a href="#work" style="position:fixed;left:1rem;top:-64px;z-index:300;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.76rem;font-weight:500;color:#0b1320;background:#f2efe8;padding:.55rem .95rem;border-radius:8px;text-decoration:none;transition:top .25s" style-focus="top:.7rem">skip to content ↓</a>
+
+  <template id="__bundler_thumbnail" data-bg-color="#0b1320">
+    <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1200" height="800" fill="#0b1320"></rect>
+      <circle cx="600" cy="400" r="120" fill="none" stroke="#b46a55" stroke-width="14"></circle>
+      <text x="600" y="446" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="140" fill="#f2efe8">ye</text>
+    </svg>
+  </template>
+
+  <div data-cursor="1" ref="{{cursorRef}}" aria-hidden="true"><i></i></div>
+
+  <nav ref="{{navRef}}" data-screen-label="Nav" style="position:sticky;top:0;z-index:100;height:56px;display:flex;align-items:center;background:transparent;border-bottom:1px solid transparent;transition:background .36s cubic-bezier(.2,.7,.2,1),border-color .36s cubic-bezier(.2,.7,.2,1)">
+    <div data-wrap="1" style="max-width:960px;margin:0 auto;padding-left:32px;padding-right:32px;display:flex;align-items:center;justify-content:space-between;width:100%;gap:1rem">
+      <a href="#top" style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:1.15rem;color:#f2efe8;text-decoration:none">yousif elia</a>
+      <div data-rsp="navlinks" style="display:flex;align-items:center;gap:1.5rem">
+        <a href="#work" style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.76rem;color:#8f8676;text-decoration:none;background-image:linear-gradient(currentColor,currentColor);background-repeat:no-repeat;background-position:0 100%;background-size:0% 1px;transition:color .24s,background-size .32s cubic-bezier(.2,.7,.2,1)" style-hover="color:#f2efe8;background-size:100% 1px">work</a>
+        <a href="#experience" style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.76rem;color:#8f8676;text-decoration:none;background-image:linear-gradient(currentColor,currentColor);background-repeat:no-repeat;background-position:0 100%;background-size:0% 1px;transition:color .24s,background-size .32s cubic-bezier(.2,.7,.2,1)" style-hover="color:#f2efe8;background-size:100% 1px">experience</a>
+        <a href="#stack" style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.76rem;color:#8f8676;text-decoration:none;background-image:linear-gradient(currentColor,currentColor);background-repeat:no-repeat;background-position:0 100%;background-size:0% 1px;transition:color .24s,background-size .32s cubic-bezier(.2,.7,.2,1)" style-hover="color:#f2efe8;background-size:100% 1px">stack</a>
+        <a href="#connect" style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.76rem;color:#8f8676;text-decoration:none;background-image:linear-gradient(currentColor,currentColor);background-repeat:no-repeat;background-position:0 100%;background-size:0% 1px;transition:color .24s,background-size .32s cubic-bezier(.2,.7,.2,1)" style-hover="color:#f2efe8;background-size:100% 1px">contact</a>
+      </div>
+      <a href="assets/Yousif-Elia-Resume.pdf" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.76rem;color:#f2efe8;text-decoration:none;padding:.4rem .85rem;border:1px solid rgba(242,239,232,.24);border-radius:7px;transition:all .22s" style-hover="border-color:var(--acc,#b46a55);color:var(--acc,#b46a55);background:color-mix(in srgb,var(--acc,#b46a55) 12%,transparent)">Resume ↗</a>
     </div>
-  </div>
-</nav>
+  </nav>
 
-<main>
-  <!-- ═══════════════════════════════════════════════════════════════
-       HERO — the tedawf pattern: photo, casual greeting, two lines,
-       location, résumé + socials. Everything a recruiter needs in
-       the first screen, zero scroll.
-  ════════════════════════════════════════════════════════════════ -->
-  <header class="hero" id="top">
-    <div class="wrap">
-      <div class="hero-grid reveal">
-        <!-- Portrait. TODO: drop in a real photo —
-             <img src="me.jpg" alt="Yousif Elia"> — and remove aria-hidden. -->
-        <div class="hero-portrait" aria-hidden="true">
-          <span class="monogram">YE</span>
-        </div>
-
-        <div class="hero-intro">
-          <h1>hi, <em class="name">yousif</em> here <span class="wave" aria-hidden="true">👋</span></h1>
-
-          <!-- Terminal-flavoured descriptor — the words cycle (typewriter.ts).
-               Static first word without JS / under reduced motion. -->
-          <p class="hero-type" aria-label="Yousif builds software, black holes, chrome extensions, CLIs, and databases">
-            <span class="type-prompt" aria-hidden="true">$ yousif --builds</span>
-            <span class="type-word" id="typewriter" aria-hidden="true">software</span><span class="type-caret" aria-hidden="true"></span>
-          </p>
-
-          <p class="hero-line">
-            Software Engineering student on co-op
-            <a class="chip" href="#experience"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11 6.5 6.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11m-14 0h14m-14 0a2 2 0 0 0-2 2v4h2m14-6a2 2 0 0 1 2 2v4h-2m-14 0v2h3v-2m-3 0h3m8 0v2h3v-2m-3 0h3M8 14h.01M16 14h.01" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>@ Stellantis</a>.
-            I engineer
-            <a class="chip" href="#work"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 7-5 5 5 5m8-10 5 5-5 5M14 4l-4 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>full-stack systems</a>
-            on a strong database backbone — and, for the fun of it,
-            <a class="chip" href="#blackhole"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3.1" fill="currentColor"/></svg>a real-time black hole</a>
-            from scratch.
-          </p>
-
-          <p class="hero-meta">
-            <span>📍 Windsor, Ontario</span>
-            <span class="hero-avail"><span class="status-dot" aria-hidden="true"></span> Available Summer / Fall 2026</span>
-          </p>
-
-          <div class="cta-row">
-            <a class="btn btn-primary" href="#work">View my work</a>
-            <a class="btn btn-ghost" href="YousifElia-SWE.pdf" target="_blank" rel="noopener">Résumé ↗</a>
-          </div>
-
-          <div class="hero-socials">
-            <a class="hero-social" href="https://github.com/YousifElia" target="_blank" rel="noopener" aria-label="GitHub">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.69 5.41-5.25 5.69.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg>
-            </a>
-            <a class="hero-social" href="https://www.linkedin.com/in/yousif-elia" target="_blank" rel="noopener" aria-label="LinkedIn">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.8 0 0 .78 0 1.74v20.52C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.74V1.74C24 .78 23.2 0 22.22 0Z"/></svg>
-            </a>
-            <a class="hero-social" href="mailto:yousif.eliaa@gmail.com" aria-label="Email">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 4h20a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Zm10 7.6 8.4-5.6H3.6L12 11.6Zm0 2.2L3 7.8V18h18V7.8l-9 6Z"/></svg>
-            </a>
+  <header id="top" data-screen-label="Hero" style="padding-top:56px;padding-bottom:34px">
+    <div data-wrap="1" style="max-width:960px;margin:0 auto;padding-left:32px;padding-right:32px">
+      <div data-rsp="hero" style="display:grid;grid-template-columns:auto 1fr;gap:2.4rem;align-items:center">
+        <img src="assets/photo.png" alt="Yousif Elia" style="width:132px;height:132px;border-radius:20px;object-fit:cover;object-position:50% 20%;border:1px solid rgba(242,239,232,.24);box-shadow:0 12px 28px rgba(0,0,0,.45);background:#141d33;transition:transform .45s cubic-bezier(.2,.7,.2,1),border-color .45s,box-shadow .45s" style-hover="transform:translateY(-3px) scale(1.015);border-color:color-mix(in srgb,var(--acc,#b46a55) 55%,transparent);box-shadow:0 18px 38px rgba(0,0,0,.55)"/>
+        <div>
+          <h1 style="font-family:'Manrope',sans-serif;font-size:clamp(1.85rem,6.5vw,2.5rem);font-weight:700;letter-spacing:-.022em;line-height:1.15;color:#f2efe8;margin:0 0 .5rem">hi, <em style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;font-size:1.12em;color:var(--acc,#b46a55)">yousif</em> here <span style="display:inline-block;animation:wave 2.2s cubic-bezier(.2,.7,.2,1) 600ms 1;transform-origin:70% 70%" aria-hidden="true">👋</span></h1>
+          <p style="font-size:1.14rem;line-height:1.5;max-width:52ch;margin:0 0 .55rem;color:#f2efe8;font-weight:600;letter-spacing:-.01em">Full-stack engineer who makes slow systems fast.</p>
+          <p style="font-size:.98rem;line-height:1.62;max-width:56ch;margin:0 0 .9rem;color:#c7b8a6">Software engineering co-op <a href="#experience" style="color:#f2efe8;text-decoration:none;border-bottom:1px solid rgba(242,239,232,.3)" style-hover="color:var(--acc,#b46a55);border-bottom-color:var(--acc,#b46a55)">@ Stellantis</a>, shipping enterprise backends to 40,000+ plant workers. Off the clock I build things that shouldn't run in a browser — like <a href="#work" style="color:#f2efe8;text-decoration:none;border-bottom:1px solid rgba(242,239,232,.3)" style-hover="color:var(--acc,#b46a55);border-bottom-color:var(--acc,#b46a55)">a raytraced black hole</a>, from scratch, at 60 fps.</p>
+          <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.78rem;color:#8f8676;margin:0 0 1.05rem;min-height:1.5em"><span style="color:var(--acc,#b46a55);margin-right:.5rem" aria-hidden="true">$ currently building</span><span ref="{{typerRef}}" style="color:#f2efe8"></span><span style="display:inline-block;width:7px;height:1.05em;margin-left:2px;vertical-align:text-bottom;background:var(--acc,#b46a55);animation:caret-blink 1.1s steps(1) infinite" aria-hidden="true"></span></p>
+          <div style="display:flex;flex-wrap:wrap;gap:.6rem;align-items:center">
+            <a href="#work" style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.8rem;font-weight:500;text-decoration:none;padding:.66rem 1.15rem;border-radius:8px;background:var(--acc,#b46a55);color:#0b1320;transition:all .22s" style-hover="filter:brightness(1.07);transform:translateY(-1px)">See the work ↓</a>
+            <a href="assets/Yousif-Elia-Resume.pdf" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.8rem;font-weight:500;text-decoration:none;padding:.66rem 1.15rem;border-radius:8px;border:1px solid rgba(242,239,232,.24);color:#f2efe8;transition:all .22s" style-hover="border-color:var(--acc,#b46a55);color:var(--acc,#b46a55);background:color-mix(in srgb,var(--acc,#b46a55) 12%,transparent)">Resume (PDF) ↗</a>
+            <span aria-hidden="true" style="width:1px;height:22px;background:rgba(242,239,232,.14);margin:0 .3rem"></span>
+            <a href="https://github.com/YousifElia" target="_blank" rel="noopener" aria-label="GitHub" style="display:grid;place-items:center;width:36px;height:36px;border-radius:9px;color:#8f8676;border:1px solid rgba(242,239,232,.10);transition:transform .28s cubic-bezier(.2,.7,.2,1),color .22s,border-color .22s,background-color .22s" style-hover="color:var(--acc,#b46a55);border-color:var(--acc,#b46a55);background:color-mix(in srgb,var(--acc,#b46a55) 10%,transparent);transform:translateY(-3px)"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:16px;height:16px;fill:currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.69 5.41-5.25 5.69.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"></path></svg></a>
+            <a href="https://www.linkedin.com/in/yousif-elia-swe/" target="_blank" rel="noopener" aria-label="LinkedIn" style="display:grid;place-items:center;width:36px;height:36px;border-radius:9px;color:#8f8676;border:1px solid rgba(242,239,232,.10);transition:transform .28s cubic-bezier(.2,.7,.2,1),color .22s,border-color .22s,background-color .22s" style-hover="color:var(--acc,#b46a55);border-color:var(--acc,#b46a55);background:color-mix(in srgb,var(--acc,#b46a55) 10%,transparent);transform:translateY(-3px)"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:16px;height:16px;fill:currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.8 0 0 .78 0 1.74v20.52C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.74V1.74C24 .78 23.2 0 22.22 0Z"></path></svg></a>
+            <a href="mailto:yousif.eliaa@gmail.com" aria-label="Email" style="display:grid;place-items:center;width:36px;height:36px;border-radius:9px;color:#8f8676;border:1px solid rgba(242,239,232,.10);transition:transform .28s cubic-bezier(.2,.7,.2,1),color .22s,border-color .22s,background-color .22s" style-hover="color:var(--acc,#b46a55);border-color:var(--acc,#b46a55);background:color-mix(in srgb,var(--acc,#b46a55) 10%,transparent);transform:translateY(-3px)"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:16px;height:16px;fill:currentColor"><path d="M2 4h20a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Zm10 7.6 8.4-5.6H3.6L12 11.6Zm0 2.2L3 7.8V18h18V7.8l-9 6Z"></path></svg></a>
           </div>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- ═══════════════════════════════════════════════════════════════
-       ABOUT — two short paragraphs. Humanises, then gets out of the
-       way. No manifesto.
-  ════════════════════════════════════════════════════════════════ -->
-  <section class="section" id="about">
-    <div class="wrap">
-      <div class="section-head reveal">
-        <p class="eyebrow">About</p>
-        <h2>a bit about me.</h2>
-      </div>
-      <div class="about-body reveal">
-        <p>
-          I'm a <strong>second-year Software Engineering student at the
-          University of Windsor</strong>, currently on co-op at Stellantis.
-          I build software across the stack — Java, Python, TypeScript,
-          REST APIs — and my edge is the data layer: my co-op has me inside
-          production databases every day, so I design systems from the
-          data up.
-        </p>
-        <p>
-          What I care about is the part most people skip: understanding
-          <em>why</em> a design works before building it. The black hole
-          further down this page is the clearest example — it isn't a
-          library I imported, it's a raymarcher I wrote to understand how
-          light actually behaves around mass. Outside of code: lifting,
-          ambient music, and the math of general relativity.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       WORK / EDUCATION — the tedawf signature: two tabs, one compact
-       timeline each. Recruiters can verify employment + degree in
-       five seconds.
-  ════════════════════════════════════════════════════════════════ -->
-  <section class="section" id="experience">
-    <div class="wrap">
-      <div class="tabs reveal" data-tabs>
-        <div class="tab-list" role="tablist" aria-label="Work and education">
-          <button class="tab" id="tab-work" role="tab" aria-selected="true" aria-controls="panel-work" type="button">Work</button>
-          <button class="tab" id="tab-edu" role="tab" aria-selected="false" aria-controls="panel-edu" type="button" tabindex="-1">Education</button>
+  <div data-screen-label="Proof bar" style="border-top:1px solid rgba(242,239,232,.09);border-bottom:1px solid rgba(242,239,232,.09);background:#0e1729">
+    <div data-wrap="1" style="max-width:960px;margin:0 auto;padding-left:32px;padding-right:32px">
+      <div data-rsp="metrics" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0">
+        <div style="padding:1.15rem 1.4rem 1.15rem 0">
+          <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:1.6rem;font-weight:500;color:var(--acc,#b46a55);margin:0;line-height:1.1;letter-spacing:-.02em" data-count="77" data-suffix="%">77%</p>
+          <p style="font-size:.84rem;color:#c7b8a6;margin:.25rem 0 0;line-height:1.45">faster core queries at Stellantis <span style="color:#7d7463">— batch pipelines + TID bucket indexing</span></p>
         </div>
-
-        <div class="tab-panel" id="panel-work" role="tabpanel" aria-labelledby="tab-work">
-          <ol class="timeline">
-            <li class="tl-item">
-              <span class="tl-logo" aria-hidden="true">S</span>
-              <div class="tl-body">
-                <span class="tl-date">2026 — present</span>
-                <h3>Database Specialist (Co-op)</h3>
-                <p class="tl-org">Stellantis · Windsor, ON</p>
-                <p>Writing SQL and Python against production vehicle and operations data; building internal reporting workflows used by engineering teams — including a pipeline that turned a 40-minute manual export into a one-click view.</p>
-              </div>
-            </li>
-            <li class="tl-item">
-              <span class="tl-logo" aria-hidden="true">∫</span>
-              <div class="tl-body">
-                <span class="tl-date">Mar – Sep 2024</span>
-                <h3>Math Tutor</h3>
-                <p class="tl-org">Independent</p>
-                <p>One-on-one tutoring in high-school and first-year university math. Built worked-example sheets from scratch each week.</p>
-              </div>
-            </li>
-          </ol>
+        <div style="padding:1.15rem 1.4rem;border-left:1px solid rgba(242,239,232,.09)">
+          <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:1.6rem;font-weight:500;color:var(--acc,#b46a55);margin:0;line-height:1.1;letter-spacing:-.02em" data-count="40000" data-group="1" data-suffix="+">40,000+</p>
+          <p style="font-size:.84rem;color:#c7b8a6;margin:.25rem 0 0;line-height:1.45">plant workers on tooling I automated <span style="color:#7d7463">— daily compliance pipeline</span></p>
         </div>
-
-        <div class="tab-panel" id="panel-edu" role="tabpanel" aria-labelledby="tab-edu" hidden>
-          <ol class="timeline">
-            <li class="tl-item">
-              <span class="tl-logo" aria-hidden="true">UW</span>
-              <div class="tl-body">
-                <span class="tl-date">Sept 2024 — Apr 2028</span>
-                <h3>B.A.Sc. Software Engineering (Honours, Co-op)</h3>
-                <p class="tl-org">University of Windsor · Windsor, ON</p>
-                <p>Second year. Coursework across data structures, databases, systems programming, and engineering math. Co-op stream — currently on my first work term at Stellantis.</p>
-
-                <!-- Collapsible extracurriculars — native <details> so it
-                     works without JS; the chevron + slide are CSS only. -->
-                <details class="xtra">
-                  <summary>
-                    Extra Curriculars
-                    <svg class="xtra-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  </summary>
-                  <div class="xtra-body">
-                    <div class="tl-item xtra-item">
-                      <span class="tl-logo" aria-hidden="true">CS</span>
-                      <div class="tl-body">
-                        <span class="tl-date">2026 — present</span>
-                        <h3>Head of Events</h3>
-                        <p class="tl-org">Computer Science Society · University of Windsor</p>
-                        <p>Running technical and social events for ~200 students — planning, vendor coordination, and post-event retrospectives.</p>
-                      </div>
-                    </div>
-                  </div>
-                </details>
-              </div>
-            </li>
-          </ol>
+        <div style="padding:1.15rem 0 1.15rem 1.4rem;border-left:1px solid rgba(242,239,232,.09)">
+          <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:1.6rem;font-weight:500;color:var(--acc,#b46a55);margin:0;line-height:1.1;letter-spacing:-.02em" data-count="6">6</p>
+          <p style="font-size:.84rem;color:#c7b8a6;margin:.25rem 0 0;line-height:1.45">products shipped to real users <span style="color:#7d7463">— 4 client sites, a Web Store extension, a portal</span></p>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       FEATURED PROJECTS — tedawf-style cards: name, one-liner, honest
-       metric, tech badges, explicit links. The black-hole card points
-       at its live demo below — better than a thumbnail: it runs.
-  ════════════════════════════════════════════════════════════════ -->
-  <section class="section" id="work">
-    <div class="wrap">
-      <div class="section-head reveal">
-        <p class="eyebrow">Featured projects</p>
-        <h2>what I've built.</h2>
-      </div>
-
-      <div class="work-grid">
-        <!-- 1 · Black hole — the showpiece. TODO: real repo URL. -->
-        <article class="project reveal">
-          <div class="project-top"><span class="project-year">2025 — present</span></div>
-          <h3>Real-time Black Hole</h3>
-          <p class="project-desc">A physically-grounded black hole rendered live in the browser — every frame traces curved light paths from first principles. It's running further down this page.</p>
-          <p class="project-metric">~270 lines of GLSL · 1 draw call · 60 fps on an integrated GPU</p>
-          <div class="tags">
-            <span>GLSL</span><span>Three.js</span><span>WebGL</span><span>TypeScript</span>
-          </div>
-          <div class="project-links">
-            <a href="#blackhole">Live demo ↓</a>
-            <a href="#" target="_blank" rel="noopener">Source ↗</a><!-- TODO: real repo URL -->
-          </div>
-        </article>
-
-        <!-- 2 · Chrome extension — real users. TODO: published name,
-             install count, Web Store URL, repo. -->
-        <article class="project reveal">
-          <div class="project-top"><span class="project-year">2025 — present</span></div>
-          <h3>LinkedIn Scan Blocker</h3><!-- TODO: real published name -->
-          <p class="project-desc">A Chrome extension that stops LinkedIn's local port-probing and fingerprinting, so the site can't profile your machine. Live on the Chrome Web Store.</p>
-          <p class="project-metric">Shipped on the Chrome Web Store · real users</p><!-- TODO: real install count -->
-          <div class="tags">
-            <span>JavaScript</span><span>Chrome API</span><span>Manifest v3</span>
-          </div>
-          <div class="project-links">
-            <a href="#" target="_blank" rel="noopener">Web Store ↗</a><!-- TODO -->
-            <a href="#" target="_blank" rel="noopener">Source ↗</a><!-- TODO -->
-          </div>
-        </article>
-
-        <!-- 3 · myAdvice — résumé-sourced ~80% figure. TODO: repo. -->
-        <article class="project reveal">
-          <div class="project-top"><span class="project-year">2026</span></div>
-          <h3>myAdvice</h3>
-          <p class="project-desc">A ground-up rebuild of my university's advising portal — students, advisors, scheduling, and notes in one place instead of a maze of disconnected forms.</p>
-          <p class="project-metric">~80% fewer clicks per advising workflow</p>
-          <div class="tags">
-            <span>JavaFX</span><span>REST</span><span>Hibernate</span><span>MariaDB</span><span>Docker</span>
-          </div>
-          <div class="project-links">
-            <a href="#" target="_blank" rel="noopener">Source ↗</a><!-- TODO -->
-          </div>
-        </article>
-
-        <!-- 4 · iPad CLI — STUB until real name/stack/metric land. -->
-        <article class="project reveal">
-          <div class="project-top"><span class="project-year">2025</span></div>
-          <h3>iPad Bridge CLI</h3><!-- TODO: real name -->
-          <p class="project-desc">A command-line tool that pairs my iPad with my dev machine over the local network — device discovery plus a persistent connection, built to kill a daily friction in my own workflow.</p>
-          <div class="tags">
-            <span>CLI</span><!-- TODO: real stack -->
-          </div>
-          <div class="project-links">
-            <a href="#" target="_blank" rel="noopener">Source ↗</a><!-- TODO -->
-          </div>
-        </article>
-      </div>
-
-      <p class="work-aside reveal">
-        A few more experiments live on my <a class="text-link" href="https://github.com/YousifElia" target="_blank" rel="noopener">GitHub ↗</a>.
-      </p>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       BLACK HOLE — the live demo + engineering write-up. The depth
-       here is the differentiator: no other student portfolio walks a
-       recruiter through a raymarcher stage by stage.
-  ════════════════════════════════════════════════════════════════ -->
-  <section class="section" id="blackhole">
-    <div class="wrap">
-      <div class="experiment reveal">
-        <div class="experiment-head">
-          <p class="eyebrow">Side project · live demo</p>
-          <h2>about the black hole.</h2>
-          <p class="experiment-lede">
-            A real-time raymarcher written to render gravitational lensing
-            from first principles — no library, no asset, no shortcut.
-            <em>I built it to understand how light actually behaves around
-            mass.</em> This is it, running live:
-          </p>
-        </div>
-
-        <div class="hole-stage" id="hole-stage">
-          <button class="dive-btn" id="dive-btn" type="button" hidden>
-            <span class="tri" aria-hidden="true"></span> Take the dive
-          </button>
-          <div class="hero-instr" id="hero-instr" aria-hidden="true">
-            <span class="instr-dot"></span>
-            <span>Rendering live</span>
-            <span class="instr-fps" id="instr-fps">— fps</span>
-          </div>
-        </div>
-
-        <div class="cs-grid">
-          <article class="cs-item">
-            <h3><span class="n">A.</span>Problem</h3>
-            <p>Render a convincing black hole — not a shader-toy approximation, but something where every feature depends on light actually bending. If the image looks right, the math is right.</p>
-          </article>
-          <article class="cs-item">
-            <h3><span class="n">B.</span>Challenge</h3>
-            <p>Lensing can't be a screen-space warp. Photons follow curved paths, so the far side of the disk must lens up over the shadow and self-occlude — that forces a per-pixel raymarcher integrating a curved path.</p>
-          </article>
-          <article class="cs-item">
-            <h3><span class="n">C.</span>Architecture</h3>
-            <p>One fullscreen GLSL fragment shader, no geometry. Each pixel reconstructs a world ray, marches it while bending toward the singularity, accumulates disk emission on plane crossings, and samples a procedural starfield in the <em>deflected</em> direction.</p>
-          </article>
-          <article class="cs-item">
-            <h3><span class="n">D.</span>Performance</h3>
-            <p>Held to 60 fps by an adaptive step size (fine near the horizon, coarse far out), early-out when a ray escapes, a hard 240-step ceiling, transmittance termination, and a device-pixel-ratio cap.</p>
-          </article>
-          <article class="cs-item">
-            <h3><span class="n">E.</span>Decisions</h3>
-            <p>Newtonian-style deflection over a full Schwarzschild geodesic — visually indistinguishable at this scale, several times cheaper. Disk emission is integrated in the same pass, the only way to lens and self-occlude it correctly.</p>
-          </article>
-          <article class="cs-item">
-            <h3><span class="n">F.</span>What's next</h3>
-            <p>Swap in the true Kerr geodesic integrator (drafted in <code>src/shaders/kerr.glsl</code>), a free-orbit camera, and a fullscreen dive where you cross the event horizon.</p>
-          </article>
-        </div>
-
-        <div class="metrics" role="list" aria-label="Renderer key metrics">
-          <div class="metric" role="listitem"><div class="v">60</div><div class="k">FPS · iGPU</div></div>
-          <div class="metric" role="listitem"><div class="v">1</div><div class="k">Draw call</div></div>
-          <div class="metric" role="listitem"><div class="v">~270</div><div class="k">Lines of GLSL</div></div>
-          <div class="metric" role="listitem"><div class="v">0&nbsp;KB</div><div class="k">Texture memory</div></div>
-          <div class="metric" role="listitem"><div class="v">240</div><div class="k">Step raymarch</div></div>
-        </div>
-
-        <div class="experiment-links">
-          <!-- TODO: real shader source URL on GitHub. -->
-          <a class="text-link" href="#" target="_blank" rel="noopener">Read the shader source ↗</a>
-          <a class="text-link" href="#hole-stage" id="relaunch-dive">Watch the dive again ↑</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       MILESTONES — a star chart. Every star is a real milestone; the
-       brightest (α) is the internship. The five milestone stars form
-       an original asterism — a rough letter Y — with proper Bayer
-       designations by magnitude, constellation lines, a faint
-       RA/Dec grid, and a procedural background starfield
-       (constellation.ts). All milestone markup is real HTML — fully
-       visible and labeled without JS or under reduced motion.
-  ════════════════════════════════════════════════════════════════ -->
-  <section class="section" id="milestones">
-    <div class="wrap">
-      <div class="section-head reveal">
-        <p class="eyebrow">Milestones</p>
-        <h2>written in the stars.</h2>
-        <p class="section-lede">Constellation <em>Yousif</em> — every star is a real milestone. The brighter the star, the bigger the moment; α is the internship.</p>
-      </div>
-    </div>
-
-    <div class="sky" id="sky" aria-label="Milestones drawn as a constellation star chart">
-      <!-- preserveAspectRatio="none" so viewBox coordinates map 1:1 onto
-           the container — the HTML star overlays (positioned in %) stay
-           glued to the line endpoints at every screen size. -->
-      <svg class="sky-base" viewBox="0 0 1200 560" preserveAspectRatio="none" aria-hidden="true">
-        <defs>
-          <radialGradient id="neb-a" cx="30%" cy="20%" r="55%">
-            <stop offset="0%" stop-color="#3b5baa" stop-opacity=".16"/>
-            <stop offset="60%" stop-color="#3b5baa" stop-opacity=".05"/>
-            <stop offset="100%" stop-color="#3b5baa" stop-opacity="0"/>
-          </radialGradient>
-          <radialGradient id="neb-b" cx="72%" cy="70%" r="50%">
-            <stop offset="0%" stop-color="#7a4a8f" stop-opacity=".10"/>
-            <stop offset="100%" stop-color="#7a4a8f" stop-opacity="0"/>
-          </radialGradient>
-          <radialGradient id="neb-c" cx="55%" cy="40%" r="70%">
-            <stop offset="0%" stop-color="#c9d8ff" stop-opacity=".05"/>
-            <stop offset="100%" stop-color="#c9d8ff" stop-opacity="0"/>
-          </radialGradient>
-          <linearGradient id="sky-g" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#04060e"/>
-            <stop offset="55%" stop-color="#070b18"/>
-            <stop offset="100%" stop-color="#0a0f1e"/>
-          </linearGradient>
-        </defs>
-
-        <rect width="1200" height="560" fill="url(#sky-g)"/>
-        <!-- Milky-way wash + faint nebulae -->
-        <rect width="1200" height="560" fill="url(#neb-c)" transform="rotate(-14 600 280)"/>
-        <rect width="1200" height="560" fill="url(#neb-a)"/>
-        <rect width="1200" height="560" fill="url(#neb-b)"/>
-
-        <!-- Faint RA/Dec chart grid — the cartographic detail that makes
-             it read as a star chart rather than a starry background. -->
-        <g class="sky-grid">
-          <path d="M0,140 Q600,110 1200,140"/>
-          <path d="M0,300 Q600,270 1200,300"/>
-          <path d="M0,460 Q600,430 1200,460"/>
-          <path d="M240,0 Q260,280 240,560"/>
-          <path d="M600,0 Q610,280 600,560"/>
-          <path d="M960,0 Q940,280 960,560"/>
-        </g>
-
-        <!-- Procedural background starfield mounts here (constellation.ts). -->
-        <g id="stars-bg"></g>
-
-        <!-- Constellation lines: β→α, γ→α, α→δ, δ→ε (the Y). -->
-        <g class="cons-lines" id="cons-lines">
-          <path d="M420,132 L600,268"/>
-          <path d="M764,96 L600,268"/>
-          <path d="M600,268 L588,392"/>
-          <path d="M588,392 L548,486"/>
-        </g>
-      </svg>
-
-      <!-- Milestone stars — Bayer designation by magnitude. Coordinates
-           mirror the line endpoints above (x/1200, y/560). -->
-      <a class="star star-a" href="#experience" style="--sx:50%;--sy:47.86%">
-        <span class="star-core" aria-hidden="true"></span>
-        <span class="star-label"><span class="bayer">α</span> <strong>Stellantis internship</strong>Database Specialist co-op · 2026</span>
-      </a>
-      <a class="star star-b" href="#blackhole" style="--sx:35%;--sy:23.57%">
-        <span class="star-core" aria-hidden="true"></span>
-        <span class="star-label"><span class="bayer">β</span> <strong>Black hole renderer</strong>hand-written GLSL · 60 fps</span>
-      </a>
-      <a class="star star-c" href="#work" style="--sx:63.67%;--sy:17.14%">
-        <span class="star-core" aria-hidden="true"></span>
-        <span class="star-label"><span class="bayer">γ</span> <strong>Chrome extension</strong>shipped on the Web Store</span>
-      </a>
-      <a class="star star-d" href="#work" style="--sx:49%;--sy:70%">
-        <span class="star-core" aria-hidden="true"></span>
-        <span class="star-label"><span class="bayer">δ</span> <strong>myAdvice</strong>~80% fewer clicks</span>
-      </a>
-      <a class="star star-e" href="#work" style="--sx:45.67%;--sy:86.79%">
-        <span class="star-core" aria-hidden="true"></span>
-        <span class="star-label"><span class="bayer">ε</span> <strong>iPad Bridge CLI</strong>a daily-driver tool</span>
-      </a>
-
-      <!-- Chart caption, star-atlas style. -->
-      <p class="sky-caption" aria-hidden="true">constellation <em>YOUSIF</em> · the builder — 5 stars, mag α–ε</p>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       NOTES — a tiny changelog. Signals the site is alive without
-       needing a blog. TODO: trim/replace entries as new ones land.
-  ════════════════════════════════════════════════════════════════ -->
-  <section class="section" id="notes">
-    <div class="wrap">
-      <div class="section-head reveal">
-        <p class="eyebrow">Notes</p>
-        <h2>what I'm working on.</h2>
-      </div>
-      <ul class="updates reveal">
-        <li class="upd">
-          <span class="upd-date">2026 · 07</span>
-          <span class="upd-text">Rebuilt this site on <strong>Vite + TypeScript</strong> — cleaner layout, dark mode, and a milestones range. Fullscreen black-hole dive in progress.</span>
-        </li>
-        <li class="upd">
-          <span class="upd-date">2026 · 04</span>
-          <span class="upd-text">Drafted a true Kerr-metric geodesic integrator (<code>src/shaders/kerr.glsl</code>). Math checks against the Schwarzschild limit; not yet wired into the live demo.</span>
-        </li>
-        <li class="upd">
-          <span class="upd-date">2026 · 03</span>
-          <span class="upd-text">Started at <strong>Stellantis</strong>. First sprint: a reporting pipeline that turned a 40-minute manual export into a one-click view.</span>
-        </li>
-      </ul>
-    </div>
-  </section>
-</main>
-
-<!-- ═══════════════════════════════════════════════════════════════
-     CONTACT — one primary action, the copyable email, quiet links.
-══════════════════════════════════════════════════════════════════ -->
-<footer class="connect" id="connect">
-  <div class="wrap">
-    <div class="reveal">
-      <p class="eyebrow">Contact</p>
-      <h2>get in touch.</h2>
-      <p class="connect-lede">
-        Open to Summer / Fall 2026 internships. If something here caught
-        your eye, send a note — I read everything.
-      </p>
-
-      <div class="connect-actions">
-        <!-- TODO: swap mailto for Cal.com / Calendly link once set up. -->
-        <a class="btn btn-primary" href="mailto:yousif.eliaa@gmail.com?subject=Book%20a%20chat%20-%20portfolio">Book a chat →</a>
-        <a class="btn btn-ghost" id="email-copy" href="mailto:yousif.eliaa@gmail.com" data-copy="yousif.eliaa@gmail.com" aria-label="Copy email address to clipboard">yousif.eliaa@gmail.com</a>
-      </div>
-
-      <div class="connect-secondary">
-        <a href="YousifElia-SWE.pdf" target="_blank" rel="noopener">Résumé (PDF) ↗</a>
-        <a href="https://github.com/YousifElia" target="_blank" rel="noopener">GitHub ↗</a>
-        <a href="https://www.linkedin.com/in/yousif-elia" target="_blank" rel="noopener">LinkedIn ↗</a>
-      </div>
-    </div>
-
-    <div class="colophon">
-      <p>
-        Designed &amp; built by Yousif Elia. Vite + TypeScript, no framework —
-        the black hole is hand-written GLSL on Three.js. Typeset in
-        Instrument Serif, Manrope, and JetBrains Mono.
-      </p>
-      <p>© 2026 Yousif Elia</p>
     </div>
   </div>
-</footer>
 
-<script type="module" src="/src/main.ts"></script>
+  <section id="work" data-screen-label="Projects" style="padding-top:52px;padding-bottom:52px">
+    <div data-wrap="1" style="max-width:960px;margin:0 auto;padding-left:32px;padding-right:32px">
+      <div data-rvl="1" data-rsp="head" style="display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-bottom:1.25rem">
+        <div>
+          <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.7rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--acc,#b46a55);margin:0 0 .3rem">01 · Selected work</p>
+          <h2 style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;font-size:clamp(1.6rem,5.2vw,2rem);line-height:1.15;color:#f2efe8;margin:0">what I've built.</h2>
+        </div>
+        <a href="https://github.com/YousifElia" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.76rem;color:#8f8676;text-decoration:none;white-space:nowrap" style-hover="color:var(--acc,#b46a55)">more on GitHub ↗</a>
+      </div>
+
+      <article data-rvl="1" onPointerEnter="{{holeEnter}}" onPointerLeave="{{holeLeave}}" style="border:1px solid rgba(242,239,232,.14);border-radius:16px;background:#131c31;overflow:hidden;margin-bottom:1rem;transition:border-color .3s;box-shadow:0 18px 40px rgba(0,0,0,.35)" style-hover="border-color:rgba(242,239,232,.3)">
+        <div data-rsp="hole" style="display:grid;grid-template-columns:1fr 1.05fr;min-height:320px">
+          <div style="padding:1.7rem 1.8rem;display:flex;flex-direction:column">
+            <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem;flex-wrap:wrap">
+              <span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:#0b1320;background:var(--acc,#b46a55);border-radius:999px;padding:.2rem .62rem;font-weight:500">★ Featured</span>
+              <span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.7rem;color:#8f8676">running live, right here →</span>
+            </div>
+            <h3 style="font-family:'Manrope',sans-serif;font-size:1.45rem;font-weight:700;color:#f2efe8;margin:0 0 .45rem;line-height:1.15;letter-spacing:-.015em">Real-time Black Hole</h3>
+            <p style="font-size:.94rem;color:#c7b8a6;line-height:1.6;margin:0 0 .85rem;max-width:46ch">A gravitationally-lensed black hole raymarched in a single fragment shader — no engine, no libraries, no textures. Every pixel traces its own bent light path. <em style="color:#f2efe8">Hover to wake it, then take the dive.</em></p>
+            <div style="display:flex;flex-wrap:wrap;gap:.3rem .9rem;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;color:var(--acc,#b46a55);margin:0 0 1rem">
+              <span>60 fps on an iGPU</span><span style="color:#3d4a63">·</span><span>1 draw call</span><span style="color:#3d4a63">·</span><span>~270 lines GLSL</span><span style="color:#3d4a63">·</span><span>0 KB textures</span>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-top:auto;margin-bottom:1rem">
+              <span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.7rem;color:#8f8676;padding:.18rem .5rem;border:1px solid rgba(242,239,232,.10);border-radius:5px;background:#141d33">GLSL</span>
+              <span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.7rem;color:#8f8676;padding:.18rem .5rem;border:1px solid rgba(242,239,232,.10);border-radius:5px;background:#141d33">WebGL</span>
+              <span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.7rem;color:#8f8676;padding:.18rem .5rem;border:1px solid rgba(242,239,232,.10);border-radius:5px;background:#141d33">TypeScript</span>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:.55rem;align-items:center">
+              <button type="button" onClick="{{openDive}}" style="display:inline-flex;align-items:center;gap:.5rem;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.78rem;font-weight:500;cursor:pointer;padding:.62rem 1.1rem;border-radius:8px;border:1px solid rgba(180,106,85,.45);background:rgba(180,106,85,.12);color:#e6c3b7;transition:all .22s" style-hover="background:rgba(180,106,85,.22);border-color:#b46a55;color:#f2efe8;transform:translateY(-1px)"><span style="display:inline-block;width:0;height:0;border-style:solid;border-width:4px 0 4px 7px;border-color:transparent transparent transparent currentColor" aria-hidden="true"></span>Take a dive</button>
+              <button type="button" onClick="{{toggleNotes}}" aria-expanded="{{notesExpandedStr}}" style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.78rem;cursor:pointer;padding:.62rem 1.1rem;border-radius:8px;border:1px solid rgba(242,239,232,.18);background:none;color:#c7b8a6;transition:all .22s" style-hover="border-color:rgba(242,239,232,.4);color:#f2efe8">{{notesBtnLabel}}</button>
+              <a href="https://github.com/YousifElia/Portfolio" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.76rem;color:#8f8676;text-decoration:none;margin-left:.2rem" style-hover="color:var(--acc,#b46a55)">source ↗</a>
+            </div>
+          </div>
+          <div style="position:relative;min-height:320px;border-left:1px solid rgba(242,239,232,.08)">
+            <x-import component-from-global-scope="black-hole" from="./blackhole.js" intensity="0.35" yaw="0.55" pitch="0.12" dist="14.5" hint-size="100%,100%" style="position:absolute;top:0;left:0;right:0;bottom:0"></x-import>
+            <div aria-hidden="true" style="position:absolute;right:.85rem;bottom:.75rem;display:flex;align-items:center;gap:.45rem;padding:.34rem .6rem;border:1px solid rgba(242,239,232,.14);border-radius:6px;background:rgba(11,19,32,.55);backdrop-filter:blur(8px);font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.62rem;letter-spacing:.04em;color:#8f8676;pointer-events:none">
+              <span style="width:5px;height:5px;border-radius:50%;background:#b46a55;box-shadow:0 0 8px #b46a55;animation:pulse 2.6s ease-in-out infinite"></span>
+              <span ref="{{holeHintRef}}">rendering live — hover to wake</span>
+            </div>
+          </div>
+        </div>
+        <sc-if value="{{notesExpanded}}" hint-placeholder-val="{{false}}">
+          <div data-rsp="notes" style="border-top:1px solid rgba(242,239,232,.10);padding:1.3rem 1.8rem 1.5rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.1rem 1.5rem;animation:rise .4s cubic-bezier(.2,.7,.2,1)">
+            <article><h4 style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.78rem;font-weight:500;color:#f2efe8;margin:0 0 .35rem"><span style="color:var(--acc,#b46a55);margin-right:.45rem">A.</span>Problem</h4><p style="font-size:.82rem;color:#8f8676;line-height:1.55;margin:0">Render a black hole where every feature falls out of light actually bending — if it looks right, the math is right.</p></article>
+            <article><h4 style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.78rem;font-weight:500;color:#f2efe8;margin:0 0 .35rem"><span style="color:var(--acc,#b46a55);margin-right:.45rem">B.</span>Challenge</h4><p style="font-size:.82rem;color:#8f8676;line-height:1.55;margin:0">Lensing can't be a screen-space warp — the disk's far side must lens up over the shadow. That forces per-pixel raymarching.</p></article>
+            <article><h4 style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.78rem;font-weight:500;color:#f2efe8;margin:0 0 .35rem"><span style="color:var(--acc,#b46a55);margin-right:.45rem">C.</span>Architecture</h4><p style="font-size:.82rem;color:#8f8676;line-height:1.55;margin:0">One fullscreen fragment shader, no geometry: each pixel marches a ray, bends it toward the singularity, accumulates disk light on plane crossings.</p></article>
+            <article><h4 style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.78rem;font-weight:500;color:#f2efe8;margin:0 0 .35rem"><span style="color:var(--acc,#b46a55);margin-right:.45rem">D.</span>Performance</h4><p style="font-size:.82rem;color:#8f8676;line-height:1.55;margin:0">60 fps on an iGPU via adaptive step size, early ray escape, a hard step ceiling, and a device-pixel-ratio cap.</p></article>
+            <article><h4 style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.78rem;font-weight:500;color:#f2efe8;margin:0 0 .35rem"><span style="color:var(--acc,#b46a55);margin-right:.45rem">E.</span>Decisions</h4><p style="font-size:.82rem;color:#8f8676;line-height:1.55;margin:0">Newtonian-style deflection over full geodesics — visually identical at this scale, several times cheaper per frame.</p></article>
+            <article><h4 style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.78rem;font-weight:500;color:#f2efe8;margin:0 0 .35rem"><span style="color:var(--acc,#b46a55);margin-right:.45rem">F.</span>What's next</h4><p style="font-size:.82rem;color:#8f8676;line-height:1.55;margin:0">True Kerr geodesics, a free-orbit camera, and a horizon-crossing dive sequence.</p></article>
+          </div>
+        </sc-if>
+      </article>
+
+      <div data-rsp="cards" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem">
+        <article data-rvl="1" data-card="1" onPointerMove="{{spotMove}}" onPointerEnter="{{spotEnter}}" onPointerLeave="{{spotLeave}}" style="display:flex;flex-direction:column;background:#1f2a44;border:1px solid rgba(242,239,232,.10);border-radius:14px;position:relative;overflow:hidden;transition:all .22s" style-hover="transform:translateY(-2px);border-color:rgba(242,239,232,.24);box-shadow:0 12px 28px rgba(0,0,0,.45)">
+          <div data-spot="1" style="position:absolute;inset:0;background:radial-gradient(220px circle at 50% 50%,color-mix(in srgb,var(--acc,#b46a55) 12%,transparent),transparent 70%);opacity:0;transition:opacity .36s;pointer-events:none;z-index:1"></div>
+          <div data-cardmedia="1" style="position:relative;width:100%;aspect-ratio:16/10;background:#0c1424;border-bottom:1px solid rgba(242,239,232,.08);overflow:hidden">
+            <sc-if value="{{mvPlaying}}" hint-placeholder-val="{{false}}">
+              <iframe src="{{mvSrc}}" title="myAdvice demo walkthrough" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowFullScreen="{{true}}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;display:block;background:#000;z-index:3"></iframe>
+              <a href="https://www.youtube.com/watch?v=OsDVJvcRaCg" target="_blank" rel="noopener" style="position:absolute;right:.5rem;top:.5rem;z-index:4;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.58rem;letter-spacing:.05em;color:#dfe8ff;text-decoration:none;background:rgba(7,13,24,.78);border:1px solid rgba(242,239,232,.16);border-radius:5px;padding:.15rem .4rem" style-hover="color:#ffffff">open on YouTube ↗</a>
+            </sc-if>
+            <sc-if value="{{mvIdle}}" hint-placeholder-val="{{true}}">
+            <a href="https://www.youtube.com/watch?v=OsDVJvcRaCg" target="_blank" rel="noopener" onClick="{{playMyAdvice}}" aria-label="Play the myAdvice demo" style="position:absolute;top:0;left:0;width:100%;height:100%;display:grid;place-items:center;text-decoration:none;background:#0c1424;z-index:2" style-hover="filter:brightness(1.08)">
+              <span aria-hidden="true" style="position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 40%,#16223c,#0a1120 70%)"></span>
+              <img src="https://img.youtube.com/vi/OsDVJvcRaCg/hqdefault.jpg" alt="" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:.55" />
+              <span aria-hidden="true" style="position:relative;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:rgba(7,13,24,.74);border:1px solid rgba(242,239,232,.28);transition:transform .22s cubic-bezier(.2,.7,.2,1)"><span style="width:0;height:0;border-left:12px solid #f2efe8;border-top:7px solid transparent;border-bottom:7px solid transparent;margin-left:3px"></span></span>
+              <span aria-hidden="true" style="position:absolute;left:.6rem;bottom:.55rem;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.6rem;letter-spacing:.06em;color:#dfe8ff;background:rgba(7,13,24,.72);border:1px solid rgba(242,239,232,.14);border-radius:5px;padding:.15rem .45rem">play the 60s demo</span>
+            </a>
+            </sc-if>
+          </div>
+          <div style="padding:1rem 1.1rem 1.1rem;display:flex;flex-direction:column;flex:1;position:relative">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:.6rem"><h3 style="font-family:'Manrope',sans-serif;font-size:1rem;font-weight:600;color:#f2efe8;margin:0 0 .3rem;line-height:1.25">myAdvice</h3><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;color:#8f8676;white-space:nowrap">2026</span></div>
+            <p style="font-size:.82rem;color:#c7b8a6;line-height:1.55;margin:0 0 .5rem">Ground-up rebuild of UWindsor's course-advising portal — JavaFX client on a Spring Boot + MariaDB backend.</p>
+            <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;color:var(--acc,#b46a55);margin:0 0 .7rem">↓ ~80% fewer clicks per advising workflow</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.3rem;margin-top:auto;margin-bottom:.7rem"><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.66rem;color:#8f8676;padding:.14rem .45rem;border:1px solid rgba(242,239,232,.10);border-radius:4px;background:#141d33">JavaFX</span><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.66rem;color:#8f8676;padding:.14rem .45rem;border:1px solid rgba(242,239,232,.10);border-radius:4px;background:#141d33">Spring Boot</span><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.66rem;color:#8f8676;padding:.14rem .45rem;border:1px solid rgba(242,239,232,.10);border-radius:4px;background:#141d33">MariaDB</span></div>
+            <div style="display:flex;gap:.9rem;padding-top:.65rem;border-top:1px solid rgba(242,239,232,.08)"><a href="https://github.com/saragebara/myadvice" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;color:#f2efe8;text-decoration:none" style-hover="color:var(--acc,#b46a55)">Source ↗</a><a href="https://www.linkedin.com/feed/update/urn:li:activity:7447622025650704384/" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;color:#8f8676;text-decoration:none" style-hover="color:var(--acc,#b46a55)">Write-up ↗</a></div>
+          </div>
+        </article>
+
+        <article data-rvl="1" data-card="1" onPointerMove="{{spotMove}}" onPointerEnter="{{spotEnter}}" onPointerLeave="{{spotLeave}}" style="display:flex;flex-direction:column;background:#1f2a44;border:1px solid rgba(242,239,232,.10);border-radius:14px;position:relative;overflow:hidden;transition:all .22s" style-hover="transform:translateY(-2px);border-color:rgba(242,239,232,.24);box-shadow:0 12px 28px rgba(0,0,0,.45)">
+          <div data-spot="1" style="position:absolute;inset:0;background:radial-gradient(220px circle at 50% 50%,color-mix(in srgb,var(--acc,#b46a55) 12%,transparent),transparent 70%);opacity:0;transition:opacity .36s;pointer-events:none;z-index:1"></div>
+          <div data-cardmedia="1" style="position:relative;width:100%;aspect-ratio:16/10;background:#0c1424;border-bottom:1px solid rgba(242,239,232,.08);overflow:hidden;display:grid;place-items:center">
+            <span aria-hidden="true" style="position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 35%,#16223c,#0a1120 72%)"></span>
+            <div style="position:relative;text-align:center;padding:0 1rem">
+              <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:#7d8ba8;margin:0 0 .5rem">blocked request</p>
+              <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.74rem;color:#dfe8ff;margin:0;line-height:1.7"><span style="color:#6b7a99">GET</span> localhost:<span style="color:#f2efe8">6</span><span style="color:#8f8676">…</span> <span style="display:inline-block;margin-left:.3rem;color:#0b1320;background:#b46a55;border-radius:4px;padding:0 .35rem;font-size:.66rem">DENIED</span></p>
+              <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.62rem;color:#6b7a99;margin:.55rem 0 0">port scan intercepted at the network layer</p>
+            </div>
+          </div>
+          <div style="padding:1rem 1.1rem 1.1rem;display:flex;flex-direction:column;flex:1;position:relative">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:.6rem"><h3 style="font-family:'Manrope',sans-serif;font-size:1rem;font-weight:600;color:#f2efe8;margin:0 0 .3rem;line-height:1.25">LinkedIn Scan Blocker</h3><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;color:#8f8676;white-space:nowrap">2025</span></div>
+            <p style="font-size:.82rem;color:#c7b8a6;line-height:1.55;margin:0 0 .5rem">Chrome extension that intercepts LinkedIn's silent probing of your local ports and drops the requests.</p>
+            <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;color:var(--acc,#b46a55);margin:0 0 .7rem">● Live on the Chrome Web Store</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.3rem;margin-top:auto;margin-bottom:.7rem"><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.66rem;color:#8f8676;padding:.14rem .45rem;border:1px solid rgba(242,239,232,.10);border-radius:4px;background:#141d33">JavaScript</span><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.66rem;color:#8f8676;padding:.14rem .45rem;border:1px solid rgba(242,239,232,.10);border-radius:4px;background:#141d33">Manifest v3</span></div>
+            <div style="display:flex;gap:.9rem;padding-top:.65rem;border-top:1px solid rgba(242,239,232,.08)"><a href="https://github.com/YousifElia" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;color:#f2efe8;text-decoration:none" style-hover="color:var(--acc,#b46a55)">Source ↗</a></div>
+          </div>
+        </article>
+
+        <article data-rvl="1" data-card="1" onPointerMove="{{spotMove}}" onPointerEnter="{{spotEnter}}" onPointerLeave="{{spotLeave}}" style="display:flex;flex-direction:column;background:#1f2a44;border:1px solid rgba(242,239,232,.10);border-radius:14px;position:relative;overflow:hidden;transition:all .22s" style-hover="transform:translateY(-2px);border-color:rgba(242,239,232,.24);box-shadow:0 12px 28px rgba(0,0,0,.45)">
+          <div data-spot="1" style="position:absolute;inset:0;background:radial-gradient(220px circle at 50% 50%,color-mix(in srgb,var(--acc,#b46a55) 12%,transparent),transparent 70%);opacity:0;transition:opacity .36s;pointer-events:none;z-index:1"></div>
+          <div data-cardmedia="1" style="position:relative;width:100%;aspect-ratio:16/10;background:#0a1120;border-bottom:1px solid rgba(242,239,232,.08);overflow:hidden">
+            <div style="position:absolute;inset:0;padding:.85rem 1rem;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.7rem;line-height:1.75;color:#8fa8c9">
+              <p style="margin:0"><span style="color:#b46a55">$</span> tether serve --port 8080</p>
+              <p style="margin:0;color:#6b7a99">pty attached · ws upgrade ok</p>
+              <p style="margin:0;color:#6b7a99">spectators <span style="color:#dfe8ff">3</span> · latency <span style="color:#dfe8ff">11ms</span></p>
+              <p style="margin:0"><span style="color:#b46a55">$</span> <span style="display:inline-block;width:7px;height:.95em;vertical-align:text-bottom;background:#b46a55;animation:caret-blink 1.1s steps(1) infinite"></span></p>
+            </div>
+          </div>
+          <div style="padding:1rem 1.1rem 1.1rem;display:flex;flex-direction:column;flex:1;position:relative">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:.6rem"><h3 style="font-family:'Manrope',sans-serif;font-size:1rem;font-weight:600;color:#f2efe8;margin:0 0 .3rem;line-height:1.25">Tether</h3><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;color:#8f8676;white-space:nowrap">2026</span></div>
+            <p style="font-size:.82rem;color:#c7b8a6;line-height:1.55;margin:0 0 .5rem">Self-hosted web terminal in Go — streams a real shell over WebSockets and fans one session out to authenticated spectators.</p>
+            <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;color:var(--acc,#b46a55);margin:0 0 .7rem">→ one PTY, many read-only viewers</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.3rem;margin-top:auto;margin-bottom:.7rem"><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.66rem;color:#8f8676;padding:.14rem .45rem;border:1px solid rgba(242,239,232,.10);border-radius:4px;background:#141d33">Go</span><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.66rem;color:#8f8676;padding:.14rem .45rem;border:1px solid rgba(242,239,232,.10);border-radius:4px;background:#141d33">WebSockets</span><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.66rem;color:#8f8676;padding:.14rem .45rem;border:1px solid rgba(242,239,232,.10);border-radius:4px;background:#141d33">xterm.js</span></div>
+            <div style="display:flex;gap:.9rem;padding-top:.65rem;border-top:1px solid rgba(242,239,232,.08)"><a href="https://github.com/YousifElia/Tether" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;color:#f2efe8;text-decoration:none" style-hover="color:var(--acc,#b46a55)">Source ↗</a></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience" data-screen-label="Experience" style="padding-top:52px;padding-bottom:52px;background:#0e1729;border-top:1px solid rgba(242,239,232,.09);border-bottom:1px solid rgba(242,239,232,.09)">
+    <div data-wrap="1" style="max-width:960px;margin:0 auto;padding-left:32px;padding-right:32px">
+      <div data-rvl="1" data-rsp="head" style="display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-bottom:1.25rem">
+        <div>
+          <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.7rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--acc,#b46a55);margin:0 0 .3rem">02 · Experience</p>
+          <h2 style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;font-size:clamp(1.6rem,5.2vw,2rem);line-height:1.15;color:#f2efe8;margin:0">where I've been.</h2>
+        </div>
+        <a href="assets/Yousif-Elia-Resume.pdf" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.76rem;color:#8f8676;text-decoration:none;white-space:nowrap" style-hover="color:var(--acc,#b46a55)">full resume ↗</a>
+      </div>
+
+      <div data-rvl="1" style="display:flex;flex-direction:column;gap:.75rem">
+        <article style="border:1px solid rgba(242,239,232,.12);border-radius:14px;background:#1f2a44;padding:1.4rem 1.6rem;display:grid;grid-template-columns:44px 1fr;gap:1.1rem">
+          <img src="assets/logo-stellantis.png" alt="Stellantis" style="width:44px;height:44px;border-radius:50%;object-fit:cover;background:#141d33;border:1px solid rgba(242,239,232,.22)"/>
+          <div>
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin:0 0 .15rem">
+              <h3 style="font-family:'Manrope',sans-serif;font-size:1.05rem;font-weight:700;color:#f2efe8;margin:0;line-height:1.25">Software Engineering Intern <span style="color:#8f8676;font-weight:500">· Stellantis</span></h3>
+              <span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;color:#8f8676;white-space:nowrap;letter-spacing:.02em">May — Sept 2026</span>
+            </div>
+            <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;color:#8f8676;margin:0 0 .7rem">Enterprise Systems · Java, SQL, Snowflake, REST</p>
+            <div style="display:flex;flex-direction:column;gap:.45rem">
+              <div style="display:flex;gap:.6rem"><span aria-hidden="true" style="flex:none;width:4px;height:4px;border-radius:50%;background:#b46a55;margin-top:.5rem"></span><p style="font-size:.87rem;color:#c7b8a6;line-height:1.55;margin:0">Cut query execution time <strong style="color:#f2efe8;font-weight:600">77%</strong> across core database modules with batch-processing pipelines and TID bucket indexing on the hottest relational lookups.</p></div>
+              <div style="display:flex;gap:.6rem"><span aria-hidden="true" style="flex:none;width:4px;height:4px;border-radius:50%;background:#b46a55;margin-top:.5rem"></span><p style="font-size:.87rem;color:#c7b8a6;line-height:1.55;margin:0">Automated provisioning and onboarding for <strong style="color:#f2efe8;font-weight:600">40,000+</strong> plant workers via a scheduled cron pipeline that daily operational compliance now depends on.</p></div>
+              <div style="display:flex;gap:.6rem"><span aria-hidden="true" style="flex:none;width:4px;height:4px;border-radius:50%;background:#b46a55;margin-top:.5rem"></span><p style="font-size:.87rem;color:#c7b8a6;line-height:1.55;margin:0">Dropped render wait <strong style="color:#f2efe8;font-weight:600">94%</strong> on high-traffic analytical views with client-side DOM caching and lazy loading for large DOM trees.</p></div>
+              <div style="display:flex;gap:.6rem"><span aria-hidden="true" style="flex:none;width:4px;height:4px;border-radius:50%;background:#b46a55;margin-top:.5rem"></span><p style="font-size:.87rem;color:#c7b8a6;line-height:1.55;margin:0">Shipped an interactive KPI dashboard end to end, fed by a Snowflake → Power BI pipeline over REST APIs.</p></div>
+            </div>
+          </div>
+        </article>
+
+        <article style="border:1px solid rgba(242,239,232,.10);border-radius:14px;background:#1a2338;padding:1.3rem 1.6rem;display:grid;grid-template-columns:44px 1fr;gap:1.1rem">
+          <img src="assets/logo-freelance.png" alt="Freelance full-stack development" width="44" height="44" style="width:44px;height:44px;border-radius:50%;object-fit:cover;background:#141d33;border:1px solid rgba(242,239,232,.22)"/>
+          <div>
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin:0 0 .15rem">
+              <h3 style="font-family:'Manrope',sans-serif;font-size:1.05rem;font-weight:700;color:#f2efe8;margin:0;line-height:1.25">Full-Stack Contractor <span style="color:#8f8676;font-weight:500">· Freelance</span></h3>
+              <span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;color:#8f8676;white-space:nowrap;letter-spacing:.02em">Jan 2026 — Present</span>
+            </div>
+            <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;color:#8f8676;margin:0 0 .7rem">5 commercial clients · Supabase, Square API, TypeScript</p>
+            <div style="display:flex;flex-direction:column;gap:.45rem">
+              <div style="display:flex;gap:.6rem"><span aria-hidden="true" style="flex:none;width:4px;height:4px;border-radius:50%;background:#b46a55;margin-top:.5rem"></span><p style="font-size:.87rem;color:#c7b8a6;line-height:1.55;margin:0">Shipped a production e-commerce and loyalty platform — responsive frontend, <strong style="color:#f2efe8;font-weight:600">Supabase</strong> backend for user state and purchase tracking, <strong style="color:#f2efe8;font-weight:600">Square API</strong> for payments.</p></div>
+              <div style="display:flex;gap:.6rem"><span aria-hidden="true" style="flex:none;width:4px;height:4px;border-radius:50%;background:#b46a55;margin-top:.5rem"></span><p style="font-size:.87rem;color:#c7b8a6;line-height:1.55;margin:0">Built and launched mobile-responsive product sites for <strong style="color:#f2efe8;font-weight:600">4 businesses</strong>, tuned for SEO and fast first paint — scoped, built, and handed off solo.</p></div>
+            </div>
+          </div>
+        </article>
+
+        <article style="border:1px solid rgba(242,239,232,.10);border-radius:14px;background:#1a2338;padding:1rem 1.6rem;display:grid;grid-template-columns:44px 1fr;gap:1.1rem;align-items:center">
+          <img src="assets/logo-css.png" alt="UWindsor Computer Science Society" style="width:44px;height:44px;border-radius:50%;object-fit:contain;box-sizing:border-box;padding:5px;background:#141d33;border:1px solid rgba(242,239,232,.22)"/>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap">
+            <div>
+              <h3 style="font-family:'Manrope',sans-serif;font-size:1rem;font-weight:600;color:#f2efe8;margin:0 0 .12rem;line-height:1.25">Head of Events <span style="color:#8f8676;font-weight:500">· UWindsor CS Society</span></h3>
+              <p style="font-size:.84rem;color:#8f8676;line-height:1.5;margin:0">Run university-wide hackathons and technical workshops — logistics, speakers, and infrastructure.</p>
+            </div>
+            <span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;color:#8f8676;white-space:nowrap;letter-spacing:.02em">Mar 2026 — Present</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="stack" data-screen-label="Stack + background" style="padding-top:52px;padding-bottom:52px">
+    <div data-wrap="1" style="max-width:960px;margin:0 auto;padding-left:32px;padding-right:32px">
+      <div data-rsp="band" style="display:grid;grid-template-columns:1.15fr .85fr;gap:3.2rem">
+        <div data-rvl="1">
+          <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.7rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--acc,#b46a55);margin:0 0 .3rem">03 · Stack</p>
+          <h2 style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;font-size:clamp(1.6rem,5.2vw,2rem);line-height:1.15;color:#f2efe8;margin:0 0 1rem">the toolbox.</h2>
+          <div style="display:grid;gap:.8rem">
+            <div data-rsp="skillrow" style="display:grid;grid-template-columns:88px 1fr;gap:.9rem;align-items:baseline">
+              <span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:#8f8676">Languages</span>
+              <div style="display:flex;flex-wrap:wrap;gap:.35rem"><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.73rem;color:#f2efe8;padding:.2rem .58rem;border:1px solid rgba(180,106,85,.4);border-radius:5px;background:rgba(180,106,85,.10)">Java</span><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.73rem;color:#f2efe8;padding:.2rem .58rem;border:1px solid rgba(180,106,85,.4);border-radius:5px;background:rgba(180,106,85,.10)">TypeScript</span><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.73rem;color:#f2efe8;padding:.2rem .58rem;border:1px solid rgba(180,106,85,.4);border-radius:5px;background:rgba(180,106,85,.10)">SQL</span><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.73rem;color:#c7b8a6;padding:.2rem .58rem;border:1px solid rgba(242,239,232,.12);border-radius:5px;background:#141d33">Python</span><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.73rem;color:#c7b8a6;padding:.2rem .58rem;border:1px solid rgba(242,239,232,.12);border-radius:5px;background:#141d33">Go</span><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.73rem;color:#c7b8a6;padding:.2rem .58rem;border:1px solid rgba(242,239,232,.12);border-radius:5px;background:#141d33">C/C++</span><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.73rem;color:#c7b8a6;padding:.2rem .58rem;border:1px solid rgba(242,239,232,.12);border-radius:5px;background:#141d33">GLSL</span></div>
+            </div>
+            <div data-rsp="skillrow" style="display:grid;grid-template-columns:88px 1fr;gap:.9rem;align-items:baseline">
+              <span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:#8f8676">Backend</span>
+              <div style="display:flex;flex-wrap:wrap;gap:.35rem"><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.73rem;color:#f2efe8;padding:.2rem .58rem;border:1px solid rgba(180,106,85,.4);border-radius:5px;background:rgba(180,106,85,.10)">Spring Boot</span><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.73rem;color:#f2efe8;padding:.2rem .58rem;border:1px solid rgba(180,106,85,.4);border-radius:5px;background:rgba(180,106,85,.10)">REST APIs</span><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.73rem;color:#c7b8a6;padding:.2rem .58rem;border:1px solid rgba(242,239,232,.12);border-radius:5px;background:#141d33">WebSockets</span><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.73rem;color:#c7b8a6;padding:.2rem .58rem;border:1px solid rgba(242,239,232,.12);border-radius:5px;background:#141d33">Hibernate</span><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.73rem;color:#c7b8a6;padding:.2rem .58rem;border:1px solid rgba(242,239,232,.12);border-radius:5px;background:#141d33">Supabase</span></div>
+            </div>
+            <div data-rsp="skillrow" style="display:grid;grid-template-columns:88px 1fr;gap:.9rem;align-items:baseline">
+              <span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:#8f8676">Data</span>
+              <div style="display:flex;flex-wrap:wrap;gap:.35rem"><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.73rem;color:#f2efe8;padding:.2rem .58rem;border:1px solid rgba(180,106,85,.4);border-radius:5px;background:rgba(180,106,85,.10)">PostgreSQL</span><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.73rem;color:#c7b8a6;padding:.2rem .58rem;border:1px solid rgba(242,239,232,.12);border-radius:5px;background:#141d33">MariaDB</span><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.73rem;color:#c7b8a6;padding:.2rem .58rem;border:1px solid rgba(242,239,232,.12);border-radius:5px;background:#141d33">Snowflake</span><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.73rem;color:#c7b8a6;padding:.2rem .58rem;border:1px solid rgba(242,239,232,.12);border-radius:5px;background:#141d33">Power BI</span></div>
+            </div>
+            <div data-rsp="skillrow" style="display:grid;grid-template-columns:88px 1fr;gap:.9rem;align-items:baseline">
+              <span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:#8f8676">Infra</span>
+              <div style="display:flex;flex-wrap:wrap;gap:.35rem"><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.73rem;color:#c7b8a6;padding:.2rem .58rem;border:1px solid rgba(242,239,232,.12);border-radius:5px;background:#141d33">Docker</span><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.73rem;color:#c7b8a6;padding:.2rem .58rem;border:1px solid rgba(242,239,232,.12);border-radius:5px;background:#141d33">Azure</span><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.73rem;color:#c7b8a6;padding:.2rem .58rem;border:1px solid rgba(242,239,232,.12);border-radius:5px;background:#141d33">Cloudflare</span><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.73rem;color:#c7b8a6;padding:.2rem .58rem;border:1px solid rgba(242,239,232,.12);border-radius:5px;background:#141d33">CI/CD</span><span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.73rem;color:#c7b8a6;padding:.2rem .58rem;border:1px solid rgba(242,239,232,.12);border-radius:5px;background:#141d33">Git</span></div>
+            </div>
+          </div>
+          <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.7rem;color:#7d7463;margin:1rem 0 0"><span style="display:inline-block;width:9px;height:9px;border-radius:3px;border:1px solid rgba(180,106,85,.5);background:rgba(180,106,85,.14);vertical-align:-1px;margin-right:.4rem"></span>highlighted = what I reach for first</p>
+        </div>
+
+        <div data-rvl="1">
+          <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.7rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--acc,#b46a55);margin:0 0 .3rem">Education</p>
+          <h2 style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;font-size:clamp(1.6rem,5.2vw,2rem);line-height:1.15;color:#f2efe8;margin:0 0 1rem">the background.</h2>
+          <div style="border:1px solid rgba(242,239,232,.12);border-radius:14px;background:#1f2a44;padding:1.3rem 1.4rem">
+            <div style="display:flex;align-items:center;gap:.85rem;margin-bottom:.85rem">
+              <img src="assets/logo-uwindsor.png" alt="University of Windsor" style="width:40px;height:40px;border-radius:50%;object-fit:cover;background:#141d33;border:1px solid rgba(242,239,232,.22)"/>
+              <div>
+                <h3 style="font-family:'Manrope',sans-serif;font-size:1rem;font-weight:700;color:#f2efe8;margin:0;line-height:1.25">University of Windsor</h3>
+                <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.7rem;color:#8f8676;margin:.1rem 0 0">Sept 2024 — Apr 2028</p>
+              </div>
+            </div>
+            <p style="font-size:.88rem;color:#f2efe8;font-weight:600;margin:0 0 .5rem;line-height:1.45">B.Cs. (Honours) Software Engineering, Co-op<br/><span style="font-weight:400;color:#c7b8a6">Minor in Mathematics</span></p>
+            <div style="display:flex;flex-direction:column;gap:.4rem">
+              <div style="display:flex;gap:.6rem"><span aria-hidden="true" style="flex:none;width:4px;height:4px;border-radius:50%;background:#b46a55;margin-top:.5rem"></span><p style="font-size:.85rem;color:#c7b8a6;line-height:1.55;margin:0"><strong style="color:#f2efe8;font-weight:600">$12,000+</strong> in merit-based scholarships.</p></div>
+              <div style="display:flex;gap:.6rem"><span aria-hidden="true" style="flex:none;width:4px;height:4px;border-radius:50%;background:#b46a55;margin-top:.5rem"></span><p style="font-size:.85rem;color:#c7b8a6;line-height:1.55;margin:0">Databases, systems programming, data structures, computer graphics.</p></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:.5rem 1.3rem;align-items:center;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.74rem;color:#8f8676;margin-top:1.1rem">
+            <span style="white-space:nowrap">📍 Windsor, Ontario</span>
+            <sc-if value="{{showAvail}}" hint-placeholder-val="{{true}}">
+              <span style="display:inline-flex;align-items:center;gap:.45rem;white-space:nowrap"><span style="flex:none;width:7px;height:7px;border-radius:50%;background:#b46a55;box-shadow:0 0 8px rgba(180,106,85,.8);animation:pulse 2.6s ease-in-out infinite" aria-hidden="true"></span> Open to Winter / Summer 2027 co-op</span>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div data-rsp="sky" ref="{{skyRef}}" onClick="{{skyClick}}" aria-label="Milestones plotted as stars in the shape of a Y, my initial, each star sized by how much it shaped my computer science journey." style="position:relative;height:400px;overflow:hidden;background:#070d18;border-top:1px solid rgba(242,239,232,.06)">
+    <svg viewBox="0 0 1200 560" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;display:block">
+      <defs>
+        <radialGradient id="rd-neb-a" cx="30%" cy="20%" r="55%"><stop offset="0%" stop-color="#3b5baa" stop-opacity=".16"></stop><stop offset="60%" stop-color="#3b5baa" stop-opacity=".05"></stop><stop offset="100%" stop-color="#3b5baa" stop-opacity="0"></stop></radialGradient>
+        <radialGradient id="rd-neb-b" cx="72%" cy="70%" r="50%"><stop offset="0%" stop-color="#7a4a8f" stop-opacity=".10"></stop><stop offset="100%" stop-color="#7a4a8f" stop-opacity="0"></stop></radialGradient>
+        <radialGradient id="rd-neb-c" cx="55%" cy="40%" r="70%"><stop offset="0%" stop-color="#c9d8ff" stop-opacity=".05"></stop><stop offset="100%" stop-color="#c9d8ff" stop-opacity="0"></stop></radialGradient>
+        <linearGradient id="rd-sky-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#070d18"></stop><stop offset="55%" stop-color="#0a1122"></stop><stop offset="100%" stop-color="#0d1526"></stop></linearGradient>
+      </defs>
+      <rect width="1200" height="560" fill="url(#rd-sky-g)"></rect>
+      <rect width="1200" height="560" fill="url(#rd-neb-c)" transform="rotate(-14 600 280)"></rect>
+      <rect width="1200" height="560" fill="url(#rd-neb-a)"></rect>
+      <rect width="1200" height="560" fill="url(#rd-neb-b)"></rect>
+      <g style="fill:none;stroke:rgba(160,190,255,.06);stroke-width:1">
+        <path d="M0,140 Q600,110 1200,140"></path>
+        <path d="M0,300 Q600,270 1200,300"></path>
+        <path d="M0,460 Q600,430 1200,460"></path>
+        <path d="M240,0 Q260,280 240,560"></path>
+        <path d="M600,0 Q610,280 600,560"></path>
+        <path d="M960,0 Q940,280 960,560"></path>
+      </g>
+      <g ref="{{starsBgRef}}"></g>
+      <g ref="{{consLinesRef}}" style="fill:none;stroke:rgba(168,196,255,.34);stroke-width:1.1;stroke-linecap:round">
+        <path d="M372,73 L468,185"></path>
+        <path d="M468,185 L600,308"></path>
+        <path d="M828,73 L732,185"></path>
+        <path d="M732,185 L600,308"></path>
+        <path d="M600,308 L600,459"></path>
+      </g>
+    </svg>
+    <a class="star-hit" data-ms="a" href="#experience" aria-label="Stellantis internship — Software Engineering Intern, 2026. Impact: defining." style="position:absolute;left:50%;top:55%;transform:translate(-50%,-50%);display:grid;place-items:center;width:48px;height:48px;text-decoration:none;z-index:2">
+      <span class="star-core" aria-hidden="true" style="position:relative;width:13px;height:13px;border-radius:50%;background:radial-gradient(circle at 42% 38%,#ffffff 0%,#ffe9b8 55%,rgba(223,232,255,0) 78%);box-shadow:0 0 7px 1px #ffe9b8,0 0 22px 3px rgba(255,233,184,.34);animation:star-breathe 5.2s ease-in-out .3s infinite;transition:transform .22s cubic-bezier(.2,.7,.2,1)" style-before="content:'';position:absolute;left:50%;top:50%;width:1.4px;height:46px;background:linear-gradient(rgba(255,246,224,0),rgba(255,246,224,.85),rgba(255,246,224,0));transform:translate(-50%,-50%)" style-after="content:'';position:absolute;left:50%;top:50%;width:1.4px;height:46px;background:linear-gradient(rgba(255,246,224,0),rgba(255,246,224,.85),rgba(255,246,224,0));transform:translate(-50%,-50%) rotate(90deg)"></span>
+      <span class="star-lbl" style="position:absolute;right:calc(100% + .3rem);top:50%;transform:translateY(-50%);text-align:right;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;line-height:1.5;color:#8fa0c4;white-space:nowrap;transition:color .22s"><em style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:.9rem;color:#ffe9b8">α</em> <strong style="display:block;color:#dfe8ff;font-weight:600">Stellantis internship</strong>Software Eng Intern · 2026</span>
+    </a>
+    <a class="star-hit" data-ms="f" href="#experience" aria-label="Freelance full-stack development — client sites and secure backends, 2026. Impact: major." style="position:absolute;left:39%;top:33%;transform:translate(-50%,-50%);display:grid;place-items:center;width:44px;height:44px;text-decoration:none;z-index:2">
+      <span class="star-core" aria-hidden="true" style="position:relative;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 42% 38%,#ffffff 0%,#f0dcc4 55%,rgba(223,232,255,0) 78%);box-shadow:0 0 6px 1px #f0dcc4,0 0 19px 3px rgba(240,220,196,.3);animation:star-breathe 4.8s ease-in-out 1.9s infinite;transition:transform .22s cubic-bezier(.2,.7,.2,1)"></span>
+      <span class="star-lbl" style="position:absolute;right:calc(100% + .3rem);top:50%;transform:translateY(-50%);text-align:right;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;line-height:1.5;color:#8fa0c4;white-space:nowrap;transition:color .22s"><em style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:.9rem;color:#ffe9b8">ζ</em> <strong style="display:block;color:#dfe8ff;font-weight:600">Freelance full-stack</strong>client sites + backends · 2026</span>
+    </a>
+    <a class="star-hit" data-ms="b" href="#work" aria-label="Black hole renderer — hand-written GLSL at 60 fps, 2025. Impact: strong." style="position:absolute;left:31%;top:13%;transform:translate(-50%,-50%);display:grid;place-items:center;width:44px;height:44px;text-decoration:none;z-index:2">
+      <span class="star-core" aria-hidden="true" style="position:relative;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 42% 38%,#ffffff 0%,#cfe0ff 55%,rgba(223,232,255,0) 78%);box-shadow:0 0 6px 1px #cfe0ff,0 0 18px 2px rgba(223,232,255,.35);animation:star-breathe 4.1s ease-in-out 1.4s infinite;transition:transform .22s cubic-bezier(.2,.7,.2,1)"></span>
+      <span class="star-lbl" style="position:absolute;right:calc(100% + .3rem);top:50%;transform:translateY(-50%);text-align:right;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;line-height:1.5;color:#8fa0c4;white-space:nowrap;transition:color .22s"><em style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:.9rem;color:#ffe9b8">β</em> <strong style="display:block;color:#dfe8ff;font-weight:600">Black hole renderer</strong>hand-written GLSL · 60 fps · 2025</span>
+    </a>
+    <a class="star-hit" data-ms="c" href="#work" aria-label="Chrome extension — shipped on the Chrome Web Store, 2025. Impact: moderate." style="position:absolute;left:69%;top:13%;transform:translate(-50%,-50%);display:grid;place-items:center;width:44px;height:44px;text-decoration:none;z-index:2">
+      <span class="star-core" aria-hidden="true" style="position:relative;width:8px;height:8px;border-radius:50%;background:radial-gradient(circle at 42% 38%,#ffffff 0%,#ffd2a8 55%,rgba(223,232,255,0) 78%);box-shadow:0 0 6px 1px #ffd2a8,0 0 18px 2px rgba(223,232,255,.35);animation:star-breathe 6s ease-in-out 2.2s infinite;transition:transform .22s cubic-bezier(.2,.7,.2,1)"></span>
+      <span class="star-lbl" style="position:absolute;left:calc(100% + .3rem);top:50%;transform:translateY(-50%);text-align:left;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;line-height:1.5;color:#8fa0c4;white-space:nowrap;transition:color .22s"><em style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:.9rem;color:#ffe9b8">γ</em> <strong style="display:block;color:#dfe8ff;font-weight:600">Chrome extension</strong>shipped on the Web Store · 2025</span>
+    </a>
+    <a class="star-hit" data-ms="d" href="#work" aria-label="myAdvice — about 80 percent fewer clicks per workflow, 2026. Impact: moderate." style="position:absolute;left:61%;top:33%;transform:translate(-50%,-50%);display:grid;place-items:center;width:44px;height:44px;text-decoration:none;z-index:2">
+      <span class="star-core" aria-hidden="true" style="position:relative;width:7px;height:7px;border-radius:50%;background:radial-gradient(circle at 42% 38%,#ffffff 0%,#f2f4ff 55%,rgba(223,232,255,0) 78%);box-shadow:0 0 6px 1px #f2f4ff,0 0 18px 2px rgba(223,232,255,.35);animation:star-breathe 4.6s ease-in-out 3.1s infinite;transition:transform .22s cubic-bezier(.2,.7,.2,1)"></span>
+      <span class="star-lbl" style="position:absolute;left:calc(100% + .4rem);top:50%;transform:translateY(-50%);text-align:left;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;line-height:1.5;color:#8fa0c4;white-space:nowrap;transition:color .22s"><em style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:.9rem;color:#ffe9b8">δ</em> <strong style="display:block;color:#dfe8ff;font-weight:600">myAdvice</strong>~80% fewer clicks · 2026</span>
+    </a>
+    <a class="star-hit" data-ms="e" href="#work" aria-label="Tether, a self-hosted web terminal in Go, 2026. Impact: a sharpening tool." style="position:absolute;left:50%;top:82%;transform:translate(-50%,-50%);display:grid;place-items:center;width:44px;height:44px;text-decoration:none;z-index:2">
+      <span class="star-core" aria-hidden="true" style="position:relative;width:6px;height:6px;border-radius:50%;background:radial-gradient(circle at 42% 38%,#ffffff 0%,#bcd4ff 55%,rgba(223,232,255,0) 78%);box-shadow:0 0 6px 1px #bcd4ff,0 0 18px 2px rgba(223,232,255,.35);animation:star-breathe 5.5s ease-in-out .9s infinite;transition:transform .22s cubic-bezier(.2,.7,.2,1)"></span>
+      <span class="star-lbl" style="position:absolute;left:calc(100% + .4rem);top:50%;transform:translateY(-50%);text-align:left;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;line-height:1.5;color:#8fa0c4;white-space:nowrap;transition:color .22s"><em style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:.9rem;color:#ffe9b8">ε</em> <strong style="display:block;color:#dfe8ff;font-weight:600">Tether</strong>self-hosted web terminal · 2026</span>
+    </a>
+    <p data-skycap="1" style="position:absolute;left:1.2rem;bottom:1.1rem;z-index:2;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;letter-spacing:.06em;color:#7d8ba8;margin:0;max-width:20rem;line-height:1.6">constellation <em style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:1.15rem;color:#dfe8ff">Y</em> — my initial.<br/><span style="color:#5f6d88">six milestones, sized by how much each one shaped the way I build. click one.</span></p>
+  </div>
+
+  <footer id="connect" data-screen-label="Contact + footer" style="background:#141d33;border-top:1px solid rgba(242,239,232,.10);padding-top:52px;padding-bottom:1.8rem">
+    <div data-wrap="1" style="max-width:960px;margin:0 auto;padding-left:32px;padding-right:32px">
+      <div data-rvl="1" data-rsp="contact" style="display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:center;margin-bottom:2.2rem">
+        <div>
+          <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.7rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--acc,#b46a55);margin:0 0 .3rem">04 · Contact</p>
+          <h2 style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;font-size:clamp(1.6rem,5.2vw,2rem);line-height:1.15;color:#f2efe8;margin:0 0 .4rem">let's build something.</h2>
+          <p style="font-size:.95rem;color:#c7b8a6;margin:0 0 .5rem;max-width:44ch">Open to Winter / Summer 2027 co-op and internship roles — send a note, I read everything.</p>
+          <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.76rem;color:#8f8676;margin:0">yousif.eliaa@gmail.com · <a href="assets/Yousif-Elia-Resume.pdf" target="_blank" rel="noopener" style="color:#c7b8a6;text-decoration:none;border-bottom:1px solid rgba(242,239,232,.24)" style-hover="color:var(--acc,#b46a55);border-bottom-color:var(--acc,#b46a55)">resume (PDF) ↗</a></p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.55rem;align-items:stretch">
+          <a href="https://cal.com/yousif-elia/15min" target="_blank" rel="noopener" style="text-align:center;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.8rem;font-weight:500;text-decoration:none;padding:.62rem 1.2rem;border-radius:8px;background:var(--acc,#b46a55);color:#0b1320;transition:all .22s" style-hover="filter:brightness(1.07);transform:translateY(-1px)">Book a chat →</a>
+          <button type="button" onClick="{{copyEmail}}" aria-label="Copy email address" style="{{copyBtnStyle}}">{{copyBtnLabel}}</button>
+          <div style="display:flex;flex-direction:column;gap:.45rem;margin-top:.35rem;padding-top:.7rem;border-top:1px solid rgba(242,239,232,.10)">
+            <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.64rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#7d7463;margin:0">theme</p>
+            <div role="group" aria-label="Accent theme" style="display:grid;grid-template-columns:1fr 1fr;gap:.35rem">
+              <sc-for list="{{themes}}" as="t" hint-placeholder-count="4">
+                <button type="button" onClick="{{t.pick}}" aria-pressed="{{t.on}}" style="{{t.style}}"><span aria-hidden="true" style="{{t.dot}}"></span>{{t.name}}</button>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.8rem;padding-top:1.3rem;border-top:1px solid rgba(242,239,232,.10)">
+        <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.7rem;color:#7d7463;margin:0"><span style="color:#8f8676">now:</span> porting the dive to a true Kerr integrator · <span style="color:#8f8676">built with:</span> Vite + TS, hand-written GLSL</p>
+        <div style="display:flex;gap:1.1rem;align-items:center">
+          <a href="https://github.com/YousifElia" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;color:#8f8676;text-decoration:none" style-hover="color:var(--acc,#b46a55)">GitHub</a>
+          <a href="https://www.linkedin.com/in/yousif-elia-swe/" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;color:#8f8676;text-decoration:none" style-hover="color:var(--acc,#b46a55)">LinkedIn</a>
+          <span style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;color:#7d7463">© 2026 Yousif Elia</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <sc-if value="{{diveOpen}}" hint-placeholder-val="{{false}}">
+    <div role="dialog" aria-modal="true" aria-label="Black hole immersive mode" data-screen-label="Dive overlay" style="position:fixed;inset:0;z-index:2000;background:#000;animation:rise .3s ease-out">
+      <x-import component-from-global-scope="black-hole" from="./blackhole.js" interactive="true" intensity="1" yaw="0.55" pitch="0.12" dist="14.5" fov="0.49" hint-size="100%,100%" style="position:absolute;top:0;left:0;right:0;bottom:0"></x-import>
+      <div ref="{{barTopRef}}" aria-hidden="true" style="position:absolute;top:0;left:0;right:0;height:0;background:#000;transition:height .95s cubic-bezier(.2,.7,.2,1);pointer-events:none;z-index:3"></div>
+      <div ref="{{barBotRef}}" aria-hidden="true" style="position:absolute;bottom:0;left:0;right:0;height:0;background:#000;transition:height .95s cubic-bezier(.2,.7,.2,1);pointer-events:none;z-index:3"></div>
+      <div ref="{{hudTopRef}}" style="position:absolute;top:1.1rem;left:1.3rem;pointer-events:none;z-index:4;transition:transform .95s cubic-bezier(.2,.7,.2,1)">
+        <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:#b46a55;margin:0 0 .2rem">Immersive mode</p>
+        <p style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:1.3rem;color:#f2efe8;margin:0">the dive.</p>
+        <p ref="{{divePhaseRef}}" style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;letter-spacing:.06em;color:#8f8676;margin:.4rem 0 0;min-height:1.2em;transition:opacity .4s"></p>
+      </div>
+      <button type="button" ref="{{diveCloseRef}}" onClick="{{closeDive}}" aria-label="Exit immersive mode" style="position:absolute;top:1.1rem;right:1.3rem;z-index:4;display:inline-flex;align-items:center;gap:.5rem;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.76rem;cursor:pointer;padding:.55rem 1rem;border-radius:8px;border:1px solid rgba(242,239,232,.28);background:rgba(11,19,32,.6);color:#f2efe8;backdrop-filter:blur(8px);transition:transform .95s cubic-bezier(.2,.7,.2,1),border-color .22s,color .22s" style-hover="border-color:#b46a55;color:#b46a55">✕ exit dive <span style="color:#7d7463">esc</span></button>
+      <div ref="{{hudBotRef}}" aria-hidden="true" style="position:absolute;right:1.3rem;bottom:1.25rem;z-index:4;display:flex;align-items:center;gap:.5rem;padding:.36rem .62rem;border:1px solid rgba(242,239,232,.14);border-radius:6px;background:rgba(11,19,32,.5);backdrop-filter:blur(8px);font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.64rem;letter-spacing:.06em;color:#8f8676;pointer-events:none;transition:transform .95s cubic-bezier(.2,.7,.2,1)">
+        <span style="width:5px;height:5px;border-radius:50%;background:#b46a55;box-shadow:0 0 8px #b46a55"></span>
+        <span ref="{{diveDistRef}}">r 14.5 M</span>
+      </div>
+      <sc-if value="{{diveIntroRunning}}" hint-placeholder-val="{{false}}">
+        <button type="button" onClick="{{skipIntro}}" style="position:absolute;left:50%;bottom:1.25rem;transform:translateX(-50%);z-index:4;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;cursor:pointer;color:#8f8676;margin:0;padding:.5rem .95rem;border:1px solid rgba(242,239,232,.14);border-radius:999px;background:rgba(11,19,32,.6);backdrop-filter:blur(8px);white-space:nowrap;transition:color .22s,border-color .22s" style-hover="color:#f2efe8;border-color:rgba(242,239,232,.34)">skip the approach ↷</button>
+      </sc-if>
+      <sc-if value="{{diveReady}}" hint-placeholder-val="{{true}}">
+        <p style="position:absolute;left:50%;bottom:1.25rem;transform:translateX(-50%);z-index:4;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.72rem;color:#8f8676;margin:0;padding:.5rem .95rem;border:1px solid rgba(242,239,232,.14);border-radius:999px;background:rgba(11,19,32,.6);backdrop-filter:blur(8px);white-space:nowrap;pointer-events:none">{{diveHint}}</p>
+      </sc-if>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#7f9ec4&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#b46a55&quot;,&quot;#c8996f&quot;,&quot;#7f9ec4&quot;],&quot;section&quot;:&quot;Theme&quot;},&quot;holeIdle&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:0.35,&quot;min&quot;:0,&quot;max&quot;:1,&quot;step&quot;:0.05,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Black hole&quot;},&quot;diveIntro&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Black hole&quot;},&quot;showAvailability&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Hero&quot;}}">
+class Component extends DCLogic {
+  state = { theme: null, copied: false, diveOpen: false, diveReady: false, notesExpanded: false, mvPlaying: false };
+
+  rootRef = React.createRef();
+  navRef = React.createRef();
+  typerRef = React.createRef();
+  skyRef = React.createRef();
+  starsBgRef = React.createRef();
+  consLinesRef = React.createRef();
+  diveCloseRef = React.createRef();
+  holeHintRef = React.createRef();
+  barTopRef = React.createRef();
+  barBotRef = React.createRef();
+  hudTopRef = React.createRef();
+  hudBotRef = React.createRef();
+  divePhaseRef = React.createRef();
+  diveDistRef = React.createRef();
+  cursorRef = React.createRef();
+
+  mulberry32(seed) {
+    let a = seed >>> 0;
+    return () => {
+      a |= 0; a = (a + 0x6d2b79f5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  componentDidMount() {
+    document.title = 'Yousif Elia — Software Engineer';
+    this._reduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    this._coarse = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+    this._idleHint = this._coarse ? 'rendering live — tap to wake' : 'rendering live — hover to wake';
+    if (this.holeHintRef.current) this.holeHintRef.current.textContent = this._idleHint;
+    this.applyProps();
+    this.buildStarfield();
+    this.initTypewriter();
+    this.initNavScroll();
+    this.initReveal();
+    this.initCounters();
+    this.initCursor();
+    this.waitForGsap(() => this.initSkyMotion());
+    this.onKey = (e) => { if (e.key === 'Escape' && this.state.diveOpen) this.closeDiveNow(); };
+    window.addEventListener('keydown', this.onKey);
+  }
+
+  componentDidUpdate() {
+    this.applyProps();
+    if (this.state.diveOpen && this.diveCloseRef.current && !this._focused) {
+      this._focused = true;
+      this.diveCloseRef.current.focus();
+    }
+    if (!this.state.diveOpen) { this._focused = false; this._diveArmed = false; }
+    if (this.state.diveOpen && !this._diveArmed) {
+      this._diveArmed = true;
+      this.runDiveSequence(0);
+    }
+  }
+
+  diveEl() {
+    const root = document.querySelector('[data-screen-label="Dive overlay"]');
+    return root ? root.querySelector('black-hole') : null;
+  }
+
+  setCine(on) {
+    const h = on ? '52px' : '0px';
+    const down = on ? 'translateY(60px)' : 'translateY(0px)';
+    if (this.barTopRef.current) this.barTopRef.current.style.height = h;
+    if (this.barBotRef.current) this.barBotRef.current.style.height = h;
+    if (this.hudTopRef.current) this.hudTopRef.current.style.transform = down;
+    if (this.diveCloseRef.current) this.diveCloseRef.current.style.transform = down;
+    if (this.hudBotRef.current) this.hudBotRef.current.style.transform = on ? 'translateY(-60px)' : 'translateY(0px)';
+  }
+
+  runDiveSequence(tries) {
+    if (!this.state.diveOpen) return;
+    const el = this.diveEl();
+    if (!el || typeof el.flyTo !== 'function') {
+      if (tries < 300) { this._diveT = setTimeout(() => this.runDiveSequence(tries + 1), 40); return; }
+      this.setCine(false);
+      this.setState({ diveReady: true });
+      return;
+    }
+    this._diveHole = el;
+
+    cancelAnimationFrame(this._hudRaf);
+    const hud = () => {
+      if (!this.state.diveOpen) return;
+      const d = this.diveDistRef.current;
+      if (d && el.camera) d.textContent = 'r ' + el.camera.dist.toFixed(1) + ' M';
+      this._hudRaf = requestAnimationFrame(hud);
+    };
+    this._hudRaf = requestAnimationFrame(hud);
+
+    const say = (t) => { if (this.divePhaseRef.current) this.divePhaseRef.current.textContent = t; };
+    const land = () => {
+      this.setCine(false);
+      say('');
+      if (this.state.diveOpen && !this.state.diveReady) this.setState({ diveReady: true });
+    };
+
+    if (this.props.diveIntro === false) {
+      el.setCam({ dist: 9.2, fov: 0.47, yaw: 0.35, pitch: 0.16, starBoost: 1, intensity: 1 });
+      land();
+      return;
+    }
+
+    el.setCam({ dist: 14.5, fov: 0.49, yaw: 0.55, pitch: 0.12, starBoost: 1, intensity: 1 });
+    this.setCine(true);
+    say('establishing orbit');
+    const guard = (ok) => { if (!ok) throw new Error('skipped'); };
+
+    el.flyTo({ dist: 17.5, pitch: 0.16 }, { duration: 1.0, ease: 'outCubic' })
+      .then((ok) => { guard(ok); say('pulling back — widening the field'); return el.flyTo({ dist: 46, fov: 1.14, pitch: 0.30, starBoost: 2.25 }, { duration: 3.1, ease: 'inOutCubic' }); })
+      .then((ok) => { guard(ok); say('46 M out — still the brightest thing out here'); return el.flyTo({ yaw: el.camera.yaw + 0.24 }, { duration: 1.2, ease: 'inOutCubic' }); })
+      .then((ok) => { guard(ok); say('falling in'); return el.flyTo({ dist: 9.2, fov: 0.47, pitch: 0.16, yaw: el.camera.yaw + 1.15, starBoost: 1 }, { duration: 3.1, ease: 'inOutQuint' }); })
+      .then((ok) => {
+        guard(ok);
+        this.setCine(false);
+        say('free orbit — you have the controls');
+        this.setState({ diveReady: true });
+        clearTimeout(this._phaseT);
+        this._phaseT = setTimeout(() => say(''), 2800);
+      })
+      .catch(() => land());
+  }
+
+  componentWillUnmount() {
+    cancelAnimationFrame(this._hudRaf);
+    clearTimeout(this._phaseT);
+    if (this.timers) this.timers.forEach(clearTimeout);
+    if (this.onScroll) window.removeEventListener('scroll', this.onScroll);
+    if (this.onRevealScroll) {
+      window.removeEventListener('scroll', this.onRevealScroll);
+      window.removeEventListener('resize', this.onRevealScroll);
+    }
+    if (this.onKey) window.removeEventListener('keydown', this.onKey);
+    if (this.onCountScroll) window.removeEventListener('scroll', this.onCountScroll);
+    if (this.onCurMove) window.removeEventListener('pointermove', this.onCurMove);
+    if (this.onCurOut) document.removeEventListener('mouseout', this.onCurOut);
+    cancelAnimationFrame(this._curRaf);
+    cancelAnimationFrame(this._countRaf);
+    document.documentElement.style.overflow = '';
+  }
+
+  applyProps() {
+    const root = this.rootRef.current;
+    if (root) root.style.setProperty('--acc', this.state.theme || this.props.accent || '#b46a55');
+    if (!this._holeHover) {
+      const hole = document.querySelector('#work black-hole');
+      if (hole) hole.setAttribute('intensity', String(this.props.holeIdle ?? 0.35));
+    }
+  }
+
+  buildStarfield() {
+    const g = this.starsBgRef.current;
+    if (!g || g.childNodes.length) return;
+    const SVG_NS = 'http://www.w3.org/2000/svg';
+    const rand = this.mulberry32(20260705);
+    const frag = document.createDocumentFragment();
+    let placed = 0;
+    while (placed < 240) {
+      const x = rand() * 1200, y = rand() * 560;
+      const d = Math.abs(y - (340 - 0.25 * x));
+      const keepP = 0.45 + 0.55 * Math.exp(-(d * d) / (2 * 150 * 150));
+      if (rand() > keepP) continue;
+      placed++;
+      const m = rand();
+      const r = 0.35 + Math.pow(m, 3) * 1.5;
+      const warm = rand() < 0.22;
+      const tint = warm
+        ? 'rgba(255,' + (230 - Math.round(rand() * 30)) + ',' + (190 - Math.round(rand() * 40)) + ',1)'
+        : 'rgba(' + (215 + Math.round(rand() * 25)) + ',' + (228 + Math.round(rand() * 20)) + ',255,1)';
+      const opacity = 0.25 + m * 0.65;
+      const c = document.createElementNS(SVG_NS, 'circle');
+      c.setAttribute('cx', x.toFixed(1));
+      c.setAttribute('cy', y.toFixed(1));
+      c.setAttribute('r', r.toFixed(2));
+      c.setAttribute('fill', tint);
+      c.setAttribute('opacity', opacity.toFixed(2));
+      if (rand() < 0.2) {
+        c.classList.add('tw');
+        c.style.setProperty('--twd', (2.2 + rand() * 4.5).toFixed(2) + 's');
+        c.style.setProperty('--twdel', (rand() * 5).toFixed(2) + 's');
+        c.style.setProperty('--two', opacity.toFixed(2));
+      }
+      frag.appendChild(c);
+    }
+    g.appendChild(frag);
+  }
+
+  initTypewriter() {
+    const el = this.typerRef.current;
+    if (!el) return;
+    const WORDS = ['a Kerr black-hole integrator', 'a Go terminal server', 'faster database queries'];
+    if (this._reduced) { el.textContent = WORDS[0]; return; }
+    this.timers = [];
+    let word = 0;
+    const later = (fn, ms) => this.timers.push(setTimeout(fn, ms));
+    const type = (i) => {
+      el.textContent = WORDS[word].slice(0, i);
+      if (i < WORDS[word].length) later(() => type(i + 1), 52);
+      else later(erase, 2400);
+    };
+    const erase = () => {
+      const cur = el.textContent || '';
+      if (cur.length > 0) { el.textContent = cur.slice(0, -1); later(erase, 24); }
+      else { word = (word + 1) % WORDS.length; later(() => type(0), 260); }
+    };
+    later(() => type(0), 300);
+  }
+
+  initNavScroll() {
+    const nav = this.navRef.current;
+    if (!nav) return;
+    const links = Array.from(nav.querySelectorAll('[data-rsp="navlinks"] a'));
+    const ids = links.map((a) => (a.getAttribute('href') || '').slice(1));
+    this.onScroll = () => {
+      const on = window.scrollY > 8;
+      const y = window.scrollY + 130;
+      let cur = '';
+      ids.forEach((id) => { const s = document.getElementById(id); if (s && s.offsetTop <= y) cur = id; });
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) cur = 'connect';
+      links.forEach((a) => { if (cur && a.getAttribute('href') === '#' + cur) a.setAttribute('data-active', ''); else a.removeAttribute('data-active'); });
+      nav.style.background = on ? 'rgba(11,19,32,.78)' : 'transparent';
+      nav.style.borderBottomColor = on ? 'rgba(242,239,232,.10)' : 'transparent';
+      nav.style.backdropFilter = on ? 'blur(14px) saturate(140%)' : 'none';
+      nav.style.webkitBackdropFilter = on ? 'blur(14px) saturate(140%)' : 'none';
+    };
+    window.addEventListener('scroll', this.onScroll, { passive: true });
+    this.onScroll();
+  }
+
+  initReveal() {
+    const ease = 'cubic-bezier(.2,.7,.2,1)';
+    const seen = new Map();
+    let pending = Array.from(document.querySelectorAll('[data-rvl]')).filter((el) => {
+      if (el.getBoundingClientRect().top <= window.innerHeight * 0.92) return false;
+      const p = el.parentElement;
+      const i = seen.get(p) || 0;
+      seen.set(p, i + 1);
+      const d = Math.min(i, 4) * 0.09;
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(18px)';
+      el.style.transition = 'opacity .72s ' + ease + ' ' + d + 's, transform .72s ' + ease + ' ' + d + 's';
+      return true;
+    });
+    if (!pending.length) return;
+    let ticking = false;
+    const check = () => {
+      ticking = false;
+      pending = pending.filter((el) => {
+        const r = el.getBoundingClientRect();
+        if (r.top <= window.innerHeight * 0.92 || r.bottom < 0) {
+          el.style.opacity = '1';
+          el.style.transform = 'none';
+          return false;
+        }
+        return true;
+      });
+      if (!pending.length) {
+        window.removeEventListener('scroll', this.onRevealScroll);
+        window.removeEventListener('resize', this.onRevealScroll);
+      }
+    };
+    this.onRevealScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(check); } };
+    window.addEventListener('scroll', this.onRevealScroll, { passive: true });
+    window.addEventListener('resize', this.onRevealScroll, { passive: true });
+  }
+
+  initCounters() {
+    const els = Array.from(document.querySelectorAll('[data-count]'));
+    if (!els.length) return;
+    if (this._reduced) return;
+    const fmt = (el, v) => {
+      const n = Math.round(v);
+      const s = el.dataset.group ? n.toLocaleString('en-US') : String(n);
+      el.textContent = s + (el.dataset.suffix || '');
+    };
+    const run = (el) => {
+      const target = parseFloat(el.dataset.count) || 0;
+      const t0 = performance.now();
+      const dur = 1250;
+      const step = (t) => {
+        const k = Math.min(1, (t - t0) / dur);
+        const e = 1 - Math.pow(1 - k, 3);
+        fmt(el, target * e);
+        if (k < 1) this._countRaf = requestAnimationFrame(step);
+      };
+      fmt(el, 0);
+      this._countRaf = requestAnimationFrame(step);
+    };
+    let pending = els.filter((el) => {
+      if (el.getBoundingClientRect().top <= window.innerHeight * 0.9) return false;
+      fmt(el, 0);
+      return true;
+    });
+    els.filter((el) => pending.indexOf(el) === -1).forEach(run);
+    if (!pending.length) return;
+    let ticking = false;
+    const check = () => {
+      ticking = false;
+      pending = pending.filter((el) => {
+        if (el.getBoundingClientRect().top <= window.innerHeight * 0.9) { run(el); return false; }
+        return true;
+      });
+      if (!pending.length) window.removeEventListener('scroll', this.onCountScroll);
+    };
+    this.onCountScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(check); } };
+    window.addEventListener('scroll', this.onCountScroll, { passive: true });
+  }
+
+  initCursor() {
+    const wrap = this.cursorRef.current;
+    if (!wrap || this._reduced || this._coarse) return;
+    let tx = window.innerWidth / 2, ty = window.innerHeight / 2, x = tx, y = ty, on = false;
+    this.onCurMove = (e) => {
+      tx = e.clientX; ty = e.clientY;
+      if (!on) { on = true; x = tx; y = ty; wrap.style.opacity = '1'; }
+      const hot = e.target && e.target.closest && e.target.closest('a,button,[role="button"],.star-hit,[data-card],[data-cardmedia]');
+      if (hot) wrap.setAttribute('data-hot', ''); else wrap.removeAttribute('data-hot');
+    };
+    this.onCurOut = (e) => { if (!e.relatedTarget && !e.toElement) { on = false; wrap.style.opacity = '0'; } };
+    const tick = () => {
+      x += (tx - x) * 0.18;
+      y += (ty - y) * 0.18;
+      wrap.style.transform = 'translate3d(' + x.toFixed(2) + 'px,' + y.toFixed(2) + 'px,0)';
+      this._curRaf = requestAnimationFrame(tick);
+    };
+    window.addEventListener('pointermove', this.onCurMove, { passive: true });
+    document.addEventListener('mouseout', this.onCurOut);
+    this._curRaf = requestAnimationFrame(tick);
+  }
+
+  waitForGsap(cb, tries) {
+    tries = tries || 0;
+    if (window.gsap && window.ScrollTrigger) { window.gsap.registerPlugin(window.ScrollTrigger); cb(); }
+    else if (tries < 40) setTimeout(() => this.waitForGsap(cb, tries + 1), 150);
+  }
+
+  initSkyMotion() {
+    const gsap = window.gsap;
+    const sky = this.skyRef.current;
+    const starsBg = this.starsBgRef.current;
+    const linesG = this.consLinesRef.current;
+    if (!sky || !linesG) return;
+
+    if (this._reduced) return;
+    const lines = Array.from(linesG.querySelectorAll('path'));
+    let drawn = false;
+    const drawIn = () => {
+      if (drawn) return;
+      drawn = true;
+      lines.forEach((p) => {
+        const len = p.getTotalLength();
+        p.style.strokeDasharray = String(len);
+        p.style.strokeDashoffset = String(len);
+      });
+      gsap.timeline()
+        .fromTo(sky.querySelectorAll('.star-hit'),
+          { scale: 0, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(2.2)', stagger: 0.13, clearProps: 'scale,opacity' })
+        .to(lines, { strokeDashoffset: 0, duration: 0.8, ease: 'power1.inOut', stagger: 0.16,
+          onComplete: () => lines.forEach((p) => { p.style.strokeDasharray = ''; p.style.strokeDashoffset = ''; }) }, '-=0.3');
+    };
+    window.ScrollTrigger.create({ trigger: sky, start: 'top 78%', once: true, onEnter: drawIn });
+    setTimeout(() => {
+      const r = sky.getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) drawIn();
+    }, 1200);
+
+    if (starsBg) {
+      gsap.fromTo(starsBg, { y: -14 }, { y: 14, ease: 'none', scrollTrigger: { trigger: sky, start: 'top bottom', end: 'bottom top', scrub: true } });
+    }
+
+    const rand = this.mulberry32(Date.now() >>> 0);
+    const makeMeteor = () => {
+      const m = document.createElement('span');
+      m.setAttribute('aria-hidden', 'true');
+      m.style.cssText = 'position:absolute;top:0;left:0;width:110px;height:1.5px;border-radius:2px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(235,243,255,.9));opacity:0;pointer-events:none;z-index:1';
+      sky.appendChild(m);
+      return m;
+    };
+    const ambient = makeMeteor();
+    this.clickedMeteor = makeMeteor();
+    this.shootFrom = (meteor, fx, fy, onDone) => {
+      const angle = 18 + rand() * 20;
+      const dist = 220 + rand() * 260;
+      gsap.timeline({ onComplete: onDone })
+        .set(meteor, { x: fx * sky.clientWidth, y: fy * sky.clientHeight, rotation: angle, opacity: 0 })
+        .to(meteor, { opacity: 0.9, duration: 0.12 })
+        .to(meteor, { x: '+=' + dist * Math.cos(angle * Math.PI / 180), y: '+=' + dist * Math.sin(angle * Math.PI / 180), duration: 0.8, ease: 'power1.in' }, '<')
+        .to(meteor, { opacity: 0, duration: 0.25 }, '-=0.3');
+    };
+    const loop = () => this.shootFrom(ambient, 0.15 + rand() * 0.6, 0.05 + rand() * 0.35, () => gsap.delayedCall(6 + rand() * 5, loop));
+    gsap.delayedCall(2.5 + rand() * 3, loop);
+  }
+
+  closeDiveNow() {
+    document.documentElement.style.overflow = '';
+    cancelAnimationFrame(this._hudRaf);
+    clearTimeout(this._phaseT);
+    clearTimeout(this._diveT);
+    if (this._diveHole && this._diveHole.cancelFly) this._diveHole.cancelFly();
+    this._diveHole = null;
+    const hole = document.querySelector('#work black-hole');
+    if (hole) hole.removeAttribute('paused');
+    this.setState({ diveOpen: false, diveReady: false });
+  }
+
+  get mvCanEmbed() {
+    try { const p = window.location.protocol; return (p === 'https:' || p === 'http:') && window.location.origin && window.location.origin !== 'null'; } catch (e) { return false; }
+  }
+
+  playMyAdvice = (e) => {
+    if (!this.mvCanEmbed) return;
+    if (e) e.preventDefault();
+    this.setState({ mvPlaying: true });
+  };
+
+  renderVals() {
+    const idle = this.props.holeIdle ?? 0.35;
+    const acc = String(this.state.theme || this.props.accent || '#b46a55').toLowerCase();
+    const pillBase = "font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.7rem;display:flex;align-items:center;gap:.4rem;padding:.34rem .55rem;border-radius:7px;cursor:pointer;background:none;transition:all .18s;";
+    const themes = [['ember', '#b46a55'], ['drift', '#7f9ec4'], ['sage', '#85a68a'], ['brass', '#c2a15c']].map(function (p) {
+      const name = p[0], c = p[1], on = c === acc;
+      return {
+        name: name,
+        on: String(on),
+        pick: () => this.setState({ theme: c }),
+        style: pillBase + (on
+          ? 'border:1px solid ' + c + ';color:#f2efe8;background:color-mix(in srgb,' + c + ' 14%,transparent)'
+          : 'border:1px solid rgba(242,239,232,.14);color:#8f8676'),
+        dot: 'width:9px;height:9px;border-radius:50%;flex:none;background:' + c + (on ? ';box-shadow:0 0 0 2px color-mix(in srgb,' + c + ' 32%,transparent)' : '')
+      };
+    }, this);
+    const copyBase = "font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.76rem;cursor:pointer;padding:.55rem 1rem;border-radius:8px;transition:all .22s;text-align:center;";
+    return {
+      themes: themes,
+      showAvail: this.props.showAvailability ?? true,
+      diveOpen: this.state.diveOpen,
+      diveReady: this.state.diveReady,
+      diveIntroRunning: this.state.diveOpen && !this.state.diveReady,
+      skipIntro: () => { if (this._diveHole && this._diveHole.cancelFly) this._diveHole.cancelFly(); },
+      notesExpanded: this.state.notesExpanded,
+      notesExpandedStr: this.state.notesExpanded ? 'true' : 'false',
+      notesBtnLabel: this.state.notesExpanded ? 'Hide the engineering ▲' : 'How it works ▾',
+      diveHint: this._coarse ? 'drag to orbit · tap ✕ to exit' : 'drag to orbit · scroll to zoom · esc to exit',
+      toggleNotes: () => this.setState((s) => ({ notesExpanded: !s.notesExpanded })),
+
+      openDive: () => {
+        document.documentElement.style.overflow = 'hidden';
+        const hole = document.querySelector('#work black-hole');
+        if (hole) hole.setAttribute('paused', '');
+        this.setState({ diveOpen: true, diveReady: false });
+      },
+      closeDive: () => this.closeDiveNow(),
+
+      holeEnter: () => {
+        this._holeHover = true;
+        const hole = document.querySelector('#work black-hole');
+        if (hole) hole.setAttribute('intensity', '1');
+        if (this.holeHintRef.current) this.holeHintRef.current.textContent = 'awake — take the dive';
+      },
+      holeLeave: () => {
+        this._holeHover = false;
+        const hole = document.querySelector('#work black-hole');
+        if (hole) hole.setAttribute('intensity', String(idle));
+        if (this.holeHintRef.current) this.holeHintRef.current.textContent = this._idleHint || 'rendering live — hover to wake';
+      },
+
+      copyBtnLabel: this.state.copied ? 'Copied ✓' : 'copy email',
+      copyBtnStyle: this.state.copied
+        ? copyBase + 'border:1px solid var(--acc,#b46a55);background:color-mix(in srgb,var(--acc,#b46a55) 12%,transparent);color:var(--acc,#b46a55)'
+        : copyBase + 'border:1px solid rgba(242,239,232,.24);background:none;color:#f2efe8',
+      copyEmail: () => {
+        const done = () => {
+          this.setState({ copied: true });
+          clearTimeout(this.copyT);
+          this.copyT = setTimeout(() => this.setState({ copied: false }), 1600);
+        };
+        if (navigator.clipboard) navigator.clipboard.writeText('yousif.eliaa@gmail.com').then(done).catch(done);
+        else done();
+      },
+
+      spotMove: (e) => {
+        const card = e.currentTarget;
+        const r = card.getBoundingClientRect();
+        const spot = card.querySelector('[data-spot]');
+        if (spot) spot.style.background = 'radial-gradient(220px circle at ' + (((e.clientX - r.left) / r.width) * 100).toFixed(1) + '% ' + (((e.clientY - r.top) / r.height) * 100).toFixed(1) + '%, color-mix(in srgb,var(--acc,#b46a55) 12%,transparent), transparent 70%)';
+      },
+      spotEnter: (e) => { const s = e.currentTarget.querySelector('[data-spot]'); if (s) s.style.opacity = '1'; },
+      spotLeave: (e) => { const s = e.currentTarget.querySelector('[data-spot]'); if (s) s.style.opacity = '0'; },
+
+      skyClick: (e) => {
+        if (!this.shootFrom || e.target.closest('.star-hit')) return;
+        const sky = this.skyRef.current;
+        const r = sky.getBoundingClientRect();
+        this.shootFrom(this.clickedMeteor, (e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height);
+      },
+
+      mvPlaying: this.state.mvPlaying, mvIdle: !this.state.mvPlaying, playMyAdvice: this.playMyAdvice,
+      mvSrc: 'https://www.youtube-nocookie.com/embed/OsDVJvcRaCg?autoplay=1&rel=0&modestbranding=1&playsinline=1' + (this.mvCanEmbed ? '&origin=' + encodeURIComponent(window.location.origin) : ''),
+      rootRef: this.rootRef, navRef: this.navRef, typerRef: this.typerRef,
+      skyRef: this.skyRef, starsBgRef: this.starsBgRef, consLinesRef: this.consLinesRef,
+      diveCloseRef: this.diveCloseRef, holeHintRef: this.holeHintRef,
+      barTopRef: this.barTopRef, barBotRef: this.barBotRef,
+      hudTopRef: this.hudTopRef, hudBotRef: this.hudBotRef,
+      divePhaseRef: this.divePhaseRef, diveDistRef: this.diveDistRef,
+    };
+  }
+}
+</script>
 </body>
 </html>
